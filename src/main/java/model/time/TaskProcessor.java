@@ -17,20 +17,24 @@ public class TaskProcessor {
     }
 
     public void process(){
-        // snapshot is a trick to copy the operations task because operations task will be
-                //changed during foreach loop!!!
+
         List<TimedOperation> snapshot = new ArrayList<>(village.getTimedOperation().values());
-        List<UUID> finishedTasks = new ArrayList<>();
+        List<TimedOperation> toAdd = new ArrayList<>();
+        List<UUID> toRemove = new ArrayList<>();
 
         for ( TimedOperation timedOperation : snapshot){
             if(timedOperation.isFinished()){
-                timedOperation.execute(this.village);
-                finishedTasks.add(timedOperation.getId());
+                timedOperation.execute(this.village, toAdd);
+                toRemove.add(timedOperation.getId());
             }
         }
 
-        for (UUID id : finishedTasks){
-            village.getTimedOperation().remove(id); // We remove the finished task
+        for (TimedOperation timedOperation : toAdd){
+            this.village.getTimedOperation().put(timedOperation.getId(), timedOperation);
+        }
+
+        for (UUID uuid : toRemove){
+            this.village.getTimedOperation().remove(uuid);
         }
     }
 }

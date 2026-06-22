@@ -1,7 +1,5 @@
-package model.time;
+package model.building;
 
-import model.building.Building;
-import model.building.BuildingType;
 import model.world.Coordinate;
 
 public class MajorBuilding extends Building {

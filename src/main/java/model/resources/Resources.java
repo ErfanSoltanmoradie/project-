@@ -14,15 +14,15 @@ public  class Resources {
     private int coin;
 
     public Resources() {
-        this.wood = 80000000;
-        this.iron = 600;
-        this.gunPowder = 250;
-        this.stone = 900;
-        this.dirtyWater = 0;
-        this.dirtySoil = 0;
-        this.cleanWater = 250;
-        this.cleanSoil = 250;
-        this.coin = 200;
+        this.wood = 1000;
+        this.iron = 500;
+        this.gunPowder = 500;
+        this.stone = 500;
+        this.dirtyWater = 500;
+        this.dirtySoil = 500;
+        this.cleanWater = 500;
+        this.cleanSoil = 500;
+        this.coin = 500;
     }
 
 

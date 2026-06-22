@@ -1,13 +1,16 @@
 package model.gameengine;
 
 import model.building.Building;
+import model.building.BuildingStatus;
 import model.building.BuildingType;
+import model.building.StorageBuilding;
 import model.player.Player;
 import model.resources.Resources;
 import model.resources.ResourcesType;
 import model.time.TaskProcessor;
 import model.time.TimedOperation;
 import model.time.TimedOperationType;
+import model.time.UpgradeTask;
 import model.village.Village;
 import model.world.Coordinate;
 import service.buildings.BuildingsManagement;
@@ -19,44 +22,91 @@ public class GameEngine {
 
     public static void main(String[] args) throws Exception {
 
-        Village village = new Village(new Coordinate(0, 0), 100);
-        Player player= new Player("erfan", "123", village);
-        BuildingsManagement buildingsManagement =
-                new BuildingsManagement(player);
-
+        Coordinate coordinate = new Coordinate(10, 10);
+        Village village = new Village(coordinate, 5000);
+        Player player = new Player("Erfan", "1234", village);
         TaskProcessor taskProcessor = new TaskProcessor(village);
 
-        System.out.println("========== PURIFICATION TEST START ==========");
+        StorageBuilding soilStorage =  new StorageBuilding(BuildingType.SOIL_STORAGE, coordinate, 2000);
+        StorageBuilding waterStorage = new StorageBuilding(BuildingType.WATER_STORAGE, coordinate, 2000);
+        StorageBuilding woodStorage = new StorageBuilding(BuildingType.WOOD_STORAGE,coordinate, 2000);
+        StorageBuilding  ironStorage =  new StorageBuilding(BuildingType.IRON_STORAGE, coordinate, 2000);
+        StorageBuilding  stoneStorage = new StorageBuilding(BuildingType.STONE_STORAGE, coordinate, 2000);
+        StorageBuilding gunpowderStorage = new StorageBuilding(BuildingType.GUNPOWDER_STORAGE, coordinate, 2000);
+
+        soilStorage.setBuildingStatus(BuildingStatus.ACTIVE);
+        waterStorage.setBuildingStatus(BuildingStatus.ACTIVE);
+        woodStorage.setBuildingStatus(BuildingStatus.ACTIVE);
+        ironStorage.setBuildingStatus(BuildingStatus.ACTIVE);
+        stoneStorage.setBuildingStatus(BuildingStatus.ACTIVE);
+        gunpowderStorage.setBuildingStatus(BuildingStatus.ACTIVE);
+
+        village.getBuildings().put(soilStorage.getId(), soilStorage);
+        village.getBuildings().put(waterStorage.getId(), waterStorage);
+        village.getBuildings().put(woodStorage.getId(), woodStorage);
+        village.getBuildings().put(ironStorage.getId(), ironStorage);
+        village.getBuildings().put(stoneStorage.getId(), stoneStorage);
+        village.getBuildings().put(gunpowderStorage.getId(), gunpowderStorage);
+
+        BuildingsManagement buildingsManagement = new BuildingsManagement(player);
+
+        System.out.println("Resources before buying buildings:");
+        System.out.println("Wood: " + village.getResources().getAmount(ResourcesType.WOOD));
+        System.out.println("IRON: " + village.getResources().getAmount(ResourcesType.IRON));
+        System.out.println("Clean water: " + village.getResources().getAmount(ResourcesType.CLEAN_WATER));
+        System.out.println("CLEAN SOIL: " + village.getResources().getAmount(ResourcesType.CLEAN_SOIL));
+        System.out.println("GUNPOWDER: " + village.getResources().getAmount(ResourcesType.GUN_POWDER));
+        System.out.println("DIRTY SOIL: " + village.getResources().getAmount(ResourcesType.DIRTY_SOIL));
+        System.out.println("DIRTY WATER: " + village.getResources().getAmount(ResourcesType.DIRTY_WATER));
+        System.out.println("STONE: " + village.getResources().getAmount(ResourcesType.STONE));
 
 
-        BuildingsManagement bm = new BuildingsManagement(player);
+        buildingsManagement.build(BuildingType.STONE_MINE, coordinate);
+        buildingsManagement.build(BuildingType.IRON_MINE, coordinate);
+        buildingsManagement.build(BuildingType.WATER_PURIFIER, coordinate);
+        buildingsManagement.build(BuildingType.SOIL_PURIFIER, coordinate);
+        buildingsManagement.build(BuildingType.GUNPOWDER_MINE, coordinate);
+        buildingsManagement.build(BuildingType.WOOD_MINE, coordinate);
 
-        bm.build(BuildingType.WATER_STORAGE , new Coordinate(80, 10));
-        bm.build(BuildingType.SOIL_STORAGE, new Coordinate(20, 30));
-        bm.build(BuildingType.WATER_PURIFIER, new Coordinate(1,1));
-        bm.build(BuildingType.SOIL_PURIFIER, new Coordinate(2,1));
+
+        System.out.println("Resources after buying buildings:");
+        System.out.println("Wood: " + village.getResources().getAmount(ResourcesType.WOOD));
+        System.out.println("IRON: " + village.getResources().getAmount(ResourcesType.IRON));
+        System.out.println("Clean water: " + village.getResources().getAmount(ResourcesType.CLEAN_WATER));
+        System.out.println("CLEAN SOIL: " + village.getResources().getAmount(ResourcesType.CLEAN_SOIL));
+        System.out.println("GUNPOWDER: " + village.getResources().getAmount(ResourcesType.GUN_POWDER));
+        System.out.println("DIRTY SOIL: " + village.getResources().getAmount(ResourcesType.DIRTY_SOIL));
+        System.out.println("DIRTY WATER: " + village.getResources().getAmount(ResourcesType.DIRTY_WATER));
+        System.out.println("STONE: " + village.getResources().getAmount(ResourcesType.STONE));
 
 
-
-        for (int i = 0; i < 10; i++) {
-            Thread.sleep(1000);
-            taskProcessor.process();
+        for (TimedOperation task : village.getTimedOperation().values()) {
+            task.setFinishTime(Instant.now().minusSeconds(1));
         }
 
+        taskProcessor.process();
 
-        village.getResources().addResource(ResourcesType.DIRTY_WATER, 500, 5000);
-        village.getResources().addResource(ResourcesType.DIRTY_SOIL, 500, 5000);
+        System.out.println("\nBuildings:");
 
-        System.out.println("Before production:");
-        System.out.println("DIRTY WATER = " + village.getResources().getAmount(ResourcesType.DIRTY_WATER));
-        System.out.println("CLEAN WATER = " + village.getResources().getAmount(ResourcesType.CLEAN_WATER));
-        System.out.println("DIRTY SOIL  = " + village.getResources().getAmount(ResourcesType.DIRTY_SOIL));
-        System.out.println("CLEAN SOIL  = " + village.getResources().getAmount(ResourcesType.CLEAN_SOIL));
+        for (Building building : village.getBuildings().values()) {
+            System.out.println(
+                    building.getType()
+                            + " | level=" + building.getLevel()
+                            + " | status=" + building.getBuildingStatus()
+            );
+        }
+
+        System.out.println(
+                "Timed Operations Count: "
+                        + village.getTimedOperation().size()
+        );
 
 
-        for (int i = 0; i < 50; i++) {
+        // ---------------- PRODUCTION CYCLE ----------------
+        System.out.println("\n========== PRODUCTION TEST ==========");
 
-            Thread.sleep(1000);
+        for (int i = 0; i < 20; i++) {
+
             for (TimedOperation task : village.getTimedOperation().values()) {
                 task.setFinishTime(Instant.now().minusSeconds(1));
             }
@@ -64,47 +114,20 @@ public class GameEngine {
             taskProcessor.process();
         }
 
+        System.out.println("\n========== AFTER PRODUCTION ==========");
 
-        System.out.println("\nAfter production:");
-        System.out.println("DIRTY WATER = " + village.getResources().getAmount(ResourcesType.DIRTY_WATER));
-        System.out.println("CLEAN WATER = " + village.getResources().getAmount(ResourcesType.CLEAN_WATER));
-        System.out.println("DIRTY SOIL  = " + village.getResources().getAmount(ResourcesType.DIRTY_SOIL));
-        System.out.println("CLEAN SOIL  = " + village.getResources().getAmount(ResourcesType.CLEAN_SOIL));
+        System.out.println("WOOD: " + village.getResources().getAmount(ResourcesType.WOOD));
+        System.out.println("IRON: " + village.getResources().getAmount(ResourcesType.IRON));
+        System.out.println("STONE: " + village.getResources().getAmount(ResourcesType.STONE));
+        System.out.println("DIRTY WATER: " + village.getResources().getAmount(ResourcesType.DIRTY_WATER));
+        System.out.println("DIRTY SOIL: " + village.getResources().getAmount(ResourcesType.DIRTY_SOIL));
+        System.out.println("CLEAN WATER: " + village.getResources().getAmount(ResourcesType.CLEAN_WATER));
+        System.out.println("CLEAN SOIL: " + village.getResources().getAmount(ResourcesType.CLEAN_SOIL));
+        System.out.println("GUNPOWDER: " + village.getResources().getAmount(ResourcesType.GUN_POWDER));
 
-        System.out.println("========== PURIFICATION TEST END ==========");
+        // ---------------- CHECK TASK SYSTEM ----------------
+        System.out.println("\n========== TASK CHECK ==========");
+        System.out.println("Remaining Tasks: " + village.getTimedOperation().size());
 
-
-    }
-
-    private static void printVillage(Village village) {
-
-        Resources r = village.getResources();
-
-        System.out.println("WOOD        = "
-                + r.getAmount(ResourcesType.WOOD));
-
-        System.out.println("IRON        = "
-                + r.getAmount(ResourcesType.IRON));
-
-        System.out.println("STONE       = "
-                + r.getAmount(ResourcesType.STONE));
-
-        System.out.println("GUNPOWDER   = "
-                + r.getAmount(ResourcesType.GUN_POWDER));
-
-        System.out.println("DIRTY WATER = "
-                + r.getAmount(ResourcesType.DIRTY_WATER));
-
-        System.out.println("DIRTY SOIL  = "
-                + r.getAmount(ResourcesType.DIRTY_SOIL));
-
-        System.out.println("CLEAN WATER = "
-                + r.getAmount(ResourcesType.CLEAN_WATER));
-
-        System.out.println("CLEAN SOIL  = "
-                + r.getAmount(ResourcesType.CLEAN_SOIL));
-
-        System.out.println("COIN        = "
-                + r.getAmount(ResourcesType.COIN));
     }
 }

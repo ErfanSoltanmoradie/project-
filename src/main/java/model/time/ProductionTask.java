@@ -7,6 +7,7 @@ import service.resource.ResourcesManagement;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class ProductionTask extends TimedOperation{
@@ -22,7 +23,7 @@ public class ProductionTask extends TimedOperation{
     }
 
     @Override
-    public void execute(Village village) {
+    public void execute(Village village, List<TimedOperation> toAdd) {
         this.resources = village.getResourcesManagement();
 
         Building building = village.getBuildings().get(this.buildingId);
@@ -79,6 +80,6 @@ public class ProductionTask extends TimedOperation{
 
         ProductionTask productionTask = new ProductionTask(Instant.now(),
                 Instant.now().plus(neededTime), TimedOperationType.PRODUCTION_TASK, this.neededTime,  this.buildingId);
-        village.getTimedOperation().put(productionTask.getId(), productionTask);
+        toAdd.add(productionTask);
     }
 }

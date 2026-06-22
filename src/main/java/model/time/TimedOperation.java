@@ -7,6 +7,7 @@ import model.village.Village;
 import java.security.PublicKey;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public abstract class TimedOperation {
         //this.status = status;
     }
 
-    public abstract void execute(Village village);
+    public abstract void execute(Village village, List<TimedOperation> toAdd);
 
     public TimedOperationType getTimedOperationType() {
         return timedOperationType;

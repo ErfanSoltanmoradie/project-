@@ -4,6 +4,8 @@ import model.village.Village;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 public class MovementTask extends TimedOperation{
     private Village villageA;
@@ -19,7 +21,7 @@ public class MovementTask extends TimedOperation{
     }
 
     @Override
-    public void execute(Village village) {
+    public void execute(Village village, List<TimedOperation> toAdd) {
 
     }
 }

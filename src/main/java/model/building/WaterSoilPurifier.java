@@ -18,16 +18,16 @@ public class WaterSoilPurifier extends Building implements Production {
         upgradeWellsCost = new HashMap<>();
 
         upgradeWellsCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofMinutes(1))));
+                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
 
         upgradeWellsCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofMinutes(1))));
+                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
 
         upgradeWellsCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofMinutes(1))));
+                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
 
         upgradeWellsCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofMinutes(1))));
+                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
     }
 
     public WaterSoilPurifier(BuildingType type, Coordinate position, int production) {

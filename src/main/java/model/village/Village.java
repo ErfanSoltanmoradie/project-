@@ -55,28 +55,8 @@ public class Village {
         return resources;
     }
 
-    public ResourcesManagement getResourcesManagement() {
-        return resourcesManagement;
-    }
-
     public void setResources(Resources resources) {
         this.resources = resources;
-    }
-
-    public Cloud getCloud() {
-        return cloud;
-    }
-
-    public void setCloud(Cloud cloud) {
-        this.cloud = cloud;
-    }
-
-    public Army getArmy() {
-        return army;
-    }
-
-    public void setArmy(Army army) {
-        this.army = army;
     }
 
     public Coordinate getCoordinate() {
@@ -103,29 +83,32 @@ public class Village {
         this.timedOperation = timedOperation;
     }
 
+    public ResourcesManagement getResourcesManagement() {
+        return resourcesManagement;
+    }
+
+    public Cloud getCloud() {
+        return cloud;
+    }
+
+    public void setCloud(Cloud cloud) {
+        this.cloud = cloud;
+    }
+
+    public Army getArmy() {
+        return army;
+    }
+
+    public void setArmy(Army army) {
+        this.army = army;
+    }
+
     public int getHealth() {
         return health;
     }
 
-    /*public void setHealth(int health) {
+    public void setHealth(int health) {
         this.health = health;
-    }*/
-
-    /*public int getScienceLevel() {
-        return scienceLevel;
     }
-
-    public void setScienceLevel(int scienceLevel) {
-        this.scienceLevel = scienceLevel;
-    }
-
-    public int getMajorBuildingLevel() {
-        return majorBuildingLevel;
-    }
-
-    public void setMajorBuildingLevel(int majorBuildingLevel) {
-        this.majorBuildingLevel = majorBuildingLevel;
-    }*/
-
 }
 

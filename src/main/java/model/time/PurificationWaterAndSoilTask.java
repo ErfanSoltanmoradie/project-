@@ -8,6 +8,7 @@ import service.resource.ResourcesManagement;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class PurificationWaterAndSoilTask extends TimedOperation{
@@ -24,7 +25,7 @@ public class PurificationWaterAndSoilTask extends TimedOperation{
     }
 
     @Override
-    public void execute(Village village) {
+    public void execute(Village village, List<TimedOperation> toAdd) {
         this.resources = village.getResourcesManagement();
         Building building = village.getBuildings().get(this.buildingId);
 
@@ -50,7 +51,7 @@ public class PurificationWaterAndSoilTask extends TimedOperation{
 
             PurificationWaterAndSoilTask purificationWaterAndSoilTask = new PurificationWaterAndSoilTask(Instant.now(),
                     Instant.now().plus(neededTime), TimedOperationType.PURIFICATION_WATER_AND_SOIL_TASK, this.neededTime,this.buildingId);
-            village.getTimedOperation().put(purificationWaterAndSoilTask.getId(), purificationWaterAndSoilTask);
+            toAdd.add(purificationWaterAndSoilTask);
         }
     }
 }

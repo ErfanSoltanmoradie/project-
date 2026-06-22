@@ -5,6 +5,7 @@ import model.building.BuildingStatus;
 import model.village.Village;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class UpgradeTask extends TimedOperation {
@@ -17,7 +18,7 @@ public class UpgradeTask extends TimedOperation {
     }
 
     @Override
-    public void execute(Village village) {
+    public void execute(Village village, List<TimedOperation> toAdd) {
 
         Building building = village.getBuildings().get(this.getBuildingId());
 
@@ -32,5 +33,4 @@ public class UpgradeTask extends TimedOperation {
     public void setBuildingId(UUID buildingId) {
         this.buildingId = buildingId;
     }
-
 }

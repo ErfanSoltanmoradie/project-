@@ -17,16 +17,16 @@ public class StorageBuilding extends Building implements Storage {
         upgradeStoragesCost = new HashMap<>();
 
         upgradeStoragesCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
 
         upgradeStoragesCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
 
         upgradeStoragesCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeStoragesCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
     }
 
     public static UpgradeBuildingInfo getUpgradeStoragesCost(int level){
