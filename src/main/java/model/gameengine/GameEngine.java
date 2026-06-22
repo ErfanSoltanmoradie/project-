@@ -102,8 +102,8 @@ public class GameEngine {
         );
 
 
-        // ---------------- PRODUCTION CYCLE ----------------
-        System.out.println("\n========== PRODUCTION TEST ==========");
+
+        System.out.println("\n*********** PRODUCTION TEST ************");
 
         for (int i = 0; i < 20; i++) {
 
@@ -114,7 +114,7 @@ public class GameEngine {
             taskProcessor.process();
         }
 
-        System.out.println("\n========== AFTER PRODUCTION ==========");
+        System.out.println("\n************ AFTER PRODUCTION ***********");
 
         System.out.println("WOOD: " + village.getResources().getAmount(ResourcesType.WOOD));
         System.out.println("IRON: " + village.getResources().getAmount(ResourcesType.IRON));
@@ -125,8 +125,8 @@ public class GameEngine {
         System.out.println("CLEAN SOIL: " + village.getResources().getAmount(ResourcesType.CLEAN_SOIL));
         System.out.println("GUNPOWDER: " + village.getResources().getAmount(ResourcesType.GUN_POWDER));
 
-        // ---------------- CHECK TASK SYSTEM ----------------
-        System.out.println("\n========== TASK CHECK ==========");
+        
+        System.out.println("\n************* TASK CHECK***************");
         System.out.println("Remaining Tasks: " + village.getTimedOperation().size());
 
     }
