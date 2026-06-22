@@ -17,10 +17,10 @@ public class Ballista extends  DefensiveBuilding{
         upgradeBallistaCost = new HashMap<>();
 
         upgradeBallistaCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(10, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
+                new Cost(10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
 
         upgradeBallistaCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+                new Cost(20, 20, 20, 20, 20, 20, 20, Duration.ofSeconds(1))));
 
         upgradeBallistaCost.put(3, new UpgradeBuildingInfo(1 ,1,
                 new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
