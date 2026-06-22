@@ -125,7 +125,7 @@ public class GameEngine {
         System.out.println("CLEAN SOIL: " + village.getResources().getAmount(ResourcesType.CLEAN_SOIL));
         System.out.println("GUNPOWDER: " + village.getResources().getAmount(ResourcesType.GUN_POWDER));
 
-        
+
         System.out.println("\n************* TASK CHECK***************");
         System.out.println("Remaining Tasks: " + village.getTimedOperation().size());
 
