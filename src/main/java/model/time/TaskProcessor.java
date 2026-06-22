@@ -17,7 +17,7 @@ public class TaskProcessor {
     }
 
     public void process(){
-        // snapshot is a trick to copy the operations task because uperations task will be
+        // snapshot is a trick to copy the operations task because operations task will be
                 //changed during foreach loop!!!
         List<TimedOperation> snapshot = new ArrayList<>(village.getTimedOperation().values());
         List<UUID> finishedTasks = new ArrayList<>();
