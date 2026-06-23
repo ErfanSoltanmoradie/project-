@@ -29,6 +29,7 @@ public class Cost {
     public static Cost buildCost(BuildingType buildingType) {
         return buildingType.getBaseBuildCost();
     }
+    public static Cost buildCost(PlantType plantType) {return plantType.getBasePlantCost();}
 
 
     public static Cost upgradeCost(Building building){
@@ -46,6 +47,7 @@ public class Cost {
 
             case SENTINEL_DEFENSIVE -> Sentinel.getSentinelUpgradeInfo(building.getLevel()).getCost();
 
+            case LABORATORY -> Laboratory.upgradeBuildingInfo(building.getLevel()).getCost();
 
             default -> new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(0));
         };
