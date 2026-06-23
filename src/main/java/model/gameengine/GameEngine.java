@@ -31,14 +31,16 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class GameEngine {
 
     public static void main(String[] args) throws Exception {
 
-        GameStart gameStart = new GameStart();
+        /*GameStart gameStart = new GameStart();
 
         System.out.println("Choose one");
         System.out.println("1.Register");
@@ -57,9 +59,24 @@ public class GameEngine {
 
                 gameStart.login(username, password);
                 break;
-        }
+        }*/
 
-        /*StorageBuilding soilStorage =  new StorageBuilding(BuildingType.SOIL_STORAGE, coordinate, 2000);
+        File file = new File("players.dat");
+        GameState loadedState = LoadService.load(file);
+
+        System.out.println(
+                loadedState.getUsers().keySet()
+        );
+
+         Map<UUID, Player> player = loadedState.getPlayers();
+         for (Player player1 : player.values()){
+             System.out.println("" + player1.getUsername());
+         }
+
+
+         TaskProcessor taskProcessor = new TaskProcessor();
+         Coordinate coordinate = new Coordinate(2, 5);
+        StorageBuilding soilStorage =  new StorageBuilding(BuildingType.SOIL_STORAGE, coordinate, 2000);
         StorageBuilding waterStorage = new StorageBuilding(BuildingType.WATER_STORAGE, coordinate, 2000);
         StorageBuilding woodStorage = new StorageBuilding(BuildingType.WOOD_STORAGE,coordinate, 2000);
         StorageBuilding  ironStorage =  new StorageBuilding(BuildingType.IRON_STORAGE, coordinate, 2000);
@@ -159,7 +176,7 @@ public class GameEngine {
 
 
         System.out.println("\n************* TASK CHECK***************");
-        System.out.println("Remaining Tasks: " + village.getTimedOperation().size());*/
+        System.out.println("Remaining Tasks: " + village.getTimedOperation().size());
 
     }
 }

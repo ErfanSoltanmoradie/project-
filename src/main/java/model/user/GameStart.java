@@ -5,17 +5,44 @@ import model.repository.PlayerRepository;
 import model.repository.UserRepository;
 import model.world.WorldMap;
 import service.filehandeling.GameState;
+import service.filehandeling.LoadService;
+import service.filehandeling.SaveService;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class GameStart {
 
     private final WorldMap worldMap = new WorldMap();
-    private final GameState gameState = new GameState();
-    private final UserRepository userRepository = new UserRepository(gameState.getUsers());
-    private final PlayerRepository playerRepository = new PlayerRepository(gameState.getPlayers());
-    private final PlayerFactory playerFactory = new PlayerFactory(worldMap);
-    private final AuthService authService = new AuthService(userRepository, playerRepository, playerFactory);
+    private  GameState gameState;
+    private  UserRepository userRepository ;
+    private  PlayerRepository playerRepository ;
+    private final PlayerFactory playerFactory;
+    private final AuthService authService ;
+
+    private LoadService usersLoadService;
+    private LoadService PlayersLoadService;
+    private SaveService usersSaveService;
+    private SaveService playersSaveService;
+
+    private  File usersFile;
+    private File playersFile;
+
+    public GameStart() {
+         this.usersFile = new File("users.dat");
+         this.playersFile = new File("players.dat");
+
+        this.gameState = LoadService.load(this.usersFile);
+        this.gameState.setUser(this.gameState.getUsers());
+        this.userRepository = new UserRepository(this.gameState.getUsers());
+
+        this.gameState = LoadService.load(this.playersFile);
+        this.gameState.setPlayer(this.gameState.getPlayers());
+        this.playerRepository = new PlayerRepository(this.gameState.getPlayers());
+
+        this.playerFactory = new PlayerFactory(this.worldMap);
+        this.authService = new AuthService(this.userRepository, this.playerRepository, this.playerFactory);
+    }
 
     public void register(){
         Scanner scanner = new Scanner(System.in);
@@ -26,9 +53,16 @@ public class GameStart {
         String password = scanner.next();
 
         authService.register(username, password);
+
+        gameState.setPlayer(playerRepository.getAllPlayers());
+        gameState.setUser(userRepository.getAllUsers());
+
+        SaveService.save(gameState, playersFile);
+        SaveService.save(gameState, usersFile);
     }
 
     public void login(String username, String password){
         authService.login(username, password);
+
     }
 }

@@ -24,15 +24,15 @@ public class GameState implements Serializable {
         return user;
     }
 
-    public void setUser(User newUser) {
-        this.user.put(newUser.getUsername(), newUser);
+    public void setUser(Map<String, User> user) {
+        this.user = user;
     }
 
     public Map<UUID, Player> getPlayers() {
         return player;
     }
 
-    public void setPlayer(Player newPlayer) {
-        this.player.put(newPlayer.getPlayerId(), newPlayer);
+    public void setPlayer(Map<UUID, Player> player) {
+        this.player = player;
     }
 }
