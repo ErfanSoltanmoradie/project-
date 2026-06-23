@@ -39,15 +39,12 @@ public class Village implements Serializable {
     public Village(Coordinate coordinate, int health) {
         this.villageId = UUID.randomUUID();
         this.resources = new Resources();
-
-        this.resourcesManagement = new ResourcesManagement(this);
-
         this.buildings = new HashMap<>();
         this.timedOperation = new HashMap<>();
         this.coordinate = coordinate;
-
         this.cloud = new Cloud();
         this.health = health;
+        this.resourcesManagement = new ResourcesManagement(this);
     }
 
     public void runTimeServices(){  // we want the logic after loading the game

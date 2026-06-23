@@ -6,7 +6,7 @@ import model.resources.ResourcesType;
 import model.village.Village;
 
 public class ResourcesManagement{
-    private final Village village;
+    private  Village village;
 
     public ResourcesManagement(Village village) {
         this.village = village;

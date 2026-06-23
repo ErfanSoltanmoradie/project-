@@ -1,14 +1,26 @@
 package model.user;
 
+import model.building.Building;
+import model.building.BuildingStatus;
+import model.building.BuildingType;
+import model.building.StorageBuilding;
+import model.player.Player;
 import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
 import model.repository.UserRepository;
+import model.resources.ResourcesType;
+import model.time.TaskProcessor;
+import model.time.TimedOperation;
+import model.world.Coordinate;
 import model.world.WorldMap;
+import service.buildings.BuildingsManagement;
 import service.filehandeling.GameState;
 import service.filehandeling.LoadService;
 import service.filehandeling.SaveService;
+import service.resource.ResourcesManagement;
 
 import java.io.File;
+import java.time.Instant;
 import java.util.Scanner;
 
 public class GameStart {
@@ -63,6 +75,10 @@ public class GameStart {
 
     public void login(String username, String password){
         authService.login(username, password);
+
+
+        SaveService.save(gameState, playersFile);
+        SaveService.save(gameState, usersFile);
 
     }
 }
