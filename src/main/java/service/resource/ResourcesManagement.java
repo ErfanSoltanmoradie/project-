@@ -12,6 +12,7 @@ public class ResourcesManagement{
         this.village = village;
     }
 
+
     public boolean checkResourcesCost(Cost cost) {
         Resources resources = village.getResources();
 
