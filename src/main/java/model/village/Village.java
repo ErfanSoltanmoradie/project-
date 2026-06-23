@@ -26,9 +26,7 @@ public class Village implements Serializable {
     private Coordinate coordinate;
     private Map<UUID, Building> buildings;
     private Map<UUID, TimedOperation> timedOperation;
-
     private transient  ResourcesManagement resourcesManagement; // transient ---> do not save it in the file
-
     private Cloud cloud;
     private Army army;
     private int health;

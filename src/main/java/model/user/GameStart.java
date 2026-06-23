@@ -69,6 +69,7 @@ public class GameStart {
         gameState.setPlayer(playerRepository.getAllPlayers());
         gameState.setUser(userRepository.getAllUsers());
 
+        //for exiting the game
         SaveService.save(gameState, playersFile);
         SaveService.save(gameState, usersFile);
     }
@@ -76,7 +77,8 @@ public class GameStart {
     public void login(String username, String password){
         authService.login(username, password);
 
-
+        
+        //for exiting the game
         SaveService.save(gameState, playersFile);
         SaveService.save(gameState, usersFile);
 
