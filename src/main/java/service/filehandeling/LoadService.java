@@ -7,20 +7,15 @@ import java.io.ObjectInputStream;
 public class LoadService {
     public static GameState load(File fileName) {
 
-        try (ObjectInputStream ois =
-                     new ObjectInputStream(
-                             new FileInputStream(fileName))) {
-
-            GameState gameState =
-                    (GameState) ois.readObject();
-
-            //System.out.println(gameState.toString());
-
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
+            GameState gameState = (GameState) ois.readObject();
             return gameState;
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+
         }
     }
 }
