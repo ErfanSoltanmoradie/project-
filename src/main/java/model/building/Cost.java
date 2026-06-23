@@ -1,8 +1,9 @@
 package model.building;
 
+import java.io.Serializable;
 import java.time.Duration;
 
-public class Cost {
+public class Cost  implements Serializable {
     private final int wood;
     private final int stone;
     private final int iron;

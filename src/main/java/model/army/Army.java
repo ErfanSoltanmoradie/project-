@@ -2,7 +2,9 @@ package model.army;
 
 import model.military.Millitary;
 
-public class Army extends Millitary {
+import java.io.Serializable;
+
+public class Army extends Millitary implements Serializable {
 
     private ArmyType type;
 

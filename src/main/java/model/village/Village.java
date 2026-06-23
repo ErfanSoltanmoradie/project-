@@ -7,15 +7,19 @@ import model.building.BuildingType;
 import model.building.StorageBuilding;
 import model.resources.Resources;
 import model.resources.ResourcesType;
+import model.time.TaskProcessor;
 import model.time.TimedOperation;
 import model.world.Coordinate;
+import service.buildings.BuildingFactory;
+import service.buildings.BuildingsManagement;
 import service.resource.ResourcesManagement;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Village {
+public class Village implements Serializable {
 
     private final UUID villageId;
     private Resources resources;
@@ -23,7 +27,7 @@ public class Village {
     private Map<UUID, Building> buildings;
     private Map<UUID, TimedOperation> timedOperation;
 
-    private final ResourcesManagement resourcesManagement;
+    private transient  ResourcesManagement resourcesManagement; // transient ---> do not save it in the file
 
     private Cloud cloud;
     private Army army;
@@ -46,6 +50,10 @@ public class Village {
         this.health = health;
     }
 
+    public void runTimeServices(){  // we want the logic after loading the game
+        this.resourcesManagement = new ResourcesManagement(this);
+        TaskProcessor taskProcessor = new TaskProcessor(this);
+    }
 
     public UUID getVillageId() {
         return villageId;

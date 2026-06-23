@@ -2,11 +2,12 @@ package model.building;
 
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Ballista extends  DefensiveBuilding{
+public class Ballista extends  DefensiveBuilding implements Serializable {
 
     public Ballista(BuildingType type, Coordinate position) {
         super(type, position);

@@ -3,20 +3,21 @@ package model.player;
 import model.village.Village;
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Player {
+public class Player  implements Serializable {
 
     private final String username;
-    private final String passwordHash;
     private final UUID playerId;
-    private final Village village;
+    private Village village;
+    private UUID userId;
 
-    public Player(String username, String passwordHash, Village village) {
+    public Player(String username , Village village) {
         this.username = username;
-        this.passwordHash = passwordHash;
         this.village = village;
         this.playerId = UUID.randomUUID();
+        this.userId = this.playerId;
     }
 
     public Village getVillage() {
@@ -26,4 +27,18 @@ public class Player {
     public UUID getPlayerId() {
         return playerId;
     }
+
+    public void setVillage(Village village) {
+        this.village = village;
+
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 }
+

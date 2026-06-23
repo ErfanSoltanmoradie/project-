@@ -1,6 +1,8 @@
 package model.village;
 
-public class Cloud {
+import java.io.Serializable;
+
+public class Cloud implements Serializable {
     private int radiation;
 
     public Cloud() {

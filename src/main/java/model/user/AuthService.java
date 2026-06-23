@@ -1,29 +1,29 @@
 package model.user;
 
+import model.player.Player;
+import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
 import model.repository.UserRepository;
-import service.filehandeling.GameState;
-import service.filehandeling.LoadService;
+import model.village.Village;
+import model.world.WorldMap;
 
-import java.io.File;
 import java.util.Objects;
 
 public class AuthService {
 
-    private UserManager userManager;
-
     private static final String USERNAME_PATTERN = "[A-Za-z0-9_]{3,20}";
     private static final String PASSWORD_PATTERN = "[A-Za-z0-9_]{6,20}";
 
-    public AuthService(UserManager userManager) {
-        this.userManager = userManager;
+    private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
+    private final PlayerFactory playerFactory;
+
+    public AuthService(UserRepository userRepository,
+                       PlayerRepository playerRepository, PlayerFactory playerFactory) {
+        this.userRepository = userRepository;
+        this.playerRepository = playerRepository;
+        this.playerFactory = playerFactory;
     }
-
-    /*File file = new File("users.dat");
-    private GameState state = LoadService.load(file);
-
-    UserRepository userRepo = new UserRepository(state.getUser());
-    PlayerRepository playerRepo = new PlayerRepository(state.getPlayer());*/
 
 
     private boolean isValidUsername(String username) {
@@ -49,15 +49,18 @@ public class AuthService {
         if (!isValidPassword(password))
             return new AuthResult(AuthStatus.INVALID_PASSWORD, null);
 
-        if (userManager.existsUser(username))
+        if(userRepository.exists(username))
             return new AuthResult(AuthStatus.USERNAME_ALREADY_EXIST, null);
 
 
         String hash = PasswordHasher.hash(password);
-        User user = new User(username, hash);
-        userManager.addUser(user);
 
-        return new AuthResult(AuthStatus.SUCCESS, user);
+        Player player = playerFactory.createPlayer(username);
+        User user = new User(username, hash, player.getPlayerId());
+        playerRepository.savePlayer(player);
+        userRepository.save(user);
+
+        return new AuthResult(AuthStatus.SUCCESS, player);
     }
 
     public AuthResult login(String username, String password) {
@@ -71,15 +74,16 @@ public class AuthService {
         if (!isValidPassword(password))
             return new AuthResult(AuthStatus.INVALID_PASSWORD, null);
 
-        if (!userManager.existsUser(username))
+        if(!userRepository.exists(username))
             return new AuthResult(AuthStatus.USERNAME_NOT_FOUND, null);
 
-        User user = userManager.findUser(username);
+        User user = userRepository.findUserByUsername(username);
         String enteredHash = PasswordHasher.hash(password);
 
         if (!Objects.equals(enteredHash, user.getPasswordHash()))
             return new AuthResult(AuthStatus.WRONG_PASSWORD, null);
 
-        return new AuthResult(AuthStatus.SUCCESS, user);
+        Player player = playerRepository.findPlayerById(user.getId());
+        return new AuthResult(AuthStatus.SUCCESS, player);
     }
 }

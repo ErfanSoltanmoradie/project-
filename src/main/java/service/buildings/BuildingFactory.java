@@ -4,7 +4,9 @@ import model.building.*;
 import model.time.BuildTask;
 import model.building.DefensiveBuilding;
 
-public class BuildingFactory {
+import java.io.Serializable;
+
+public class BuildingFactory{
 
     public static Building createBuilding(BuildTask buildTask){
         return switch (buildTask.getBuildingType()) {

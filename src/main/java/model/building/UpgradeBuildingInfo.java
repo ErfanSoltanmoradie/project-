@@ -1,6 +1,8 @@
 package model.building;
 
-public class UpgradeBuildingInfo {
+import java.io.Serializable;
+
+public class UpgradeBuildingInfo  implements Serializable {
 
     private final Cost cost;
     private final int requiredScienceLevel;

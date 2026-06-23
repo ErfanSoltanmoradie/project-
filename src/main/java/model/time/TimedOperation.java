@@ -4,6 +4,7 @@ import model.building.Building;
 import model.building.BuildingType;
 import model.village.Village;
 
+import java.io.Serializable;
 import java.security.PublicKey;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class TimedOperation {
+public abstract class TimedOperation implements Serializable {
 
     private final UUID id;  // Task ID
     private Instant startTime;

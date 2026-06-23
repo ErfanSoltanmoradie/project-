@@ -2,11 +2,12 @@ package model.building;
 
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Laboratory extends Building{
+public class Laboratory extends Building implements Serializable {
 
     private static final Map<Integer, UpgradeBuildingInfo> upgradeLaboratoryBuildingsCost;
 

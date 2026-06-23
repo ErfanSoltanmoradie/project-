@@ -1,6 +1,8 @@
 package model.resources;
 
-public  class Resources {
+import java.io.Serializable;
+
+public class Resources implements Serializable {
 
     protected ResourcesType type;
     private int wood;

@@ -5,12 +5,13 @@ import model.resources.ResourcesType;
 import model.village.Village;
 import service.resource.ResourcesManagement;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public class ProductionTask extends TimedOperation{
+public class ProductionTask extends TimedOperation implements Serializable {
     private final Duration neededTime;
     private final UUID buildingId;
     private ResourcesManagement resources;

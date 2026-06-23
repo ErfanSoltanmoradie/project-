@@ -13,15 +13,16 @@ import model.village.Village;
 import model.world.Coordinate;
 import service.resource.ResourcesManagement;
 
+import java.io.Serializable;
 import java.time.Instant;
 
-public class BuildingsManagement {
+public class BuildingsManagement{
 
    private final Village village;
    private final ResourcesManagement resources;
 
-    public BuildingsManagement(Player player) {
-        this.village = player.getVillage();
+    public BuildingsManagement(Village village) {
+        this.village = village;
         this.resources = village.getResourcesManagement();
     }
 

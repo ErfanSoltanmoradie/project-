@@ -3,11 +3,13 @@ package model.building;
 import model.production.Production;
 import model.world.Coordinate;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaterSoilPurifier extends Building implements Production {
+public class WaterSoilPurifier extends Building implements Production, Serializable {
 
     private int production;
     private int consumeAmount;

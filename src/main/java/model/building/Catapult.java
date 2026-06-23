@@ -2,11 +2,12 @@ package model.building;
 
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Catapult extends  DefensiveBuilding{
+public class Catapult extends  DefensiveBuilding implements Serializable {
     public Catapult(BuildingType type, Coordinate position) {
         super(type, position);
     }

@@ -2,9 +2,10 @@ package model.building;
 
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class Building {
+public abstract class Building implements Serializable {
 
     private final UUID id;
     private final BuildingType type;

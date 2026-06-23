@@ -6,12 +6,13 @@ import model.resources.ResourcesType;
 import model.village.Village;
 import service.resource.ResourcesManagement;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public class PurificationWaterAndSoilTask extends TimedOperation{
+public class PurificationWaterAndSoilTask extends TimedOperation implements Serializable {
 
     private final UUID buildingId;
     private final Duration neededTime;

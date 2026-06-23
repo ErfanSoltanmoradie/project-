@@ -4,11 +4,12 @@ import model.storage.Storage;
 import model.village.Village;
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StorageBuilding extends Building implements Storage {
+public class StorageBuilding extends Building implements Storage, Serializable {
     private int capacity;
 
     private static final Map<Integer, UpgradeBuildingInfo> upgradeStoragesCost;

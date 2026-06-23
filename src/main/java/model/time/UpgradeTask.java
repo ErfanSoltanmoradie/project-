@@ -4,11 +4,12 @@ import model.building.Building;
 import model.building.BuildingStatus;
 import model.village.Village;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public class UpgradeTask extends TimedOperation {
+public class UpgradeTask extends TimedOperation  implements Serializable {
 
     private UUID buildingId;
 

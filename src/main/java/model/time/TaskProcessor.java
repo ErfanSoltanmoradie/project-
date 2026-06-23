@@ -4,6 +4,7 @@ import model.building.Building;
 import model.village.Village;
 import service.buildings.BuildingFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

@@ -8,12 +8,13 @@ import model.village.Village;
 import model.world.Coordinate;
 import service.buildings.BuildingFactory;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public class BuildTask extends TimedOperation {
+public class BuildTask extends TimedOperation implements Serializable {
 
     private BuildingType buildingType;
     private Coordinate coordinate;

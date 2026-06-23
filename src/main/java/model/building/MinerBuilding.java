@@ -3,11 +3,12 @@ package model.building;
 import model.production.Production;
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MinerBuilding extends Building implements Production{
+public class MinerBuilding extends Building implements Production , Serializable {
 
     private int production;
 

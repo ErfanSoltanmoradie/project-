@@ -5,27 +5,86 @@ import model.building.BuildingStatus;
 import model.building.BuildingType;
 import model.building.StorageBuilding;
 import model.player.Player;
+import model.player.PlayerFactory;
+import model.repository.PlayerRepository;
+import model.repository.UserRepository;
 import model.resources.Resources;
 import model.resources.ResourcesType;
 import model.time.TaskProcessor;
 import model.time.TimedOperation;
 import model.time.TimedOperationType;
 import model.time.UpgradeTask;
+import model.user.AuthResult;
+import model.user.AuthService;
+import model.user.User;
 import model.village.Village;
 import model.world.Coordinate;
+import model.world.WorldMap;
 import service.buildings.BuildingsManagement;
+import service.filehandeling.GameState;
+import service.filehandeling.LoadService;
+import service.filehandeling.SaveService;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Random;
 
 public class GameEngine {
 
     public static void main(String[] args) throws Exception {
 
+        /*File file = new File("test.dat");
         Coordinate coordinate = new Coordinate(10, 10);
-        Village village = new Village(coordinate, 5000);
+        Village village = new Village(coordinate, 2000);
+        GameState gameState = new GameState();
+        SaveService.save(gameState, file);
+        GameState loadedGameState = LoadService.load(file);
+        System.out.println(loadedGameState);*/
+
+        File file = new File("test.dat");
+
+        GameState gameState = new GameState();
+
+        UserRepository userRepository = new UserRepository(gameState.getUser());
+        PlayerRepository playerRepository = new PlayerRepository(gameState.getPlayer());
+
+        /*for (int i = 0; i <= 100; i++) {
+            Village village = new Village(new Coordinate(i, i), i+1000);
+            String username = "user_" + i;
+            User user = new User(username);
+            Player player = new Player(username, username, village);
+            gameState.setUser(user);
+            gameState.setPlayer(player);
+        }
+
+        SaveService.save(gameState, file);*/
+
+        GameState loadedData = LoadService.load(file);
+        /*for (int i = 0; i < 100; i++) {
+            String username = "user_" + i;
+            System.out.println("username: " + loadedData.getUser().keySet());
+            System.out.println("username: " + loadedData.getPlayer().keySet());
+        }*/
+
+        for (String username : loadedData.getUser().keySet()){
+            System.out.println(username);
+        }
+
+        AuthService authService = new AuthService(userRepository, playerRepository, new PlayerFactory(new WorldMap()));
+        AuthResult authResult = authService.login("3fsf", "43345");
+
+        /*Village village = new Village(coordinate, 5000);
         Player player = new Player("Erfan", "1234", village);
         TaskProcessor taskProcessor = new TaskProcessor(village);
+
+        ObjectOutputStream oos =
+                new ObjectOutputStream(
+                        new FileOutputStream("test.dat"));
+
+        oos.writeObject(player);
 
         StorageBuilding soilStorage =  new StorageBuilding(BuildingType.SOIL_STORAGE, coordinate, 2000);
         StorageBuilding waterStorage = new StorageBuilding(BuildingType.WATER_STORAGE, coordinate, 2000);
@@ -127,7 +186,7 @@ public class GameEngine {
 
 
         System.out.println("\n************* TASK CHECK***************");
-        System.out.println("Remaining Tasks: " + village.getTimedOperation().size());
+        System.out.println("Remaining Tasks: " + village.getTimedOperation().size());*/
 
     }
 }
