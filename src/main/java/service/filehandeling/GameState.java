@@ -20,7 +20,7 @@ public class GameState implements Serializable {
         this.player = new HashMap<>();
     }
 
-    public Map<String, User> getUser() {
+    public Map<String, User> getUsers() {
         return user;
     }
 
@@ -28,7 +28,7 @@ public class GameState implements Serializable {
         this.user.put(newUser.getUsername(), newUser);
     }
 
-    public Map<UUID, Player> getPlayer() {
+    public Map<UUID, Player> getPlayers() {
         return player;
     }
 
