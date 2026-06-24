@@ -1,29 +1,18 @@
-package model.user;
+package model.gameengine;
 
-import model.building.Building;
-import model.building.BuildingStatus;
-import model.building.BuildingType;
-import model.building.StorageBuilding;
-import model.player.Player;
 import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
 import model.repository.UserRepository;
-import model.resources.ResourcesType;
-import model.time.TaskProcessor;
-import model.time.TimedOperation;
-import model.world.Coordinate;
+import model.user.AuthService;
 import model.world.WorldMap;
-import service.buildings.BuildingsManagement;
 import service.filehandeling.GameState;
 import service.filehandeling.LoadService;
 import service.filehandeling.SaveService;
-import service.resource.ResourcesManagement;
 
 import java.io.File;
-import java.time.Instant;
 import java.util.Scanner;
 
-public class GameStart {
+public class GameFlow {
 
     private final WorldMap worldMap = new WorldMap();
     private  GameState gameState;
@@ -40,7 +29,7 @@ public class GameStart {
     private  File usersFile;
     private File playersFile;
 
-    public GameStart() {
+    public GameFlow() {
          this.usersFile = new File("users.dat");
          this.playersFile = new File("players.dat");
 

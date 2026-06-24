@@ -47,7 +47,7 @@ public class Village implements Serializable {
 
     public void runTimeServices(){  // we want the logic after loading the game
         this.resourcesManagement = new ResourcesManagement(this);
-        TaskProcessor taskProcessor = new TaskProcessor(this);
+        //TaskProcessor taskProcessor = new TaskProcessor(this);
     }
 
     public UUID getVillageId() {

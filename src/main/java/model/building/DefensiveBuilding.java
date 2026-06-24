@@ -15,6 +15,7 @@ public abstract class DefensiveBuilding extends Building  implements Serializabl
 
     public final void upgrade(){
         this.setLevel(this.getLevel() + 1 );
+        this.setBuildingStatus(BuildingStatus.ACTIVE);
     }
 
     public abstract int getDefenceStrength();
