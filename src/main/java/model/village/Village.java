@@ -7,14 +7,18 @@ import model.building.BuildingType;
 import model.building.StorageBuilding;
 import model.resources.Resources;
 import model.resources.ResourcesType;
+import model.time.RandomEventTask;
 import model.time.TaskProcessor;
 import model.time.TimedOperation;
+import model.time.TimedOperationType;
 import model.world.Coordinate;
 import service.buildings.BuildingFactory;
 import service.buildings.BuildingsManagement;
 import service.resource.ResourcesManagement;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -43,6 +47,7 @@ public class Village implements Serializable {
         this.cloud = new Cloud();
         this.health = health;
         this.resourcesManagement = new ResourcesManagement(this);
+        RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
     }
 
     public void runTimeServices(){  // we want the logic after loading the game
