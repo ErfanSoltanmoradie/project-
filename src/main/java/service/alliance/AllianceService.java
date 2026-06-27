@@ -18,7 +18,7 @@ public class AllianceService {
 
     public void sendRequest(Player sender, Player receiver){
 
-        if(this.hasAlliance(sender, receiver) || sender == receiver || isRequestAlreadyExist(sender, receiver))
+        if(this.hasAlliance(sender, receiver) || sender.getPlayerId().equals(receiver.getPlayerId()) || isRequestAlreadyExist(sender, receiver))
             return;
 
         AllianceRequest allianceRequest = new AllianceRequest(sender, receiver);
@@ -45,9 +45,12 @@ public class AllianceService {
             allianceRequest.getReceiver().getVillage().getResourcesManagement().withdrawResourcesCost(Cost.allianceCost());
             allianceRequest.getSender().getVillage().getResourcesManagement().withdrawResourcesCost(Cost.allianceCost());
 
+            Alliance alliance = new Alliance(allianceRequest.getSender(), allianceRequest.getReceiver());
+
             this.increaseScienceLevel(allianceRequest.getSender(), allianceRequest.getReceiver());
 
-            Alliance alliance = new Alliance(allianceRequest.getSender(), allianceRequest.getReceiver());
+            allianceRequest.getSender().setAllianceCounts(allianceRequest.getSender().getAllianceCounts() + 1);
+            allianceRequest.getReceiver().setAllianceCounts(allianceRequest.getReceiver().getAllianceCounts() + 1);
 
             allianceRepository.saveAlliance(alliance);
 
@@ -96,6 +99,9 @@ public class AllianceService {
             }
         }
 
+        if (receiverPlayerResearchCenter == null || senderPlayerResearchCenter == null)
+            return false;
+
         if(receiverPlayerResearchCenter.getLevel() >= 2 && senderPlayerResearchCenter.getLevel() >= 2)
             return true;
 
@@ -119,6 +125,9 @@ public class AllianceService {
                 break;
             }
         }
+
+        if (receiverPlayerMajorBuilding == null || senderPlayerMajorBuilding == null)
+            return false;
 
         if(senderPlayerMajorBuilding.getLevel() >= 2 && receiverPlayerMajorBuilding.getLevel() >= 2)
             return true;
@@ -150,7 +159,7 @@ public class AllianceService {
             for (Building building : receiver.getVillage().getBuildings().values()) {
 
                 if (building instanceof ResearchCenter researchCenter) {
-                    
+
                     researchCenter.setScienceLevel(researchCenter.getScienceLevel() + 1);
 
                     break;

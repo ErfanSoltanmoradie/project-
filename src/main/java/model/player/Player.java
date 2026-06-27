@@ -21,6 +21,7 @@ public class Player  implements Serializable {
         this.village = village;
         this.playerId = UUID.randomUUID();
         this.userId = this.playerId;
+        this.allianceCounts = 0;
     }
 
     public Village getVillage() {
