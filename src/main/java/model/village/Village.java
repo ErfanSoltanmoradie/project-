@@ -2,9 +2,7 @@ package model.village;
 
 
 import model.army.Army;
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.StorageBuilding;
+import model.building.*;
 import model.resources.Resources;
 import model.resources.ResourcesType;
 import model.time.TimedOperation;
@@ -22,6 +20,7 @@ public class Village {
     private Coordinate coordinate;
     private Map<UUID, Building> buildings;
     private Map<UUID, TimedOperation> timedOperation;
+    private final Map<UUID, Plant> plants = new HashMap<>();
 
     private final ResourcesManagement resourcesManagement;
 
@@ -109,6 +108,10 @@ public class Village {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public Map<UUID, Plant> getPlant() {
+        return plants;
     }
 }
 
