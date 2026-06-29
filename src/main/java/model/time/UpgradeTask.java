@@ -2,6 +2,7 @@ package model.time;
 
 import model.building.Building;
 import model.building.BuildingStatus;
+import model.building.Laboratory;
 import model.village.Village;
 
 import java.time.Instant;
@@ -22,8 +23,14 @@ public class UpgradeTask extends TimedOperation {
 
         Building building = village.getBuildings().get(this.getBuildingId());
 
-        if (building != null && building.getBuildingStatus() == BuildingStatus.UPGRADING)
-            building.upgrade();
+        if (building != null && building.getBuildingStatus() == BuildingStatus.UPGRADING) {
+            if (building instanceof Laboratory lab) {
+                lab.upgradeWithVillage(village);
+            } else {
+                building.upgrade();
+            }
+            building.setBuildingStatus(BuildingStatus.ACTIVE);
+        }
     }
 
     public UUID getBuildingId() {

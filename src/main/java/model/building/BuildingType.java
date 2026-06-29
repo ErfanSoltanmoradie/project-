@@ -33,7 +33,7 @@ public enum BuildingType {
     ARMY_PRODUCER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2))),
     MAJOR_BUILDING(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2))),
     PURIFICATION(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2))),
-    CUSTOMS(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)));
+    CUSTOMHOUSE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)));
 
     BuildingType(Cost baseBuildCost) {
         this.baseBuildCost = baseBuildCost;

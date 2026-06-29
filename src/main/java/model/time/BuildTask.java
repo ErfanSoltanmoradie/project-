@@ -21,13 +21,10 @@ public class BuildTask extends TimedOperation {
         this.buildingType = buildingType;
         this.coordinate = coordinate;
     }
-    public BuildTask(Instant startTime, Instant finishTime, PlantType plantType) {
+    public BuildTask(Instant startTime, Instant finishTime, PlantType plantType, Coordinate coordinate) {
         super(startTime, finishTime, TimedOperationType.BUILD_TASK);
         this.plantType = plantType;
-    }
-
-    public PlantType getPlantType() {
-        return plantType;
+        this.coordinate = coordinate;
     }
 
     @Override
@@ -52,13 +49,12 @@ public class BuildTask extends TimedOperation {
 
                 toAdd.add(productionTask);
             }
-            if(plantType != null){
-                for(Building building1 : village.getBuildings().values()){
-                    if(building1 instanceof Laboratory laboratory){
-                        laboratory.buildPlant(plantType);
-                    }
-                }
-
+        }
+        for(Building b : village.getBuildings().values()){
+            if(b instanceof Laboratory lab){
+                Plant plant = new Plant(plantType, coordinate, lab.getLevel());
+                village.getPlant().put(plant.getId(), plant);
+                break;
             }
         }
     }
@@ -77,5 +73,9 @@ public class BuildTask extends TimedOperation {
 
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
+    }
+
+    public PlantType getPlantType() {
+        return plantType;
     }
 }

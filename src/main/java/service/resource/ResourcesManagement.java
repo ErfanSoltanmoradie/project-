@@ -44,6 +44,21 @@ public class ResourcesManagement{
         village.getResources().addResource(type, amount, capacity);
     }
 
+    public void sellResource(int amount, ResourcesType type) {
+        int coin=switch (type){
+            case WOOD -> amount/20;
+            case IRON -> amount/8;
+            case STONE -> amount/15;
+            case GUN_POWDER ->  amount/10;
+            case CLEAN_SOIL -> amount/10;
+            case CLEAN_WATER -> amount/10;
+            default  -> 0;
+        };
+        if(coin==0) return ;
+        if(village.getResources().withdraw(type, amount))
+            addResource(coin,ResourcesType.COIN);
+    }
+
     public int getMaxCapacity(ResourcesType type){
 
         return switch (type){

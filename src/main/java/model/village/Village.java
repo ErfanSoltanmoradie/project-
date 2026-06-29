@@ -2,13 +2,12 @@ package model.village;
 
 
 import model.army.Army;
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.StorageBuilding;
+import model.building.*;
 import model.resources.Resources;
-import model.resources.ResourcesType;
 import model.time.TimedOperation;
+import model.trade.TradeOffer;
 import model.world.Coordinate;
+import service.alliance.AllianceRequest;
 import service.resource.ResourcesManagement;
 
 import java.util.HashMap;
@@ -22,12 +21,15 @@ public class Village {
     private Coordinate coordinate;
     private Map<UUID, Building> buildings;
     private Map<UUID, TimedOperation> timedOperation;
+    private final Map<UUID, Plant> plants = new HashMap<>();
 
     private final ResourcesManagement resourcesManagement;
 
     private Cloud cloud;
     private Army army;
     private int health;
+    private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
+    private AllianceRequest allianceRequest;
 
     /*private int scienceLevel;
     private int majorBuildingLevel;*/
@@ -110,5 +112,14 @@ public class Village {
     public void setHealth(int health) {
         this.health = health;
     }
+
+    public Map<UUID, Plant> getPlant() {
+        return plants;
+    }
+
+    public Map<UUID, TradeOffer> getTradeOffers() {
+        return tradeOffers;
+    }
+
 }
 
