@@ -10,6 +10,7 @@ public class BuildingFactory{
 
     public static Building createBuilding(BuildTask buildTask){
         return switch (buildTask.getBuildingType()) {
+
             case IRON_MINE -> new MinerBuilding(BuildingType.IRON_MINE, buildTask.getCoordinate(), 100);
             case SOIL_PURIFIER -> new WaterSoilPurifier(BuildingType.SOIL_PURIFIER, buildTask.getCoordinate(), 100);
             case DIRTY_SOIL_MINE ->new MinerBuilding(BuildingType.DIRTY_SOIL_MINE, buildTask.getCoordinate(), 100);

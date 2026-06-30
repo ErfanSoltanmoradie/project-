@@ -5,7 +5,10 @@ import model.resources.Resources;
 import model.resources.ResourcesType;
 import model.village.Village;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class ResourcesManagement{
+
     private  Village village;
 
     public ResourcesManagement(Village village) {
@@ -13,6 +16,7 @@ public class ResourcesManagement{
     }
 
     public boolean checkResourcesCost(Cost cost) {
+
         Resources resources = village.getResources();
 
         return resources.getAmount(ResourcesType.WOOD) >= cost.getWood()
@@ -47,30 +51,24 @@ public class ResourcesManagement{
 
         return switch (type){
 
-            case WOOD ->
-                    calAllCapacity(BuildingType.WOOD_STORAGE);
+            case WOOD -> calAllCapacity(BuildingType.WOOD_STORAGE);
 
-            case IRON ->
-                    calAllCapacity(BuildingType.IRON_STORAGE);
+            case IRON -> calAllCapacity(BuildingType.IRON_STORAGE);
 
-            case STONE ->
-                    calAllCapacity(BuildingType.STONE_STORAGE);
+            case STONE -> calAllCapacity(BuildingType.STONE_STORAGE);
 
-            case GUN_POWDER ->
-                    calAllCapacity(BuildingType.GUNPOWDER_STORAGE);
+            case GUN_POWDER -> calAllCapacity(BuildingType.GUNPOWDER_STORAGE);
 
-            case CLEAN_WATER, DIRTY_WATER ->
-                    calAllCapacity(BuildingType.WATER_STORAGE);
+            case CLEAN_WATER, DIRTY_WATER -> calAllCapacity(BuildingType.WATER_STORAGE);
 
-            case CLEAN_SOIL, DIRTY_SOIL ->
-                    calAllCapacity(BuildingType.SOIL_STORAGE);
+            case CLEAN_SOIL, DIRTY_SOIL -> calAllCapacity(BuildingType.SOIL_STORAGE);
 
-            case COIN ->
-                    Integer.MAX_VALUE;
+            case COIN -> Integer.MAX_VALUE;
         };
     }
 
     public int calAllCapacity(BuildingType buildingType){
+
         int capacity = 0;
         for (Building building : this.village.getBuildings().values()){
             if(building.getType() == buildingType  &&  building instanceof StorageBuilding){

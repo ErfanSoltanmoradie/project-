@@ -7,22 +7,37 @@ import service.resource.ResourcesManagement;
 
 public class Event {
 
-        private final Village village;
+    private final Village village;
 
-        public Event(Village village) {
-            this.village = village;
+    public Event(Village village) {
+        this.village = village;
 
-        }
+    }
 
-        public void storm(){
+    public void storm(){
+
+        village.getLock().writeLock().lock();
+        try {
             this.village.getCloud().setRadiation(this.village.getCloud().getRadiation() + 100);
+        }finally {
+            village.getLock().writeLock().unlock();
         }
+    }
 
-        public void disease(){
+    public void disease(){
+
+        village.getLock().writeLock().lock();
+        try {
             this.village.setHealth(this.village.getHealth() - 250);
+        }finally {
+            village.getLock().writeLock().unlock();
         }
+    }
 
-        public void discovery(){
+    public void discovery(){
+
+        village.getLock().writeLock().lock();
+        try {
             ResourcesManagement resourcesManagement = village.getResourcesManagement();
 
             resourcesManagement.addResource(500, ResourcesType.IRON);
@@ -32,6 +47,9 @@ public class Event {
             resourcesManagement.addResource(500, ResourcesType.COIN);
             resourcesManagement.addResource(500, ResourcesType.GUN_POWDER);
             // ,. . .
+        }finally {
+            village.getLock().writeLock().unlock();
         }
     }
+}
 

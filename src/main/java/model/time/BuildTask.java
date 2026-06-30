@@ -19,35 +19,37 @@ public class BuildTask extends TimedOperation implements Serializable {
     private BuildingType buildingType;
     private Coordinate coordinate;
 
-    public BuildTask(Instant startTime, Instant finishTime, BuildingType buildingType, Coordinate coordinate) {
-        super(startTime, finishTime, TimedOperationType.BUILD_TASK);
+    public BuildTask(Instant startTime, Duration neededTime, BuildingType buildingType, Coordinate coordinate) {
+        super(startTime, neededTime, TimedOperationType.BUILD_TASK);
         this.buildingType = buildingType;
         this.coordinate = coordinate;
     }
 
     @Override
-    public void execute(Village village, List<TimedOperation> toAdd) {
+    public TaskResult execute() {
 
         Building building = BuildingFactory.createBuilding(this);
+        TaskResult taskResult = new TaskResult();
 
         if (building != null){
 
             building.setBuildingStatus(BuildingStatus.ACTIVE);
-            village.getBuildings().put(building.getId(), building);
-
-            if(building.getType() == BuildingType.WATER_PURIFIER || building.getType() == BuildingType.SOIL_PURIFIER){
+            taskResult.getBuildingsToAdd().put(building.getId(), building);
+            taskResult.getProductionBuildingsToReschedule().add(building.getId());
+            /*if(building.getType() == BuildingType.WATER_PURIFIER || building.getType() == BuildingType.SOIL_PURIFIER){
 
                 PurificationWaterAndSoilTask purificationWaterAndSoilTask = new PurificationWaterAndSoilTask(Instant.now(), Instant.now().plus(Duration.ofSeconds(1)),
                         TimedOperationType.PURIFICATION_WATER_AND_SOIL_TASK, Duration.ofSeconds(1), building.getId());
 
-                toAdd.add(purificationWaterAndSoilTask);
+                taskResult.getTasksToAdd().put(purificationWaterAndSoilTask.getId(), purificationWaterAndSoilTask);
             } else {
                 ProductionTask productionTask = new ProductionTask(Instant.now(), Instant.now().plus(Duration.ofSeconds(1)),
-                        TimedOperationType.PRODUCTION_TASK, Duration.ofSeconds(1), building.getId());
+                        TimedOperationType.PRODUCTION_TASK, Duration.ofSeconds(1), building);
 
-                toAdd.add(productionTask);
-            }
+                taskResult.getTasksToAdd().put(productionTask.getId(), productionTask);
+            }/*/
         }
+        return taskResult;
     }
 
     public BuildingType getBuildingType() {

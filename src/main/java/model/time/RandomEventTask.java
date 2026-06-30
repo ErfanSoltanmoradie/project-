@@ -1,37 +1,36 @@
 package model.time;
 
-import model.event.Event;
-import model.village.Village;
+
+import model.event.EventType;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.Random;
 
 public class RandomEventTask extends TimedOperation{
 
     private static final Random random = new Random();
-    private final Duration neededTime;
 
     public RandomEventTask(Instant startTime, Duration neededTime, TimedOperationType timedOperationType) {
-        super(startTime, startTime.plus(neededTime), timedOperationType);
-        this.neededTime = neededTime;
+        super(startTime, neededTime, timedOperationType);
     }
 
     @Override
-    public void execute(Village village, List<TimedOperation> toAdd) {
-        Event event = new Event(village);
+    public TaskResult execute() {
+
+        TaskResult taskResult = new TaskResult();
 
         int randomNumber = random.nextInt(100);
 
         if(randomNumber <= 33)
-            event.disease();
+            taskResult.getEventType().add(EventType.DISEASE);
+
         else if (randomNumber > 33 && randomNumber <= 66)
-            event.discovery();
+            taskResult.getEventType().add(EventType.STORM);
         else
-            event.storm();
+            taskResult.getEventType().add(EventType.DISCOVERY);
 
 
-        toAdd.add(new RandomEventTask(Instant.now(), neededTime, TimedOperationType.RANDOM_EVENT_TASK));
+        return taskResult;
     }
 }

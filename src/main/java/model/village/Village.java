@@ -22,10 +22,13 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Village implements Serializable {
 
     private final UUID villageId;
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private Resources resources;
     private Coordinate coordinate;
     private Map<UUID, Building> buildings;
@@ -35,16 +38,14 @@ public class Village implements Serializable {
     private Army army;
     private int health;
 
-    /*private int scienceLevel;
-    private int majorBuildingLevel;*/
 
     public Village(Coordinate coordinate, int health) {
         this.villageId = UUID.randomUUID();
         this.resources = new Resources();
         this.buildings = new HashMap<>();
         this.timedOperation = new HashMap<>();
-        this.coordinate = coordinate;
         this.cloud = new Cloud();
+        this.coordinate = coordinate;
         this.health = health;
         this.resourcesManagement = new ResourcesManagement(this);
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
@@ -117,6 +118,11 @@ public class Village implements Serializable {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+
+    public ReentrantReadWriteLock getLock() {
+        return lock;
     }
 }
 

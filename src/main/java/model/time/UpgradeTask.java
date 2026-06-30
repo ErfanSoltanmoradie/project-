@@ -5,6 +5,7 @@ import model.building.BuildingStatus;
 import model.village.Village;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -13,18 +14,22 @@ public class UpgradeTask extends TimedOperation  implements Serializable {
 
     private UUID buildingId;
 
-    public UpgradeTask(Instant startTime, Instant finishTime, UUID buildingId) {
-        super(startTime, finishTime, TimedOperationType.UPGRADE_TASK);
+    public UpgradeTask(Instant startTime, Duration neededTime, UUID buildingId) {
+        super(startTime, neededTime, TimedOperationType.UPGRADE_TASK);
         this.buildingId = buildingId;
     }
 
     @Override
-    public void execute(Village village, List<TimedOperation> toAdd) {
+    public TaskResult execute() {
 
-        Building building = village.getBuildings().get(this.getBuildingId());
+        TaskResult taskResult =new TaskResult();
+        //Building building = village.getBuildings().get(this.getBuildingId());
 
-        if (building != null && building.getBuildingStatus() == BuildingStatus.UPGRADING)
-            building.upgrade();
+        //if (building != null && building.getBuildingStatus() == BuildingStatus.UPGRADING){
+            taskResult.getBuildingsToUpgrade().add(this.buildingId);
+            //building.upgrade();
+        //}
+        return taskResult;
     }
 
     public UUID getBuildingId() {
