@@ -43,15 +43,24 @@ public class Laboratory extends Building{
         this.setBuildingStatus(BuildingStatus.ACTIVE);
     }
     public void upgradeWithVillage(Village village) {
+<<<<<<< HEAD
         int oldLevel = this.getLevel();
         upgrade();
         for (Plant plant : village.getPlant().values()) {
             if (plant.getType().getRequiredLaboratoryLevel() <= oldLevel) {
+=======
+        upgrade();
+        for (Plant plant : village.getPlant().values()) {
+            if (plant.getBuiltAtLevel() < this.getLevel()) {
+>>>>>>> 624e47b62d8161b8725088c5913d6fb183f1aa32
                 plant.upgradeNeutralizationPower();
             }
         }
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 624e47b62d8161b8725088c5913d6fb183f1aa32
 
 
 }

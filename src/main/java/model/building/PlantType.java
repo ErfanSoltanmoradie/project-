@@ -20,8 +20,20 @@ public enum PlantType {
     }
 
     public int getNeutralizationPower(int laboratoryLevel) {
+<<<<<<< HEAD
         int levelDifference = laboratoryLevel - requiredLaboratoryLevel;
         return (int) (neutralizationPower * Math.pow(1.1, levelDifference));
+    }
+
+    public static int getTotalNeutralizationPower(Map<UUID, Plant> plants) {
+        int total = 0;
+        for (Plant plant : plants.values()) {
+            total += plant.getNeutralizationPower();
+        }
+        return total;
+=======
+        return (int) (neutralizationPower * Math.pow(1.1, laboratoryLevel - 1));
+>>>>>>> 624e47b62d8161b8725088c5913d6fb183f1aa32
     }
 
     public static int getTotalNeutralizationPower(Map<UUID, Plant> plants) {

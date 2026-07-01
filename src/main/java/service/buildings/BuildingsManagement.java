@@ -77,6 +77,7 @@ public class BuildingsManagement {
         }
     }
 
+<<<<<<< HEAD
     public void removePlant(UUID plantId) {
         Plant plant = village.getPlant().get(plantId);
         if (plant == null) return;
@@ -87,6 +88,11 @@ public class BuildingsManagement {
 
         resources.addResource((int)(cost.getCleanWater() * 0.3), ResourcesType.CLEAN_WATER);
         resources.addResource((int)(cost.getCleanSoil() * 0.3), ResourcesType.CLEAN_SOIL);
+=======
+
+    public void removePlant(UUID plantId){
+        village.getPlant().remove(plantId);
+>>>>>>> 624e47b62d8161b8725088c5913d6fb183f1aa32
     }
 
     public int getTotalNeutralizationPower(){
