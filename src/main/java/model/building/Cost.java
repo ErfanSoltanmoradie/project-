@@ -52,6 +52,9 @@ public class Cost  implements Serializable {
         };
     }
 
+    public static Cost allianceCost(){
+        return new Cost(10, 10, 20, 5, 5, 5, 5, Duration.ofDays(1));
+    }
 
     public int getWood() {return wood;}
 
