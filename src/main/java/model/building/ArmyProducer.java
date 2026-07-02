@@ -1,0 +1,60 @@
+package model.building;
+
+import model.world.Coordinate;
+
+import java.io.Serializable;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ArmyProducer extends Building implements Serializable {
+
+    public ArmyProducer(BuildingType type, Coordinate position) {
+        super(type, position);
+    }
+
+    private static final Map<Integer, UpgradeBuildingInfo> upgradeArmyProducerCost; //Integer ----> level
+    static {
+        upgradeArmyProducerCost = new HashMap<>();
+
+        upgradeArmyProducerCost.put(1, new UpgradeBuildingInfo(1 ,1,
+                new Cost(200, 200, 150, 100, 10, 10, 10, Duration.ofSeconds(1))));
+
+        upgradeArmyProducerCost.put(2, new UpgradeBuildingInfo(1 ,1,
+                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+
+        upgradeArmyProducerCost.put(3, new UpgradeBuildingInfo(1 ,1,
+                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+
+        upgradeArmyProducerCost.put(4, new UpgradeBuildingInfo(1 ,1,
+                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+    }
+    public static UpgradeBuildingInfo getArmyProducerUpgradeInfo(int currentLevel){
+        return ArmyProducer.upgradeArmyProducerCost.get(currentLevel);
+    }
+
+    @Override
+    public void upgrade() {
+        if(getLevel()>=5)
+            return;
+        setLevel(getLevel()+1);
+        setBuildingStatus(BuildingStatus.ACTIVE);
+    }
+    public int getMaxTrainingCount(){
+        return switch (getLevel()){
+            case 1 -> 10;
+            case 2 -> 15;
+            case 3 -> 20;
+            case 4 -> 25;
+            case 5 -> 30;
+            default -> 0;
+        };
+    }
+    public double getPowerMultiplier(){
+        return switch (getLevel()){
+            case 4 -> 1.2;
+            case 5 -> 1.4;
+            default -> 1.0;
+        };
+    }
+}

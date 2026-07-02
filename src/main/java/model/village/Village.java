@@ -1,6 +1,7 @@
 package model.village;
 
 
+import model.army.Armies;
 import model.army.Army;
 import model.building.Building;
 import model.building.BuildingType;
@@ -36,6 +37,7 @@ public class Village implements Serializable {
     private transient  ResourcesManagement resourcesManagement; // transient ---> do not save it in the file
     private Cloud cloud;
     private Army army;
+    private Armies armies;
     private int health;
 
 
@@ -48,6 +50,7 @@ public class Village implements Serializable {
         this.coordinate = coordinate;
         this.health = health;
         this.resourcesManagement = new ResourcesManagement(this);
+        this.armies = new Armies();
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
     }
 
@@ -107,6 +110,8 @@ public class Village implements Serializable {
     public Army getArmy() {
         return army;
     }
+
+    public Armies getArmies(){return armies;}
 
     public void setArmy(Army army) {
         this.army = army;

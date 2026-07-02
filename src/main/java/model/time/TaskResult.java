@@ -1,10 +1,11 @@
 package model.time;
 
-
+import model.army.ArmyType;
 import model.building.Building;
 import model.event.EventType;
 import model.resources.ResourcesType;
 
+import java.time.Instant;
 import java.util.*;
 
 public class TaskResult {
@@ -18,6 +19,11 @@ public class TaskResult {
     private final List<UUID> tasksToRemove = new ArrayList<>();
     private final List<UUID> productionBuildingsToReschedule = new ArrayList<>();
     private final List<EventType> eventType = new ArrayList<>();
+    private final Map<ArmyType, Integer> trainedArmiesToAdd = new HashMap<>();
+
+    public Map<ArmyType, Integer> getTrainedArmiesToAdd() {
+        return trainedArmiesToAdd;
+    }
 
     public List<EventType> getEventType() {
         return eventType;

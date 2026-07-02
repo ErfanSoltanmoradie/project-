@@ -1,5 +1,8 @@
 package model.time;
 
+import model.army.ArmyQueue;
+import model.army.ArmyType;
+import model.army.TrainArmyTask;
 import model.building.Building;
 import model.building.BuildingStatus;
 import model.event.Event;
@@ -8,8 +11,10 @@ import model.resources.ResourcesType;
 import model.village.Village;
 import service.resource.ResourcesManagement;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -102,6 +107,29 @@ public class TaskProcessor {
                         event.disease();
                     else
                         event.discovery();
+                }
+
+                for (Map.Entry<ArmyType, Integer> entry : task.getTrainedArmiesToAdd().entrySet()) {
+                    ArmyType trainedType = entry.getKey();
+                    int count = entry.getValue();
+
+                    // 1. اضافه کردن نیروی جدید به اردوگاه (Storage)
+                    village.getArmies().getArmyStorage().increaseArmy(trainedType, count);
+
+                    // 2. خارج کردن این نیرو از صف آموزش
+                    village.getArmies().getArmyQueue().dequeue();
+
+                    // 3. اگر هنوز نیرویی در صف باقی مانده است، آموزش نیروی بعدی را کلید بزن
+                    if (!village.getArmies().getArmyQueue().isEmpty()) {
+                        ArmyType nextArmy = village.getArmies().getArmyQueue().peek();
+
+                        TrainArmyTask nextTask = new TrainArmyTask(
+                                Instant.now(),
+                                nextArmy.getTrainCost().neededTime(),
+                                nextArmy
+                        );
+                        village.getTimedOperation().put(nextTask.getId(), nextTask);
+                    }
                 }
             }
 
