@@ -27,36 +27,8 @@ public class TrainArmyTask extends TimedOperation implements Serializable {
 
         TaskResult taskResult = new TaskResult();
 
-        taskResult.getTasksToRemove().add(getId());
-
         taskResult.getTrainedArmiesToAdd().put(armyType, 1);
 
         return taskResult;
     }
 }
-    /*
-    public TaskResult execute(Village village, List<TimedOperation> toAdd) {
-
-        ArmyStorage storage = village.getArmies().getArmyStorage();
-
-        ArmyQueue queue =village.getArmies();
-
-        storage.increaseArmy(getArmyType(),1);
-
-        queue.dequeue();
-
-        if (!queue.isEmpty()) {
-
-            ArmyType nextArmy = queue.peek();
-
-            Instant start = getFinishTime();
-
-            Instant finish = start.plus(nextArmy.getTrainCost().neededTime());
-
-            queue.setLastFinishTime(finish);
-
-            TrainArmyTask nextTask = new TrainArmyTask(start, finish, nextArmy);
-
-            toAdd.add(nextTask);
-        }
-        */

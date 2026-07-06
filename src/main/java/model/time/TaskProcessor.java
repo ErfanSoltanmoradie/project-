@@ -2,7 +2,11 @@ package model.time;
 
 import model.army.ArmyQueue;
 import model.army.ArmyType;
+import model.army.QueuedArmy;
 import model.army.TrainArmyTask;
+import model.battle.Battle;
+import model.battle.BattleStatus;
+import model.battle.BattleTask;
 import model.building.Building;
 import model.building.BuildingStatus;
 import model.event.Event;
@@ -11,6 +15,7 @@ import model.resources.ResourcesType;
 import model.village.Village;
 import service.resource.ResourcesManagement;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,6 +114,7 @@ public class TaskProcessor {
                         event.discovery();
                 }
 
+                //TrainArmy
                 for (Map.Entry<ArmyType, Integer> entry : task.getTrainedArmiesToAdd().entrySet()) {
                     ArmyType trainedType = entry.getKey();
                     int count = entry.getValue();
@@ -119,18 +125,48 @@ public class TaskProcessor {
                     // 2. خارج کردن این نیرو از صف آموزش
                     village.getArmies().getArmyQueue().dequeue();
 
+                    ArmyQueue queue = village.getArmies().getArmyQueue();
                     // 3. اگر هنوز نیرویی در صف باقی مانده است، آموزش نیروی بعدی را کلید بزن
-                    if (!village.getArmies().getArmyQueue().isEmpty()) {
-                        ArmyType nextArmy = village.getArmies().getArmyQueue().peek();
+                    if (queue.isEmpty()) {
+                        queue.setTraining(false);
+                    } else {
+                        QueuedArmy nextArmy = queue.peek();
+
+                        Instant startTime = nextArmy.finishTime().minus(nextArmy.armyType().getTrainCost().neededTime());
 
                         TrainArmyTask nextTask = new TrainArmyTask(
-                                Instant.now(),
-                                nextArmy.getTrainCost().neededTime(),
-                                nextArmy
+                                startTime,
+                                nextArmy.armyType().getTrainCost().neededTime(),
+                                nextArmy.armyType()
                         );
+
+                        queue.setTraining(true);
+
                         village.getTimedOperation().put(nextTask.getId(), nextTask);
                     }
                 }
+
+                //battle
+                /*
+                for (Map.Entry<UUID, BattleStatus> entry1 : task.getBattleStatusChanges().entrySet()) {
+                    Battle battle = village.getBattles().get(entry1.getKey());
+
+                    if(battle == null)
+                        continue;
+
+                    battle.setStatus(entry1.getValue());
+
+                    if(entry1.getValue() == BattleStatus.FIGHTING){
+
+                        BattleTask battleTask = new BattleTask(
+                                TimedOperation.getStartTime(),
+                                Duration.ofSeconds(20),
+                                battle
+                        );
+
+                        village.getTimedOperation().put(battleTask.getId(), battleTask);
+                    }
+                }*/
             }
 
             for (UUID uuid : removeTasks){

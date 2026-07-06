@@ -1,27 +1,31 @@
 package model.army;
 
-import java.time.Instant;
-
 public class ArmyQueue {
 
-    private final LinkedList<ArmyType> queue;
-    private Instant lastFinishTime;
+    private final LinkedList<QueuedArmy> queue;
+    private boolean training;
 
     public ArmyQueue() {
         queue = new LinkedList<>();
+        training = false;
     }
 
-    public void enqueue(ArmyType type) {
-        queue.addNodeToTail(type);
+    public void enqueue(QueuedArmy queuedArmy) {
+        queue.addNodeToTail(queuedArmy);
     }
 
     public void dequeue() {
         queue.removeNodeFromHead();
     }
 
-    public ArmyType peek() {
+    public QueuedArmy peek() {
         return queue.getHead();
     }
+
+    public QueuedArmy getLast() {
+        return queue.getTail();
+    }
+
 
     public boolean isEmpty() {
         return queue.isEmpty();
@@ -31,11 +35,11 @@ public class ArmyQueue {
         return queue.size();
     }
 
-    public Instant getLastFinishTime() {
-        return lastFinishTime;
+    public boolean isTraining() {
+        return training;
     }
 
-    public void setLastFinishTime(Instant lastFinishTime) {
-        this.lastFinishTime = lastFinishTime;
+    public void setTraining(boolean training) {
+        this.training = training;
     }
 }

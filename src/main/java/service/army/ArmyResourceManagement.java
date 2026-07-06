@@ -1,5 +1,5 @@
 package service.army;
-
+/*
 import model.army.ArmyCost;
 import model.resources.Resources;
 import model.resources.ResourcesType;
@@ -36,3 +36,5 @@ public class ArmyResourceManagement {
         resources.withdraw(ResourcesType.GUN_POWDER, cost.gunPowder() * count);
     }
 }
+
+ */

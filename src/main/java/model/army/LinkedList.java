@@ -53,6 +53,13 @@ public class LinkedList<T>{
         return head.data;
     }
 
+    public T getTail(){
+        if(this.tail == null){
+            return null;
+        }
+        return tail.data;
+    }
+
     public boolean isEmpty(){
         return this.head == null;
     }

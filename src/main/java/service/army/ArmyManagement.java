@@ -7,64 +7,26 @@ import model.building.Building;
 import model.building.BuildingType;
 import model.player.Player;
 import model.village.Village;
-import model.time.TimedOperation;
+import service.resource.ResourcesManagement;
+
 import java.time.Instant;
 
 public class ArmyManagement {
 
     private final Village village;
     private final Armies armies;
-    private final ArmyResourceManagement resourceManagement;
+    private final ResourcesManagement resourcesManagement;
 
     public ArmyManagement(Player player) {
 
         this.village = player.getVillage();
         this.armies = village.getArmies();
-        this.resourceManagement = new ArmyResourceManagement(village);
+        this.resourcesManagement = village.getResourcesManagement();
+
     }
-    //add to queue
-    public boolean trainArmy(ArmyType type, int count) {
 
-        if (!canTrainArmy(type, count))
-            return false;
-
-        resourceManagement.withdrawResources(type.getTrainCost(), count);
-
-        boolean isMachineIdle = !hasActiveTrainTask();
-
-        Instant statTime;
-        if (armies.getArmyQueue().isEmpty())
-            statTime = Instant.now();
-        else
-            statTime = armies.getArmyQueue().getLastFinishTime();
-
-        for (int i = 0; i < count; i++) {
-
-            armies.getArmyQueue().enqueue(type);
-
-            Instant finishTime = statTime.plus(type.getTrainCost().neededTime());
-
-            armies.getArmyQueue().setLastFinishTime(finishTime);
-
-            statTime = finishTime; // زمان شروع برای دور بعدیِ حلقه باید زمان پایانِ قبلی باشد
-        }
-        if (isMachineIdle && !armies.getArmyQueue().isEmpty()) {
-
-            ArmyType firstArmyInQueue = armies.getArmyQueue().peek();
-
-            TrainArmyTask newTask = new TrainArmyTask(
-                    Instant.now(),
-                    firstArmyInQueue.getTrainCost().neededTime(),
-                    firstArmyInQueue
-            );
-            village.getTimedOperation().put(newTask.getId(), newTask);
-        }
-
-        return true;
-    }
     //for checking requirements
     private boolean canTrainArmy(ArmyType type, int count) {
-
         if (count <= 0)
             return false;
 
@@ -92,16 +54,61 @@ public class ArmyManagement {
             return false;
 
         //check resource
-        return resourceManagement.checkResources(type.getTrainCost(), count);
+        return resourcesManagement.checkResourcesArmyCost(type.getTrainCost(), count);
     }
-    //For check that only one TrainTask is active at a time
-    private boolean hasActiveTrainTask() {
 
-        for(TimedOperation task : village.getTimedOperation().values()){
-            if(task instanceof TrainArmyTask)
-                return true;
+    //add to queue
+    public boolean trainArmy(ArmyType type, int count) {
+
+        village.getLock().writeLock().lock();
+
+        try {
+
+            if (!canTrainArmy(type, count))
+                return false;
+
+            resourcesManagement.withdrawResourcesArmyCost(type.getTrainCost(), count);
+
+            boolean isMachineIdle = ! armies.getArmyQueue().isTraining();
+
+            Instant statTime;
+
+            if (armies.getArmyQueue().isEmpty()) {
+                statTime = Instant.now();
+
+            }else {
+                statTime = armies.getArmyQueue().getLast().finishTime();
+            }
+
+            for (int i = 0; i < count; i++) {
+
+                Instant finishTime = statTime.plus(type.getTrainCost().neededTime());
+
+                QueuedArmy queuedArmy = new QueuedArmy(type, finishTime);
+
+                armies.getArmyQueue().enqueue(queuedArmy);
+
+                statTime = finishTime; // زمان شروع برای دور بعدیِ حلقه باید زمان پایانِ قبلی باشد
+            }
+            if (isMachineIdle){
+
+                QueuedArmy firstArmyInQueue = armies.getArmyQueue().peek();
+
+                TrainArmyTask newTask = new TrainArmyTask(
+                        Instant.now(),
+                        firstArmyInQueue.armyType().getTrainCost().neededTime(),
+                        firstArmyInQueue.armyType()
+                );
+
+                armies.getArmyQueue().setTraining(true);
+
+                village.getTimedOperation().put(newTask.getId(), newTask);
+            }
+            return true;
+
+        } finally {
+            village.getLock().writeLock().unlock();
         }
-        return false;
     }
 
     //finding ArmyProducer
@@ -115,6 +122,7 @@ public class ArmyManagement {
 
         return null;
     }
+
     //finding Barack
     private Barrack getBarrack() {
 
@@ -135,23 +143,3 @@ public class ArmyManagement {
         return armies.getArmyStorage();
     }
 }
-/*
-
-        for (int i = 0; i < count; i++) {
-
-            armies.getArmyQueue().enqueue(type);
-
-            Instant finishTime =statTime.plus(type.getTrainCost().neededTime());
-
-            armies.getArmyQueue().setLastFinishTime(finishTime);
-
-            //(i==0)-> we only want to create the Task in the first round
-            if(i==0 && !hasActiveTrainTask()){
-
-                TrainArmyTask task = new TrainArmyTask(statTime,type.getTrainCost().neededTime(), type);
-
-                village.getTimedOperation().put(task.getId(), task);
-            }
-            statTime = finishTime;
-        }
-        */
