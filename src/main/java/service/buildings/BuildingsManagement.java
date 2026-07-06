@@ -4,7 +4,6 @@ package service.buildings;
 import model.building.*;
 import model.player.Player;
 import model.resources.Resources;
-import model.resources.ResourcesType;
 import model.time.BuildTask;
 import model.time.UpgradeTask;
 import model.village.Village;
@@ -17,8 +16,8 @@ import java.util.UUID;
 
 public class BuildingsManagement {
 
-    private final Village village;
-    private final ResourcesManagement resources;
+   private final Village village;
+   private final ResourcesManagement resources;
 
     public BuildingsManagement(Player player) {
         this.village = player.getVillage();
@@ -42,8 +41,8 @@ public class BuildingsManagement {
         Laboratory laboratory=null;
         for(Building building1 : village.getBuildings().values()){
             if(building1 instanceof Laboratory lab){
-                laboratory = lab;
-                break;
+                   laboratory = lab;
+                   break;
             }
         }
         if(laboratory==null){return;}
@@ -77,16 +76,9 @@ public class BuildingsManagement {
         }
     }
 
-    public void removePlant(UUID plantId) {
-        Plant plant = village.getPlant().get(plantId);
-        if (plant == null) return;
 
+    public void removePlant(UUID plantId){
         village.getPlant().remove(plantId);
-
-        Cost cost = plant.getType().getBasePlantCost();
-
-        resources.addResource((int)(cost.getCleanWater() * 0.3), ResourcesType.CLEAN_WATER);
-        resources.addResource((int)(cost.getCleanSoil() * 0.3), ResourcesType.CLEAN_SOIL);
     }
 
     public int getTotalNeutralizationPower(){
