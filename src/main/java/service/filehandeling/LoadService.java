@@ -6,10 +6,11 @@ import java.io.ObjectInputStream;
 
 public class LoadService {
 
-    public static GameState load(File fileName) {
 
-        if (!fileName.exists()) {
-            return new GameState();
+    public static GameState load(File fileName, GameState gameState) {
+
+        if (!fileName.exists() || fileName.length() == 0) {
+            return gameState;
         }
 
         try {

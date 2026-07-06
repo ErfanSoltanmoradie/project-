@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class GameState implements Serializable {
+public class GameState implements Serializable{
 
     private Map<String, User> user;
     private Map<UUID, Player> player;

@@ -25,6 +25,17 @@ public class AuthService {
         this.playerFactory = playerFactory;
     }
 
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public PlayerRepository getPlayerRepository() {
+        return playerRepository;
+    }
+
+    public PlayerFactory getPlayerFactory() {
+        return playerFactory;
+    }
 
     private boolean isValidUsername(String username) {
         if (username == null) return false;

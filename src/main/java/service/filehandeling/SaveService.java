@@ -6,13 +6,13 @@ import java.io.ObjectOutputStream;
 
 public class SaveService {
 
-    public static void save(GameState gameState, File fileName){
+    public static void save(Object object, File fileName) {
 
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
-            oos.writeObject(gameState);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
 
-        }catch (Exception e) {
+            oos.writeObject(object);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -13,7 +13,7 @@ public class ResearchCenter extends Building implements Serializable {
     private static final Map<Integer, UpgradeBuildingInfo> upgradeResearchBuildingsCost;
 
     public ResearchCenter(BuildingType type, Coordinate position) {
-        super(type, position);
+        super(type, position, 3, 3);
         this.scienceLevel = 1;
     }
 

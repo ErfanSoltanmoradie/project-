@@ -12,6 +12,8 @@ public class Player  implements Serializable {
     private final UUID playerId;
     private Village village;
     private UUID userId;
+    private long lastSeen;
+    private boolean onlineStatus = false;
 
     public Player(String username , Village village) {
         this.username = username;
@@ -39,6 +41,22 @@ public class Player  implements Serializable {
 
     public String getUsername() {
         return username;
+    }
+
+    public long getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(long lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public boolean isOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public void setOnlineStatus(boolean onlineStatus) {
+        this.onlineStatus = onlineStatus;
     }
 }
 

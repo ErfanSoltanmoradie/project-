@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public class UpgradeTask extends TimedOperation  implements Serializable {
+public class UpgradeTask extends TimedOperation implements Serializable {
 
     private UUID buildingId;
 

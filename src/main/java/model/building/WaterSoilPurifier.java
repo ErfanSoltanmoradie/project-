@@ -33,7 +33,7 @@ public class WaterSoilPurifier extends Building implements Production, Serializa
     }
 
     public WaterSoilPurifier(BuildingType type, Coordinate position, int production) {
-        super(type, position);
+        super(type, position, 1, 1);
         this.production = production;
         this.consumeAmount = this.production * 2;
     }

@@ -35,7 +35,7 @@ public class StorageBuilding extends Building implements Storage, Serializable {
     }
 
     public StorageBuilding(BuildingType type, Coordinate position, int capacity) {
-        super(type, position);
+        super(type, position, 1, 1);
         setCapacity(capacity);
     }
 

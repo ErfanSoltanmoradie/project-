@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane fx:id="authPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="757.0" style="-fx-background-color: #0A192F;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.user.AuthController">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="loginButton" layoutX="205.0" layoutY="408.0" mnemonicParsing="false" onAction="#onLoginClicked" prefHeight="33.0" prefWidth="111.0" text="LOGIN" textFill="BLUE">
+               <font>
+                  <Font size="21.0" />
+               </font></Button>
+            <Button fx:id="signupButton" layoutX="407.0" layoutY="408.0" mnemonicParsing="false" onAction="#onSignupClicked" prefHeight="45.0" prefWidth="111.0" text="SIGNUP">
+               <font>
+                  <Font size="19.0" />
+               </font></Button>
+            <Label alignment="CENTER" layoutX="140.0" layoutY="14.0" prefHeight="99.0" prefWidth="478.0" text="AYE AYE CAPITAN!!!" textFill="RED">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="31.0" layoutY="166.0" prefHeight="51.0" prefWidth="277.0" text="USERNAME" textFill="WHITE">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="31.0" layoutY="293.0" prefHeight="51.0" prefWidth="277.0" text="PASSWORD" textFill="WHITE">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <TextField fx:id="usernameTextField" alignment="CENTER" layoutX="379.0" layoutY="170.0" onAction="#getUsername" prefHeight="31.0" prefWidth="277.0" promptText="Like Shotormorgh . . . .">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="passwordTextField" alignment="CENTER" layoutX="379.0" layoutY="297.0" onAction="#getPassword" prefHeight="18.0" prefWidth="277.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </TextField>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

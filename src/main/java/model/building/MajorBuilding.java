@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class MajorBuilding extends Building  implements Serializable {
 
     public MajorBuilding(BuildingType type, Coordinate position) {
-        super(type, position);
+        super(type, position, 1, 1);
     }
 
     @Override

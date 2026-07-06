@@ -8,6 +8,7 @@ import model.time.BuildTask;
 import model.time.UpgradeTask;
 import model.village.Village;
 import model.world.Coordinate;
+import service.map.GameMap;
 import service.resource.ResourcesManagement;
 import java.time.Instant;
 
@@ -19,6 +20,7 @@ public class BuildingsManagement{
     public BuildingsManagement(Village village) {
         this.village = village;
         this.resources = village.getResourcesManagement();
+
     }
 
     public void build(BuildingType buildingType, Coordinate coordinate){
@@ -38,6 +40,7 @@ public class BuildingsManagement{
             }*/
             if(!resources.checkResourcesCost(cost)) return;
             resources.withdrawResourcesCost(cost);
+
             //Build and add a task
             BuildTask buildTask = new BuildTask(Instant.now(),
                     cost.getNeededTime(), buildingType, coordinate);

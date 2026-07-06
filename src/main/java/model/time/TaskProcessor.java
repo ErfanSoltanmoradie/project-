@@ -23,10 +23,10 @@ public class TaskProcessor {
     }
 
     public void process(){
+
         if (!processing.compareAndSet(false, true)) {
             throw new IllegalStateException("TaskProcessor is running concurrently!");
         }
-
 
         List<TimedOperation> snapshot;
         List<UUID> removeTasks = new ArrayList<>();
@@ -55,9 +55,15 @@ public class TaskProcessor {
 
             for (TaskResult task : taskResults){
 
-                village.getBuildings().putAll(task.getBuildingsToAdd());
 
                 village.getTimedOperation().putAll(task.getTasksToAdd());
+
+                //village.getBuildings().putAll(task.getBuildingsToAdd());
+                for (Building building : task.getBuildingsToAdd().values()){
+                    if(village.getGameMap().placeBuilding(building, building.getPosition().getX(), building.getPosition().getY())){
+                        village.getBuildings().put(building.getId(), building);
+                    }
+                }
 
                 for (UUID uuid : task.getTasksToRemove()){
                     village.getTimedOperation().remove(uuid);
@@ -68,6 +74,7 @@ public class TaskProcessor {
                     building = village.getBuildings().get(uuid);
 
                     if (building != null && building.getBuildingStatus() == BuildingStatus.UPGRADING) {
+                        task.getProductionBuildingsToReschedule().add(building.getId());
                         building.upgrade();
                     }
                 }
@@ -86,6 +93,7 @@ public class TaskProcessor {
                     if(building1 == null)
                         continue;
 
+                    System.out.println(building1.getBuildingStatus());
                     if(building1.getBuildingStatus() == BuildingStatus.ACTIVE){
                         ProductionTask nextTask = ProductionTaskFactory.buildProductionTask(building1);
                         if(nextTask != null){

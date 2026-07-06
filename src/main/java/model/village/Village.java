@@ -14,6 +14,8 @@ import model.time.TimedOperationType;
 import model.world.Coordinate;
 import service.buildings.BuildingFactory;
 import service.buildings.BuildingsManagement;
+import service.filehandeling.LoadService;
+import service.map.GameMap;
 import service.resource.ResourcesManagement;
 
 import java.io.Serializable;
@@ -22,30 +24,37 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Village implements Serializable {
 
     private final UUID villageId;
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private Resources resources;
     private Coordinate coordinate;
     private Map<UUID, Building> buildings;
     private Map<UUID, TimedOperation> timedOperation;
     private transient  ResourcesManagement resourcesManagement; // transient ---> do not save it in the file
+    private transient LoadService loadService;
     private Cloud cloud;
     private Army army;
     private int health;
 
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private GameMap gameMap = new GameMap(70, 70, 10);
+
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+    /*private int scienceLevel;
+    private int majorBuildingLevel;*/
 
     public Village(Coordinate coordinate, int health) {
         this.villageId = UUID.randomUUID();
         this.resources = new Resources();
         this.buildings = new HashMap<>();
         this.timedOperation = new HashMap<>();
-        this.cloud = new Cloud();
         this.coordinate = coordinate;
+        this.cloud = new Cloud();
         this.health = health;
         this.resourcesManagement = new ResourcesManagement(this);
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
@@ -53,7 +62,7 @@ public class Village implements Serializable {
 
     public void runTimeServices(){  // we want the logic after loading the game
         this.resourcesManagement = new ResourcesManagement(this);
-        //TaskProcessor taskProcessor = new TaskProcessor(this);
+        this.loadService = new LoadService();
     }
 
     public UUID getVillageId() {
@@ -119,7 +128,6 @@ public class Village implements Serializable {
     public void setHealth(int health) {
         this.health = health;
     }
-
 
     public ReentrantReadWriteLock getLock() {
         return lock;

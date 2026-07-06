@@ -10,7 +10,8 @@ import java.util.Map;
 public abstract class DefensiveBuilding extends Building  implements Serializable {
 
     public DefensiveBuilding(BuildingType type, Coordinate position) {
-        super(type, position);
+
+        super(type, position,1, 1);
     }
 
     public final void upgrade(){

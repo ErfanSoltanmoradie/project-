@@ -29,7 +29,7 @@ public class Resources implements Serializable {
 
 
     public void addResource(ResourcesType type, int amount, int capacity) {
-        setAmount(type,  Math.min(getAmount(type) + amount, capacity));
+        setAmount(type,  amount + getAmount(type)/*Math.min(getAmount(type) + amount, capacity)*/);
     }
 
     public boolean withdraw(ResourcesType type, int amount) {
