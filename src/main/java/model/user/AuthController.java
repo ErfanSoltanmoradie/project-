@@ -68,6 +68,7 @@ public class AuthController {
         if(authResult.getPlayer().getUsername().equalsIgnoreCase(this.getUsername())){
             this.usernameTextField.clear();
             this.passwordTextField.clear();
+            authResult.getPlayer().setOnlineStatus(true);
             showVillage(authResult.getPlayer());
         }
     }
