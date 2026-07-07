@@ -1,7 +1,6 @@
 package model.time;
 
-import model.building.Building;
-import model.building.BuildingStatus;
+import model.building.*;
 import model.event.Event;
 import model.event.EventType;
 import model.resources.ResourcesType;
@@ -15,8 +14,24 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TaskProcessor {
 
-    private Village village;
+    private final Village village;
     private final AtomicBoolean processing = new AtomicBoolean(false);
+    private long lastCloudNeutralization;
+    private boolean firstCloudNeutralization = false;
+
+    private void cloudNeutralization(){
+
+        int totalAmount = PlantType.getTotalNeutralizationPower(this.village.getPlants());
+
+        if(totalAmount <= this.village.getCloud().getRadiation())
+            this.village.getCloud().setRadiation(this.village.getCloud().getRadiation() - totalAmount);
+        else {
+            this.village.getCloud().setRadiation(0);
+        }
+
+        this.firstCloudNeutralization = true;
+        this.lastCloudNeutralization = System.currentTimeMillis();
+    }
 
     public TaskProcessor(Village village) {
         this.village = village;
@@ -27,6 +42,10 @@ public class TaskProcessor {
         if (!processing.compareAndSet(false, true)) {
             throw new IllegalStateException("TaskProcessor is running concurrently!");
         }
+
+        if( (int) ((System.currentTimeMillis() - this.lastCloudNeutralization) / 1000) % 5 == 0  || !this.firstCloudNeutralization)
+            this.cloudNeutralization();
+
 
         List<TimedOperation> snapshot;
         List<UUID> removeTasks = new ArrayList<>();
@@ -65,6 +84,12 @@ public class TaskProcessor {
                     }
                 }
 
+                for (Plant plant : task.getPlantsToAdd().values()){
+                    if(village.getGameMap().placePlant(plant, plant.getPosition().getX(), plant.getPosition().getY())){
+                        village.getPlants().put(plant.getId(), plant);
+                    }
+                }
+
                 for (UUID uuid : task.getTasksToRemove()){
                     village.getTimedOperation().remove(uuid);
                 }
@@ -74,8 +99,12 @@ public class TaskProcessor {
                     building = village.getBuildings().get(uuid);
 
                     if (building != null && building.getBuildingStatus() == BuildingStatus.UPGRADING) {
-                        task.getProductionBuildingsToReschedule().add(building.getId());
-                        building.upgrade();
+                        if (building instanceof Laboratory lab) {
+                            lab.upgradeWithVillage(village);
+                        } else {
+                            task.getProductionBuildingsToReschedule().add(building.getId());
+                            building.upgrade();
+                        }
                     }
                 }
 
@@ -121,5 +150,9 @@ public class TaskProcessor {
             village.getLock().writeLock().unlock();
             processing.set(false);
         }
+    }
+
+    public Village getVillage() {
+        return village;
     }
 }

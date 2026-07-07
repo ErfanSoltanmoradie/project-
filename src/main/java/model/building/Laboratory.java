@@ -1,5 +1,6 @@
 package model.building;
 
+import model.village.Village;
 import model.world.Coordinate;
 
 import java.io.Serializable;
@@ -23,16 +24,16 @@ public class Laboratory extends Building implements Serializable {
         upgradeLaboratoryBuildingsCost = new HashMap<>();
 
         upgradeLaboratoryBuildingsCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeLaboratoryBuildingsCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
 
         upgradeLaboratoryBuildingsCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
 
         upgradeLaboratoryBuildingsCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(10))));
+                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
     }
 
     public static UpgradeBuildingInfo upgradeBuildingInfo(int level){
@@ -41,7 +42,18 @@ public class Laboratory extends Building implements Serializable {
 
     @Override
     public void upgrade() {
+        this.setLevel(this.getLevel() + 1);
         this.setBuildingStatus(BuildingStatus.ACTIVE);
 
+    }
+
+    public void upgradeWithVillage(Village village) {
+        int oldLevel = this.getLevel();
+        upgrade();
+        for (Plant plant : village.getPlants().values()) {
+            if (plant.getType().getRequiredLaboratoryLevel() <= oldLevel) {
+                plant.upgradeNeutralizationPower();
+            }
+        }
     }
 }

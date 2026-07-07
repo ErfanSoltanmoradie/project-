@@ -5,8 +5,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.building.Building;
+import model.building.BuildingStatus;
+import model.building.BuildingType;
+import model.time.BuildTask;
+import model.time.TimedOperation;
 import model.village.Village;
 import model.world.Coordinate;
+
+import java.time.Duration;
 import java.util.Objects;
 
 public class GameCanvasView extends Canvas {
@@ -23,7 +29,11 @@ public class GameCanvasView extends Canvas {
     private final double MAX_TILE_WIDTH = 50;
 
     private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/grass.png")));
-
+    private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.jpg")));
+    private final Image customhouseImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Customhouse.png")));
+    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/NRC.jpg")));
+    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SNRC.png")));
+    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/PSNRC.png")));
 
     public Village getVillage() {
         return village;
@@ -117,73 +127,150 @@ public class GameCanvasView extends Canvas {
         gc.setImageSmoothing(true);
 
 
+        // ۱. رسم تمام ساختمان‌ها
         for (Building building : village.getBuildings().values()) {
             Coordinate pos = building.getPosition();
+            if (pos == null) continue;
             int r = pos.getX();
             int c = pos.getY();
 
-            if (building.getBuildingStatus() == model.building.BuildingStatus.ACTIVE) {
+            if (building.getBuildingStatus() == BuildingStatus.ACTIVE) {
                 int bW = building.getWidth();
                 int bH = building.getHeight();
+                double isoX = originX + (c - r) * (tileWidth / 2);
+                double isoY = originY + (c + r) * (tileHeight / 2);
 
+                // تشخیص اتوماتیک تصویر مناسب بر اساس نوع ساختمان
+                Image currentBuildingImg = null;
+                switch (building.getType()) {
+                    case LABORATORY -> currentBuildingImg = laboratoryImage;
+                    case CUSTOMHOUSE -> currentBuildingImg = customhouseImage;
+                }
 
-                double baseTopX = originX + (c - r) * (tileWidth / 2) + tileWidth / 2;
-                double baseTopY = originY + (c + r) * (tileHeight / 2);
+                // الف) اگر عکس موجود بود، عکس واقعی ساختمان بدون پس‌زمینه رسم می‌شود
+                if (currentBuildingImg != null && !currentBuildingImg.isError()) {
+                    double imgWidth = tileWidth * bH;
+                    double imgHeight = tileHeight * 2.5; // ارتفاع بلندتر برای ایجاد افکت سه بعدی (ایزومتریک)
+                    gc.drawImage(currentBuildingImg, isoX, isoY - (imgHeight - tileHeight), imgWidth, imgHeight);
+                }
+                // ب) اگر عکس لود نشد، به عنوان زاپاس مکعب رنگی رسم کن
+                else {
+                    double baseTopX = originX + (c - r) * (tileWidth / 2) + tileWidth / 2;
+                    double baseTopY = originY + (c + r) * (tileHeight / 2);
+                    double baseLeftX = originX + (c - (r + bW - 1)) * (tileWidth / 2);
+                    double baseLeftY = originY + (c + (r + bW - 1)) * (tileHeight / 2) + tileHeight / 2;
+                    double baseRightX = originX + ((c + bH - 1) - r) * (tileWidth / 2) + tileWidth;
+                    double baseRightY = originY + ((c + bH - 1) + r) * (tileHeight / 2) + tileHeight / 2;
+                    double baseBottomX = originX + ((c + bH - 1) - (r + bW - 1)) * (tileWidth / 2) + tileWidth / 2;
+                    double baseBottomY = originY + ((c + bH - 1) + (r + bW - 1)) * (tileHeight / 2) + tileHeight;
 
-                double baseLeftX = originX + (c - (r + bW - 1)) * (tileWidth / 2);
-                double baseLeftY = originY + (c + (r + bW - 1)) * (tileHeight / 2) + tileHeight / 2;
+                    double bHeight = tileHeight * 1.5;
+                    double roofTopX = baseTopX;
+                    double roofTopY = baseTopY - bHeight;
+                    double roofLeftX = baseLeftX;
+                    double roofLeftY = baseLeftY - bHeight;
+                    double roofRightX = baseRightX;
+                    double roofRightY = baseRightY - bHeight;
+                    double roofBottomX = baseBottomX;
+                    double roofBottomY = baseBottomY - bHeight;
 
-                double baseRightX = originX + ((c + bH - 1) - r) * (tileWidth / 2) + tileWidth;
-                double baseRightY = originY + ((c + bH - 1) + r) * (tileHeight / 2) + tileHeight / 2;
+                    String leftWallColor = "#5d4037";
+                    String rightWallColor = "#8d6e63";
+                    String roofColor = "#a1887f";
+                    if (building.getType() == BuildingType.LABORATORY) {
+                        leftWallColor = "#311b92";
+                        rightWallColor = "#4527a0";
+                        roofColor = "#b388ff";
+                    }
 
-                double baseBottomX = originX + ((c + bH - 1) - (r + bW - 1)) * (tileWidth / 2) + tileWidth / 2;
-                double baseBottomY = originY + ((c + bH - 1) + (r + bW - 1)) * (tileHeight / 2) + tileHeight;
-
-
-                double bHeight = tileHeight * 1.5;
-
-
-                double roofTopX = baseTopX;       double roofTopY = baseTopY - bHeight;
-                double roofLeftX = baseLeftX;     double roofLeftY = baseLeftY - bHeight;
-                double roofRightX = baseRightX;   double roofRightY = baseRightY - bHeight;
-                double roofBottomX = baseBottomX; double roofBottomY = baseBottomY - bHeight;
-
-                gc.setFill(Color.web("#5d4037"));
-                gc.fillPolygon(
-                        new double[]{baseLeftX, baseBottomX, roofBottomX, roofLeftX},
-                        new double[]{baseLeftY, baseBottomY, roofBottomY, roofLeftY},
-                        4
-                );
-
-
-                gc.setFill(Color.web("#8d6e63"));
-                gc.fillPolygon(
-                        new double[]{baseRightX, baseBottomX, roofBottomX, roofRightX},
-                        new double[]{baseRightY, baseBottomY, roofBottomY, roofRightY},
-                        4
-                );
-
-
-                gc.setFill(Color.web("#a1887f"));
-                gc.fillPolygon(
-                        new double[]{roofTopX, roofRightX, roofBottomX, roofLeftX},
-                        new double[]{roofTopY, roofRightY, roofBottomY, roofLeftY},
-                        4
-                );
-
-
-                gc.setStroke(Color.web("#3e2723", 0.7));
-                gc.setLineWidth(1.2);
-
-                gc.strokePolygon(
-                        new double[]{roofTopX, roofRightX, roofBottomX, roofLeftX},
-                        new double[]{roofTopY, roofRightY, roofBottomY, roofLeftY},
-                        4
-                );
-
-                gc.strokeLine(baseBottomX, baseBottomY, roofBottomX, roofBottomY);
+                    gc.setFill(Color.web(leftWallColor));
+                    gc.fillPolygon(new double[]{baseLeftX, baseBottomX, roofBottomX, roofLeftX}, new double[]{baseLeftY, baseBottomY, roofBottomY, roofLeftY}, 4);
+                    gc.setFill(Color.web(rightWallColor));
+                    gc.fillPolygon(new double[]{baseRightX, baseBottomX, roofBottomX, roofRightX}, new double[]{baseRightY, baseBottomY, roofBottomY, roofRightY}, 4);
+                    gc.setFill(Color.web(roofColor));
+                    gc.fillPolygon(new double[]{roofTopX, roofRightX, roofBottomX, roofLeftX}, new double[]{roofTopY, roofRightY, roofBottomY, roofLeftY}, 4);
+                }
             }
         }
+
+// ۲. رسم تمام گیاهان (Plants)
+        for (model.building.Plant plant : village.getPlants().values()) {
+            Coordinate pos = plant.getPosition();
+            if (pos == null) continue;
+            int r = pos.getX();
+            int c = pos.getY();
+
+            double isoX = originX + (c - r) * (tileWidth / 2);
+            double isoY = originY + (c + r) * (tileHeight / 2);
+
+            Image currentPlantImg = null;
+            if (plant.getType() == model.building.PlantType.NRC) {
+                currentPlantImg = nrcPlantImage;
+            } else if (plant.getType() == model.building.PlantType.SNRC) {
+                currentPlantImg = snrcPlantImage;
+            } else if (plant.getType() == model.building.PlantType.PSNRC) {
+                currentPlantImg = psnrcPlantImage;
+            }
+
+            // الف) رسم عکس واقعی گیاه بدون پس‌زمینه
+            if (currentPlantImg != null && !currentPlantImg.isError()) {
+                double pImgWidth = tileWidth;
+                double pImgHeight = tileHeight * 1.8;
+                gc.drawImage(currentPlantImg, isoX, isoY - (pImgHeight - tileHeight), pImgWidth, pImgHeight);
+            }
+            // ب) اگر عکس نبود، رسم هندسی زاپاس سبز رنگ
+            else {
+                double plantHeight = tileHeight * 0.8;
+                double pTopX = isoX + tileWidth / 2;
+                double pTopY = isoY + tileHeight / 2 - plantHeight;
+                double pLeftX = isoX + tileWidth * 0.25;
+                double pLeftY = isoY + tileHeight * 0.5;
+                double pRightX = isoX + tileWidth * 0.75;
+                double pRightY = isoY + tileHeight * 0.5;
+                double pBottomX = isoX + tileWidth / 2;
+                double pBottomY = isoY + tileHeight * 0.75;
+
+                gc.setFill(Color.web("#00c853"));
+                gc.fillPolygon(new double[]{pLeftX, pBottomX, pRightX, pTopX}, new double[]{pLeftY, pBottomY, pRightY, pTopY}, 4);
+                gc.setFill(Color.web("#00e676"));
+                gc.fillOval(isoX + tileWidth * 0.4, isoY + tileHeight * 0.3, tileWidth * 0.2, tileHeight * 0.3);
+            }
+        }
+
+// ۳. رسم نوار پیشرفت پروژه‌های در حال ساخت/آپگرید (به بیرون از حلقه گیاه منتقل شد تا باگ گرافیکی ندهد)
+        for (TimedOperation operation : village.getTimedOperation().values()) {
+            Coordinate taskCoord = null;
+
+            if (operation instanceof BuildTask bTask) {
+                taskCoord = bTask.getCoordinate();
+            } else if (operation instanceof model.time.UpgradeTask uTask) {
+                java.util.UUID bId = uTask.getBuildingId();
+                model.building.Building b = village.getBuildings().get(bId);
+                if (b != null) taskCoord = b.getPosition();
+            }
+
+            if (taskCoord != null) {
+                int r = taskCoord.getX();
+                int c = taskCoord.getY();
+                double isoX = originX + (c - r) * (tileWidth / 2);
+                double isoY = originY + (c + r) * (tileHeight / 2);
+
+                long elapsed = java.time.Duration.between(operation.getStartTime(), java.time.Instant.now()).toMillis();
+                long total = java.time.Duration.between(operation.getStartTime(), operation.getFinishTime()).toMillis();
+
+                double progress = 1.0;
+                if (total > 0) progress = Math.min(1.0, (double) elapsed / total);
+
+                gc.setFill(Color.RED);
+                gc.fillRect(isoX + tileWidth * 0.1, isoY - 15, tileWidth * 0.8, 6);
+                gc.setFill(Color.CHARTREUSE);
+                gc.fillRect(isoX + tileWidth * 0.1, isoY - 15, (tileWidth * 0.8) * progress, 6);
+            }
+        }
+
+        double radiationFactor = 0.4;
+        gc.setFill(Color.web("#3e2723", radiationFactor * 0.2)); // مقدار شفافیت کاهش یافت تا عکس‌ها واضح دیده شوند
+        gc.fillRect(0, 0, width, height);
     }
 
     public void zoom(double factor, double mouseX, double mouseY) {

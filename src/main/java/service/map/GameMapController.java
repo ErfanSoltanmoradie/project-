@@ -1,7 +1,10 @@
 package service.map;
 
+import javafx.scene.control.Alert;
 import model.building.Building;
 import model.building.BuildingType;
+import model.building.Plant;
+import model.building.PlantType;
 import model.village.Village;
 import model.world.Coordinate;
 import service.buildings.BuildingsManagement;
@@ -18,6 +21,11 @@ public class GameMapController {
 
     private Building selectedBuilding = null;
     private VillageController villageController;
+
+    private boolean plantModeActive = false;
+
+    private PlantType selectedPlantType = null;
+    private Plant selectedPlant;
 
     public GameMapController(Village village, GameCanvasView gameCanvasView) {
         this.village = village;
@@ -37,6 +45,14 @@ public class GameMapController {
         if (villageController != null) villageController.hideInfoPanel();
     }
 
+    public void enterPlantBuildMode(model.building.PlantType plantType) {
+        System.out.println("Select a place for your plant: " + plantType);
+        this.plantModeActive = true;
+        this.selectedPlantType = plantType;
+        this.buildModeActive = false; // مود سازه عادی خاموش شود
+        if (villageController != null) villageController.hideInfoPanel();
+    }
+
     public void handleMapClick(double pixelX, double pixelY) {
         villageController.hideAddBuildingPanel();
 
@@ -44,43 +60,99 @@ public class GameMapController {
         int row = coordinate.getX();
         int col = coordinate.getY();
 
-        if (buildModeActive && selectedBuildingType != null) {
+        // ================= حالت ساخت گیاه =================
+        if (plantModeActive && selectedPlantType != null) {
+            if (!this.gameMap.isAreaFree(row, col, 1, 1)) {
+                this.selectedPlantType = null;
+                this.plantModeActive = false;
+                return;
+            }
 
-            if(!this.gameMap.isAreaFree(row, col, selectedBuildingType.getWidth(), selectedBuildingType.getHeight())){
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Final approval");
+            confirmAlert.setHeaderText("Are you sure about this?");
+            confirmAlert.setContentText("building " + selectedPlantType + " will begin");
+
+            java.util.Optional<javafx.scene.control.ButtonType> result = confirmAlert.showAndWait();
+
+            // ⚡ اصلاح منطق: دستور ساخت فقط و فقط در صورت زدن دکمه OK صادر می‌شود
+            if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
+                this.buildingsManagement.buildPlant(this.selectedPlantType, coordinate);
+            }
+
+            // پاکسازی وضعیت مود ساخت در هر دو حالت (تایید یا لغو)
+            this.selectedPlantType = null;
+            this.plantModeActive = false;
+            return;
+        }
+
+        // ================= حالت ساخت ساختمان =================
+        if (buildModeActive && selectedBuildingType != null) {
+            if (!this.gameMap.isAreaFree(row, col, selectedBuildingType.getWidth(), selectedBuildingType.getHeight())) {
                 this.selectedBuildingType = null;
                 this.buildModeActive = false;
                 return;
             }
 
-            this.buildingsManagement.build(this.selectedBuildingType, coordinate);
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Final approval");
+            confirmAlert.setHeaderText("Are you sure about this?");
+            confirmAlert.setContentText("building " + selectedBuildingType + " will begin"); // اصلاح نام متغیر به selectedBuildingType
+
+            java.util.Optional<javafx.scene.control.ButtonType> result = confirmAlert.showAndWait();
+
+            // ⚡ اصلاح منطق: دستور ساخت از بیرون بلاک حذف شد و فقط اینجا اجرا می‌شود
+            if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
+                this.buildingsManagement.build(selectedBuildingType, coordinate);
+            }
+
             this.selectedBuildingType = null;
             this.buildModeActive = false;
-
             return;
         }
 
+        // ================= حالت کلیک و انتخاب روی نقشه =================
         Building clickedBuilding = null;
         for (Building building : village.getBuildings().values()) {
             Coordinate position = building.getPosition();
-
             if (row >= position.getX() && row < position.getX() + building.getHeight() &&
                     col >= position.getY() && col < position.getY() + building.getWidth()) {
-
                 clickedBuilding = building;
                 break;
             }
         }
 
+        Plant clickedPlant = null;
+        if (clickedBuilding == null) {
+            this.selectedBuilding = null; // اصلاح فیلد به جای انتساب خودِ متغیرِ null
+            for (Plant plant : village.getPlants().values()) {
+                Coordinate position = plant.getPosition();
+                if (position != null && row >= position.getX() && row < position.getX() + plant.getHeight() &&
+                        col >= position.getY() && col < position.getY() + plant.getWidth()) {
+                    clickedPlant = plant;
+                    break;
+                }
+            }
+        }
+
+        // اعمال خروجی روی UI پنل اطلاعات
         if (clickedBuilding != null) {
             this.selectedBuilding = clickedBuilding;
-            System.out.println("Selected: " + selectedBuilding.getType() + "level: " + selectedBuilding.getLevel()
-             + "Status: " + selectedBuilding.getBuildingStatus());
-
+            this.selectedPlant = null;
+            System.out.println("Selected Building: " + selectedBuilding.getType());
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);
             }
+        } else if (clickedPlant != null) {
+            this.selectedPlant = clickedPlant;
+            this.selectedBuilding = null;
+            System.out.println("Selected Plant: " + selectedPlant.getType());
+            if (villageController != null) {
+                villageController.showPlantInfo(clickedPlant);
+            }
         } else {
             this.selectedBuilding = null;
+            this.selectedPlant = null;
             if (villageController != null) {
                 villageController.hideInfoPanel();
                 villageController.hideShopPanel();
@@ -96,5 +168,9 @@ public class GameMapController {
                 villageController.showBuildingInfo(selectedBuilding);
             }
         }
+    }
+
+    public Plant getSelectedPlant() {
+        return selectedPlant;
     }
 }

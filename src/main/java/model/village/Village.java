@@ -3,17 +3,12 @@ package model.village;
 
 import model.army.Army;
 import model.building.Building;
-import model.building.BuildingType;
-import model.building.StorageBuilding;
+import model.building.Plant;
 import model.resources.Resources;
-import model.resources.ResourcesType;
 import model.time.RandomEventTask;
-import model.time.TaskProcessor;
 import model.time.TimedOperation;
 import model.time.TimedOperationType;
 import model.world.Coordinate;
-import service.buildings.BuildingFactory;
-import service.buildings.BuildingsManagement;
 import service.filehandeling.LoadService;
 import service.map.GameMap;
 import service.resource.ResourcesManagement;
@@ -38,15 +33,14 @@ public class Village implements Serializable {
     private Cloud cloud;
     private Army army;
     private int health;
-
+    private final Map<UUID, Plant> plants = new HashMap<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private GameMap gameMap = new GameMap(70, 70, 10);
-
+    /*private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
+    private AllianceRequest allianceRequest;*/
     public GameMap getGameMap() {
         return gameMap;
     }
-    /*private int scienceLevel;
-    private int majorBuildingLevel;*/
 
     public Village(Coordinate coordinate, int health) {
         this.villageId = UUID.randomUUID();
@@ -132,5 +126,13 @@ public class Village implements Serializable {
     public ReentrantReadWriteLock getLock() {
         return lock;
     }
+
+    public Map<UUID, Plant> getPlants() {
+        return plants;
+    }
+
+    /*public Map<UUID, TradeOffer> getTradeOffers() {
+        return tradeOffers;
+    }*/
 }
 

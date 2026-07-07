@@ -31,6 +31,9 @@ public class BuildingFactory{
             case CATAPULT_DEFENSIVE -> new Catapult(BuildingType.CATAPULT_DEFENSIVE, buildTask.getCoordinate());
             case SENTINEL_DEFENSIVE -> new Sentinel(BuildingType.SENTINEL_DEFENSIVE, buildTask.getCoordinate());
 
+            case LABORATORY ->  new Laboratory(BuildingType.LABORATORY, buildTask.getCoordinate());
+           // case CUSTOMHOUSE -> new Customhouse(BuildingType.CUSTOMHOUSE, buildTask.getCoordinate());
+
             // more building need to be added
             default -> null;
         };

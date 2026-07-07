@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="443.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.map.VillageController">
+<StackPane fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="443.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.map.VillageController">
    <children>
-      <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
-         <children>
-            <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="58.0" prefWidth="66.0" text="SHOP" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
-               <font>
-                  <Font name="System Bold Italic" size="16.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="443.0" prefWidth="200.0" StackPane.alignment="CENTER_RIGHT">
          <children>
             <HBox prefHeight="20.0" prefWidth="200.0" style="-fx-background-color: #0b0710; -fx-background-radius: 6; -fx-border-color: #b026ff;                                                               -fx-border-width: 1.8; -fx-border-radius: 6; -fx-padding: 6 12 6 12;                                                                -fx-effect: dropshadow(three-pass-box, rgba(176, 38, 255, 0.5), 10, 0, 0, 0);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -79,7 +76,7 @@
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="242.0" prefWidth="172.0" style="-fx-background-color: #0d0e15; -fx-background-radius: 8; -fx-border-color: #00e5ff; -fx-border-width: 1.8; -fx-border-radius: 8; -fx-padding: 10; -fx-effect: dropshadow(two-pass-box, rgba(0, 229, 255, 0.3), 8, 0, 0, 0);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <ImageView fitHeight="183.0" fitWidth="167.0" pickOnBounds="true">
+                  <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../tower.png" />
                      </image>
@@ -95,75 +92,129 @@
       </AnchorPane>
       <AnchorPane fx:id="addBuildingPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="242.0" prefWidth="567.0" visible="false">
          <children>
-            <ScrollPane fx:id="addBuildingScrollPane" hbarPolicy="NEVER" layoutX="-37.0" layoutY="-17.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="242.0" prefWidth="560.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <ScrollPane fx:id="addBuildingScrollPane" hbarPolicy="ALWAYS" layoutX="-37.0" layoutY="-17.0" maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefHeight="242.0" prefWidth="560.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <content>
-                  <HBox fx:id="addBuildingHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="242.0" prefWidth="560.0" spacing="10.0">
+                  <HBox fx:id="addBuildingHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="242.0" spacing="15.0">
                      <children>
-                        <VBox fx:id="addBuildingVBox" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="242.0" prefWidth="120.0">
+                        <VBox fx:id="addBuildingVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minWidth="120.0" prefHeight="242.0" prefWidth="120.0">
                            <children>
-                              <ImageView fx:id="woodMineImage" fitHeight="131.0" fitWidth="117.0" pickOnBounds="true">
+                              <ImageView fx:id="woodMineImage" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../log.png" />
                                  </image>
                               </ImageView>
-                              <Label fx:id="woodMineLabel" prefHeight="41.0" prefWidth="119.0" text="        Wood Miner" textAlignment="CENTER">
+                              <Label fx:id="woodMineLabel" alignment="CENTER" prefHeight="41.0" prefWidth="119.0" text="Wood Miner" textAlignment="CENTER">
                                  <font>
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="woodMineBuildButton" mnemonicParsing="false" onAction="#onWoodMineBuildClicked" prefHeight="33.0" prefWidth="120.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'System'; -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 85, 0.8), 12, 0.4, 0, 0);" text="BUILD">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
-                              </Button>
+                              <Button fx:id="woodMineBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onWoodMineBuildClicked" prefHeight="33.0" prefWidth="120.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 14px; -fx-font-family: 'System'; -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 85, 0.8), 12, 0.4, 0, 0);" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" centerShape="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="242.0" prefWidth="120.0" scaleShape="false">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
+                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minWidth="120.0" prefHeight="242.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="ironMineBuildButton" mnemonicParsing="false" onAction="#onIronMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Iron Miner" />
+                              <Button fx:id="ironMineBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onIronMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="230.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minWidth="120.0" prefHeight="242.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="waterMineBuildButton" mnemonicParsing="false" onAction="#onWaterMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="229.0" prefWidth="120.0">
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Water Miner" />
+                              <Button fx:id="waterMineBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onWaterMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minWidth="120.0" prefHeight="242.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="soilMineBuildButton" mnemonicParsing="false" onAction="#onSoilMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="232.0" prefWidth="120.0">
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Soil Miner" />
+                              <Button fx:id="soilMineBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onSoilMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minWidth="120.0" prefHeight="242.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="gunPowderMineBuildButton" mnemonicParsing="false" onAction="#onGunPowderMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="232.0" prefWidth="120.0">
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Gunpowder" />
+                              <Button fx:id="gunPowderMineBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onGunPowderMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" minWidth="120.0" prefHeight="242.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="StoneMineBuildButton" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Stone Miner" />
+                              <Button fx:id="StoneMineBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Label" />
+                              <Button minWidth="100.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Label" />
+                              <Button minWidth="100.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../Laboratory.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="laboratoryLabel" alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Laboratory" />
+                              <Button fx:id="laboratoryBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onLaboratoryBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../Customhouse.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="customhouseLabel" alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Customhouse" />
+                              <Button fx:id="customhouseBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onCustomhouseBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../NRC.jpg" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="nrcLabel" alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="NRC" />
+                              <Button fx:id="nrcBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onNRCBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../SNRC.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="snrcLabel" alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="SNRC" />
+                              <Button fx:id="snrcBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onSNRCBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../PSNRC.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="psnrcLabel" alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="PSNRC" />
+                              <Button fx:id="psnrcBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onPSNRCBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
                </content>
@@ -175,7 +226,16 @@
             <Insets />
          </StackPane.margin>
          <children>
-            <Button fx:id="upgradeButton" alignment="BOTTOM_CENTER" layoutX="76.0" layoutY="132.0" mnemonicParsing="false" onAction="#onUpgradeClicked" prefHeight="58.0" prefWidth="174.0" text="UPGRADE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="63.0" AnchorPane.rightAnchor="63.0" AnchorPane.topAnchor="135.0" />
+            <Button fx:id="upgradeButton" alignment="BOTTOM_CENTER" layoutX="73.0" layoutY="138.0" mnemonicParsing="false" onAction="#onUpgradeClicked" prefHeight="26.0" prefWidth="148.0" text="UPGRADE" />
+         </children>
+      </AnchorPane>
+      <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
+         <children>
+            <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="58.0" prefWidth="66.0" text="SHOP" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
+               <font>
+                  <Font name="System Bold Italic" size="16.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>
