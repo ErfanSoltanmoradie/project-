@@ -1,6 +1,7 @@
 package service.map;
 
 import model.building.Building;
+import model.building.Plant;
 import model.world.Coordinate;
 
 import java.io.Serializable;
@@ -68,6 +69,27 @@ public class GameMap implements Serializable {
         }
 
         building.setPosition(new Coordinate(row, column));
+
+        return true;
+    }
+
+    public boolean placePlant(Plant plant, int row, int column){
+        if(!this.isInside(row, column))
+            return false;
+
+        if (!isInside(row + plant.getHeight() - 1, column + plant.getWidth() - 1))
+            return false;
+
+        if(!this.isAreaFree(row, column, plant.getWidth(), plant.getHeight() ))
+            return false;
+
+        for (int i = row; i < row + plant.getHeight(); i++) {
+            for (int j = column; j < column + plant.getWidth(); j++) {
+                tiles[i][j].setPlant(plant);
+            }
+        }
+
+        plant.setPosition(new Coordinate(row, column));
 
         return true;
     }

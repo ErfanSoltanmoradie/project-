@@ -1,12 +1,10 @@
 package model.time;
 
-import model.building.Building;
-import model.building.BuildingStatus;
-import model.building.BuildingType;
-import model.building.MinerBuilding;
+import model.building.*;
 import model.village.Village;
 import model.world.Coordinate;
 import service.buildings.BuildingFactory;
+import service.buildings.purification.PlantFactory;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -17,7 +15,9 @@ import java.util.UUID;
 public class BuildTask extends TimedOperation implements Serializable {
 
     private BuildingType buildingType;
+    private PlantType plantType;
     private Coordinate coordinate;
+    private int labLevel;
 
     public BuildTask(Instant startTime, Duration neededTime, BuildingType buildingType, Coordinate coordinate) {
         super(startTime, neededTime, TimedOperationType.BUILD_TASK);
@@ -25,10 +25,27 @@ public class BuildTask extends TimedOperation implements Serializable {
         this.coordinate = coordinate;
     }
 
+    public BuildTask(Instant startTime, Duration neededTime, PlantType plantType, Coordinate coordinate, int labLevel) {
+        super(startTime, neededTime, TimedOperationType.BUILD_TASK);
+        this.plantType = plantType;
+        this.coordinate = coordinate;
+        this.labLevel = labLevel;
+    }
+
     @Override
     public TaskResult execute() {
 
-        Building building = BuildingFactory.createBuilding(this);
+        Building building = null;
+        Plant plant = null;
+
+        if(this.buildingType != null){
+             building = BuildingFactory.createBuilding(this);
+        }
+
+        if(this.plantType != null){
+            plant = PlantFactory.createPlant(this, this.labLevel);
+        }
+
         TaskResult taskResult = new TaskResult();
 
         if (building != null){
@@ -36,20 +53,18 @@ public class BuildTask extends TimedOperation implements Serializable {
             building.setBuildingStatus(BuildingStatus.ACTIVE);
             taskResult.getBuildingsToAdd().put(building.getId(), building);
             taskResult.getProductionBuildingsToReschedule().add(building.getId());
-            /*if(building.getType() == BuildingType.WATER_PURIFIER || building.getType() == BuildingType.SOIL_PURIFIER){
 
-                PurificationWaterAndSoilTask purificationWaterAndSoilTask = new PurificationWaterAndSoilTask(Instant.now(), Instant.now().plus(Duration.ofSeconds(1)),
-                        TimedOperationType.PURIFICATION_WATER_AND_SOIL_TASK, Duration.ofSeconds(1), building.getId());
-
-                taskResult.getTasksToAdd().put(purificationWaterAndSoilTask.getId(), purificationWaterAndSoilTask);
-            } else {
-                ProductionTask productionTask = new ProductionTask(Instant.now(), Instant.now().plus(Duration.ofSeconds(1)),
-                        TimedOperationType.PRODUCTION_TASK, Duration.ofSeconds(1), building);
-
-                taskResult.getTasksToAdd().put(productionTask.getId(), productionTask);
-            }/*/
         }
+
+        if(plant != null){
+            taskResult.getPlantsToAdd().put(plant.getId(), plant);
+        }
+
         return taskResult;
+    }
+
+    public PlantType getPlantType() {
+        return plantType;
     }
 
     public BuildingType getBuildingType() {

@@ -23,12 +23,9 @@ public class UpgradeTask extends TimedOperation implements Serializable {
     public TaskResult execute() {
 
         TaskResult taskResult =new TaskResult();
-        //Building building = village.getBuildings().get(this.getBuildingId());
 
-        //if (building != null && building.getBuildingStatus() == BuildingStatus.UPGRADING){
-            taskResult.getBuildingsToUpgrade().add(this.buildingId);
-            //building.upgrade();
-        //}
+        taskResult.getBuildingsToUpgrade().add(this.buildingId);
+
         return taskResult;
     }
 
