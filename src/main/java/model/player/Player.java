@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Player  implements Serializable {
 
@@ -23,11 +24,17 @@ public class Player  implements Serializable {
     private Alliance alliance;
     private int allianceCounts;
 
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+
     public Player(String username , Village village) {
         this.username = username;
         this.village = village;
         this.playerId = UUID.randomUUID();
         this.userId = this.playerId;
+    }
+
+    public ReentrantReadWriteLock getLock() {
+        return lock;
     }
 
     public Village getVillage() {
