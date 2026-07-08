@@ -47,11 +47,18 @@ public class Cost  implements Serializable {
 
             case SENTINEL_DEFENSIVE -> Sentinel.getSentinelUpgradeInfo(building.getLevel()).getCost();
 
+            case LABORATORY -> Laboratory.upgradeBuildingInfo(building.getLevel()).getCost();
+
+            case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
+
 
             default -> new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(0));
         };
     }
 
+    public static Cost allianceCost(){
+        return new Cost(500, 500, 300, 0, 0, 0, 100,Duration.ofMinutes(0));
+    }
 
     public int getWood() {return wood;}
 

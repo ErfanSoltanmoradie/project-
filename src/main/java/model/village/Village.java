@@ -12,11 +12,13 @@ import model.time.TaskProcessor;
 import model.time.TimedOperation;
 import model.time.TimedOperationType;
 import model.world.Coordinate;
+import service.alliance.AllianceRequest;
 import service.buildings.BuildingFactory;
 import service.buildings.BuildingsManagement;
 import service.filehandeling.LoadService;
 import service.map.GameMap;
 import service.resource.ResourcesManagement;
+import service.trade.TradeOffer;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -42,11 +44,13 @@ public class Village implements Serializable {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private GameMap gameMap = new GameMap(70, 70, 10);
 
+    private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
+    private AllianceRequest allianceRequest;
+
     public GameMap getGameMap() {
         return gameMap;
     }
-    /*private int scienceLevel;
-    private int majorBuildingLevel;*/
+
 
     public Village(Coordinate coordinate, int health) {
         this.villageId = UUID.randomUUID();
@@ -63,6 +67,18 @@ public class Village implements Serializable {
     public void runTimeServices(){  // we want the logic after loading the game
         this.resourcesManagement = new ResourcesManagement(this);
         this.loadService = new LoadService();
+    }
+
+    public Map<UUID, TradeOffer> getTradeOffers() {
+        return tradeOffers;
+    }
+
+    public AllianceRequest getAllianceRequest() {
+        return allianceRequest;
+    }
+
+    public void setAllianceRequest(AllianceRequest allianceRequest) {
+        this.allianceRequest = allianceRequest;
     }
 
     public UUID getVillageId() {
