@@ -4,6 +4,9 @@ package model.time;
 import model.building.Building;
 import model.event.EventType;
 import model.resources.ResourcesType;
+import service.alliance.AllianceRequest;
+import service.trade.TradeOffer;
+import service.trade.TradeTask;
 
 import java.util.*;
 
@@ -18,6 +21,17 @@ public class TaskResult {
     private final List<UUID> tasksToRemove = new ArrayList<>();
     private final List<UUID> productionBuildingsToReschedule = new ArrayList<>();
     private final List<EventType> eventType = new ArrayList<>();
+    private final List<TradeOffer> tradeOffers = new ArrayList<>();
+
+    public List<TradeOffer> getTradeOffers() {
+        return tradeOffers;
+    }
+
+    private final List<AllianceRequest> allianceRequestsToApply = new ArrayList<>();
+
+    public List<AllianceRequest> getAllianceRequestsToApply() {
+        return allianceRequestsToApply;
+    }
 
     public List<EventType> getEventType() {
         return eventType;
