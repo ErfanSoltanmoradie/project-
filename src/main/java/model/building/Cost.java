@@ -36,7 +36,7 @@ public class Cost  implements Serializable {
     public static Cost upgradeCost(Building building){
 
         return switch (building.getType()) {
-            case WOOD_MINE, STONE_MINE, SOIL_PURIFIER, DIRTY_WATER_MINE, GUNPOWDER_MINE ->
+            case WOOD_MINE, STONE_MINE, IRON_MINE , SOIL_PURIFIER, DIRTY_WATER_MINE, GUNPOWDER_MINE ->
                     MinerBuilding.getMineUpgradeInfo(building.getLevel()).getCost();
 
             case WATER_STORAGE, SOIL_STORAGE, STONE_STORAGE, WOOD_STORAGE, IRON_STORAGE, GUNPOWDER_STORAGE ->
@@ -48,17 +48,24 @@ public class Cost  implements Serializable {
 
             case SENTINEL_DEFENSIVE -> Sentinel.getSentinelUpgradeInfo(building.getLevel()).getCost();
 
+
             case LABORATORY -> Laboratory.upgradeBuildingInfo(building.getLevel()).getCost();
 
-            //case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
+            case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
+
+            case BARRACKS           -> Barrack.getBarrackUpgradeInfo(building.getLevel()).getCost();
+
+            case ARMY_PRODUCER      -> ArmyProducer.getArmyProducerUpgradeInfo(building.getLevel()).getCost();
+
+
 
             default -> new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(0));
         };
     }
 
-    /*public static Cost allianceCost(){
+    public static Cost allianceCost(){
         return new Cost(500, 500, 300, 0, 0, 0, 100,Duration.ofMinutes(0));
-    }*/
+    }
 
     public int getWood() {return wood;}
 

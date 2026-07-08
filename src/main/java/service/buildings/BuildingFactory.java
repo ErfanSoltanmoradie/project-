@@ -2,9 +2,6 @@ package service.buildings;
 
 import model.building.*;
 import model.time.BuildTask;
-import model.building.DefensiveBuilding;
-
-import java.io.Serializable;
 
 public class BuildingFactory{
 
@@ -30,6 +27,10 @@ public class BuildingFactory{
             case BALLISTA_DEFENSIVE -> new Ballista(BuildingType.BALLISTA_DEFENSIVE, buildTask.getCoordinate());
             case CATAPULT_DEFENSIVE -> new Catapult(BuildingType.CATAPULT_DEFENSIVE, buildTask.getCoordinate());
             case SENTINEL_DEFENSIVE -> new Sentinel(BuildingType.SENTINEL_DEFENSIVE, buildTask.getCoordinate());
+
+            case BARRACKS      ->  new Barrack(BuildingType.BARRACKS, buildTask.getCoordinate());
+            case ARMY_PRODUCER ->  new ArmyProducer(BuildingType.ARMY_PRODUCER, buildTask.getCoordinate());
+
 
             // more building need to be added
             default -> null;

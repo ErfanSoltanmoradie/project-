@@ -1,5 +1,6 @@
 package service.resource;
 
+import model.army.ArmyCost;
 import model.building.*;
 import model.resources.Resources;
 import model.resources.ResourcesType;
@@ -40,6 +41,30 @@ public class ResourcesManagement{
         resources.withdraw(ResourcesType.CLEAN_SOIL, cost.getCleanSoil());
         resources.withdraw(ResourcesType.CLEAN_WATER, cost.getCleanWater());
         resources.withdraw(ResourcesType.GUN_POWDER, cost.getGunPowder());
+    }
+
+    //For Army
+    public boolean checkResourcesArmyCost(ArmyCost cost, int count) {
+
+        Resources resources = village.getResources();
+
+        return resources.getAmount(ResourcesType.WOOD) >= cost.wood() * count
+                && resources.getAmount(ResourcesType.STONE) >= cost.stone() * count
+                && resources.getAmount(ResourcesType.IRON) >= cost.iron() * count
+                && resources.getAmount(ResourcesType.GUN_POWDER) >= cost.gunPowder() * count;
+    }
+
+    public void withdrawResourcesArmyCost(ArmyCost cost, int count) {
+
+        if (!checkResourcesArmyCost(cost, count))
+            return;
+
+        Resources resources = village.getResources();
+
+        resources.withdraw(ResourcesType.WOOD, cost.wood() * count);
+        resources.withdraw(ResourcesType.STONE, cost.stone() * count);
+        resources.withdraw(ResourcesType.IRON, cost.iron() * count);
+        resources.withdraw(ResourcesType.GUN_POWDER, cost.gunPowder() * count);
     }
 
     public void addResource(int amount, ResourcesType type) {
