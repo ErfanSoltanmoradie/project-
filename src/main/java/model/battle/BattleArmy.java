@@ -1,41 +1,43 @@
-package model.army;
+package model.battle;
 
-public class ArmyStorage {
+import model.army.ArmyType;
+
+import java.io.Serializable;
+
+public class BattleArmy implements Serializable {
+
     private int ragnarCount;
     private int rosooCount;
     private int lagertaCount;
 
-    public ArmyStorage() {
-        this.ragnarCount = 0;
-        this.rosooCount = 0;
-        this.lagertaCount = 0;
+    public BattleArmy() {
+    }
+
+    public BattleArmy(int ragnarCount, int rosooCount, int lagertaCount) {
+        this.ragnarCount = ragnarCount;
+        this.rosooCount = rosooCount;
+        this.lagertaCount = lagertaCount;
     }
 
     public int getRagnarCount() {
-        return this.ragnarCount;
+        return ragnarCount;
     }
 
     public int getRosooCount() {
-        return this.rosooCount;
+        return rosooCount;
     }
 
-    public int getLagertaCount() {return this.lagertaCount;}
+    public int getLagertaCount() {
+        return lagertaCount;
+    }
 
     public int getTotalArmyCount() {
-        return this.ragnarCount + this.rosooCount + this.lagertaCount;
-    }
-
-    public int getArmyCount(ArmyType type) {
-        return switch (type) {
-            case RAGNAR  -> ragnarCount;
-            case ROSOO   -> rosooCount;
-            case LAGERTA -> lagertaCount;
-        };
+        return ragnarCount + rosooCount + lagertaCount;
     }
 
     public void increaseArmy(ArmyType type, int count){
 
-        if(count < 0) {return;}
+        if(count < 0){return;}
 
         switch (type){
             case RAGNAR  -> this.ragnarCount  += count;
@@ -63,5 +65,13 @@ public class ArmyStorage {
             }
         }
         return true;
+    }
+
+    public int getArmyCount(ArmyType type) {
+        return switch (type) {
+            case RAGNAR  -> ragnarCount;
+            case ROSOO   -> rosooCount;
+            case LAGERTA -> lagertaCount;
+        };
     }
 }

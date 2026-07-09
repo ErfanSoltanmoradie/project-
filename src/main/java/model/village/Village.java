@@ -3,6 +3,9 @@ package model.village;
 
 import model.army.Armies;
 import model.army.Army;
+import model.army.LinkedList;
+import model.battle.Battle;
+import model.battle.BattleHistory;
 import model.building.Building;
 import model.building.BuildingType;
 import model.building.StorageBuilding;
@@ -39,6 +42,8 @@ public class Village implements Serializable {
     private Army army;
     private Armies armies;
     private int health;
+    private final Map<UUID, Battle> activeBattles;
+    private final LinkedList<BattleHistory> battleHistory;
 
 
     public Village(Coordinate coordinate, int health) {
@@ -51,6 +56,8 @@ public class Village implements Serializable {
         this.health = health;
         this.resourcesManagement = new ResourcesManagement(this);
         this.armies = new Armies();
+        this.activeBattles = new HashMap<>();
+        this.battleHistory = new LinkedList<>();
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
     }
 
@@ -125,6 +132,17 @@ public class Village implements Serializable {
         this.health = health;
     }
 
+    public void decreaseHealth(int amount){
+        this.health = Math.max(0, this.health - amount);
+    }
+
+    public Map<UUID, Battle> getActiveBattles() {
+        return activeBattles;
+    }
+
+    public LinkedList<BattleHistory> getBattleHistory() {
+        return battleHistory;
+    }
 
     public ReentrantReadWriteLock getLock() {
         return lock;

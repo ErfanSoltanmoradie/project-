@@ -60,6 +60,16 @@ public class LinkedList<T>{
         return tail.data;
     }
 
+    public void add(T data){
+        addNodeToTail(data);
+    }
+
+    public T remove(){
+        T data = getHead();
+        removeNodeFromHead();
+        return data;
+    }
+
     public boolean isEmpty(){
         return this.head == null;
     }
