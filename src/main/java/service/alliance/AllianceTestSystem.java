@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class AllianceTestSystem {
 
-    public static void main(String[] args) throws InterruptedException {
+    /*public static void main(String[] args) throws InterruptedException {
         System.out.println("***START***");
 
         Village villageA = new Village(new Coordinate(0, 0), 100);
@@ -81,5 +81,5 @@ public class AllianceTestSystem {
         } else {
             System.out.println("ERORRRRRRRRRRRRRRRRRRRRRRR");
         }
-    }
+    }*/
 }

@@ -31,6 +31,9 @@ public class BuildingFactory{
             case BARRACKS      ->  new Barrack(BuildingType.BARRACKS, buildTask.getCoordinate());
             case ARMY_PRODUCER ->  new ArmyProducer(BuildingType.ARMY_PRODUCER, buildTask.getCoordinate());
 
+            case MAJOR_BUILDING -> new MajorBuilding(BuildingType.MAJOR_BUILDING, buildTask.getCoordinate());
+
+            case RESEARCH_CENTER -> new ResearchCenter(BuildingType.RESEARCH_CENTER, buildTask.getCoordinate());
 
             // more building need to be added
             default -> null;

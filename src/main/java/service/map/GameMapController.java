@@ -31,7 +31,7 @@ public class GameMapController {
     }
 
     public void enterBuildMode(BuildingType buildingType) {
-        System.out.println("Select a place for your building" + buildingType);
+        System.out.println("Select a place for your building " + buildingType);
         this.buildModeActive = true;
         this.selectedBuildingType = buildingType;
         if (villageController != null) villageController.hideInfoPanel();
@@ -73,8 +73,8 @@ public class GameMapController {
 
         if (clickedBuilding != null) {
             this.selectedBuilding = clickedBuilding;
-            System.out.println("Selected: " + selectedBuilding.getType() + "level: " + selectedBuilding.getLevel()
-             + "Status: " + selectedBuilding.getBuildingStatus());
+            System.out.println("Selected: " + selectedBuilding.getType() + " level: " + selectedBuilding.getLevel()
+             + " Status: " + selectedBuilding.getBuildingStatus());
 
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);

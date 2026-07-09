@@ -48,7 +48,6 @@ public class Cost  implements Serializable {
 
             case SENTINEL_DEFENSIVE -> Sentinel.getSentinelUpgradeInfo(building.getLevel()).getCost();
 
-
             case LABORATORY -> Laboratory.upgradeBuildingInfo(building.getLevel()).getCost();
 
             case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
@@ -57,7 +56,9 @@ public class Cost  implements Serializable {
 
             case ARMY_PRODUCER      -> ArmyProducer.getArmyProducerUpgradeInfo(building.getLevel()).getCost();
 
+            case MAJOR_BUILDING -> MajorBuilding.upgradeBuildingInfo(building.getLevel()).getCost();
 
+            case RESEARCH_CENTER -> ResearchCenter.upgradeBuildingInfo(building.getLevel()).getCost();
 
             default -> new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(0));
         };

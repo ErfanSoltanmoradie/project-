@@ -13,10 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import model.building.Building;
-import model.building.BuildingStatus;
-import model.building.BuildingType;
-import model.building.MinerBuilding;
+import model.building.*;
 import model.player.Player;
 import model.resources.Resources;
 import model.resources.ResourcesType;
@@ -76,6 +73,12 @@ public class VillageController {
     @FXML private Button gunPowderMineBuildButton;
 
     @FXML private Button StoneMineBuildButton;
+
+    @FXML private Button tradeButton;
+
+    @FXML private Button majorBuildingButton;
+
+    @FXML private Button researchCenter;
 
     //@FXML private ImageView borderImageView;
 
@@ -229,7 +232,71 @@ public class VillageController {
         }
     }
 
+    @FXML
+    private void onMajorBuildingBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.MAJOR_BUILDING);
+        }
+    }
 
+    @FXML
+    private void onResearchCenterBuildClicked(){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.RESEARCH_CENTER);
+        }
+    }
+
+    @FXML
+    private void onTradeButtonClicked(){
+
+    }
+
+    private void setTradeButtonEnable(){
+        if(this.checkTradeResearchBuildingCondition() && this.checkTradeMajorBuildingCondition())
+            this.tradeButton.setDisable(false);
+    }
+
+    private boolean checkTradeMajorBuildingCondition(){
+        this.player.getLock().readLock().lock();
+        try {
+            this.player.getVillage().getLock().readLock().lock();
+            try {
+                for (Building building : this.player.getVillage().getBuildings().values()){
+                    if(building instanceof MajorBuilding ){
+                        if(building.getLevel() >= 3)
+                            return true;
+                    }
+                }
+            }finally {
+                this.player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            this.player.getLock().readLock().unlock();
+        }
+        return false;
+    }
+
+    private boolean checkTradeResearchBuildingCondition(){
+        this.player.getLock().readLock().lock();
+        try {
+            this.player.getVillage().getLock().readLock().lock();
+            try {
+                for (Building building : this.player.getVillage().getBuildings().values()){
+                    if(building instanceof ResearchCenter ){
+                        if(building.getLevel() >= 2)
+                            return true;
+                    }
+                }
+            }finally {
+                this.player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            this.player.getLock().readLock().unlock();
+        }
+        return false;
+    }
 
     public void showBuildingInfo(Building building){
         if(building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING){
@@ -280,6 +347,8 @@ public class VillageController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
+
+                setTradeButtonEnable();
 
                 taskProcessor.process();
 
