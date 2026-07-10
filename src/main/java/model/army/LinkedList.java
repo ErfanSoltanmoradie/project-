@@ -1,6 +1,8 @@
 package model.army;
 
-public class LinkedList<T>{
+import java.io.Serializable;
+
+public class LinkedList<T> implements Serializable {
 
     private class Node{
 

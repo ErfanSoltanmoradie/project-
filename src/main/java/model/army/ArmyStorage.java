@@ -1,6 +1,8 @@
 package model.army;
 
-public class ArmyStorage {
+import java.io.Serializable;
+
+public class ArmyStorage implements Serializable {
     private int ragnarCount;
     private int rosooCount;
     private int lagertaCount;
