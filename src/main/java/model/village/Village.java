@@ -3,11 +3,15 @@ package model.village;
 
 import model.army.Armies;
 import model.army.Army;
+
 import model.army.LinkedList;
 import model.battle.Battle;
 import model.battle.BattleHistory;
 import model.building.Building;
 import model.building.Plant;
+
+import model.building.*;
+
 import model.resources.Resources;
 import model.time.RandomEventTask;
 import model.time.TimedOperation;
@@ -26,13 +30,12 @@ import service.trade.TradeOffer;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Village implements Serializable {
 
+    private  String userName;
     private final UUID villageId;
     private Resources resources;
     private Coordinate coordinate;
@@ -49,8 +52,13 @@ public class Village implements Serializable {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private GameMap gameMap = new GameMap(70, 70, 10);
 
+
     private final Map<UUID, Battle> activeBattles;
     private final LinkedList<BattleHistory> battleHistory;
+
+
+    private final List<TradeOffer> receivedTradeRequests = new ArrayList<>();
+    private final List<TradeOffer> sentTradeRequests = new ArrayList<>();
 
 
     private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
@@ -75,11 +83,28 @@ public class Village implements Serializable {
         this.battleHistory = new LinkedList<>();
 
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
+
+        Customhouse customhouse = new Customhouse(BuildingType.CUSTOMHOUSE, new Coordinate(20,  10));
+        MajorBuilding majorBuilding = new MajorBuilding(BuildingType.MAJOR_BUILDING, new Coordinate(12, 15));
+        ResearchCenter researchCenter = new ResearchCenter(BuildingType.RESEARCH_CENTER, new Coordinate(5, 9));
+        majorBuilding.setLevel(5);
+        researchCenter.setLevel(5);
+        this.getBuildings().put(majorBuilding.getId(), majorBuilding);
+        this.getBuildings().put(researchCenter.getId(), researchCenter);
+        this.getBuildings().put(customhouse.getId(), customhouse);
     }
 
     public void runTimeServices(){  // we want the logic after loading the game
         this.resourcesManagement = new ResourcesManagement(this);
         this.loadService = new LoadService();
+    }
+
+    public List<TradeOffer> getReceivedTradeRequests() {
+        return receivedTradeRequests;
+    }
+
+    public List<TradeOffer> getSentTradeRequests() {
+        return sentTradeRequests;
     }
 
     public Map<UUID, TradeOffer> getTradeOffers() {
@@ -180,6 +205,14 @@ public class Village implements Serializable {
 
     public Map<UUID, Plant> getPlants() {
         return plants;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /*public Map<UUID, TradeOffer> getTradeOffers() {

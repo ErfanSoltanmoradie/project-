@@ -82,9 +82,16 @@ public class GameMapController {
         } else {
             this.selectedBuilding = null;
             if (villageController != null) {
+
                 villageController.hideInfoPanel();
                 villageController.hideShopPanel();
                 villageController.hideAddBuildingPanel();
+                villageController.hideTradePanel();
+                villageController.hideMakeATradePanel();
+                villageController.hideReceivedTradeRequestsPanel();
+                villageController.hideSentTradeRequestsPanel();
+                villageController.hideAlliancePanel();
+                villageController.hideAllianceRequestsPanel();
             }
         }
     }

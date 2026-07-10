@@ -31,6 +31,7 @@ public class Player  implements Serializable {
         this.village = village;
         this.playerId = UUID.randomUUID();
         this.userId = this.playerId;
+        this.getVillage().setUserName(this.username);
     }
 
     public ReentrantReadWriteLock getLock() {

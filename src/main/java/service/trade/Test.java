@@ -17,7 +17,7 @@ public class Test {
 
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("START");
+        /*System.out.println("START");
 
         Village villageSender = new Village(new Coordinate(0, 0), 100);
         Village villageReceiver = new Village(new Coordinate(30, 40), 100);
@@ -86,7 +86,7 @@ public class Test {
 
 
         System.out.println("final reciver wooc  " + villageReceiver.getResources().getAmount(ResourcesType.WOOD));
-        System.out.println("fianl reciver iron " + villageReceiver.getResources().getAmount(ResourcesType.IRON));
+        System.out.println("fianl reciver iron " + villageReceiver.getResources().getAmount(ResourcesType.IRON));*/
 
     }
 }

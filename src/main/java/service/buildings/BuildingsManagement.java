@@ -1,6 +1,7 @@
 package service.buildings;
 
 import model.building.*;
+import model.player.Player;
 import model.time.BuildTask;
 import model.time.UpgradeTask;
 import model.village.Village;
@@ -92,6 +93,66 @@ public class BuildingsManagement{
 
     public void removePlant(UUID plantId){
         village.getPlants().remove(plantId);
+    }
+
+
+    public static boolean checkMajorBuildingForTrade(Player player){
+        player.getLock().readLock().lock();
+        try {
+            player.getVillage().getLock().readLock().lock();
+            try {
+                for (Building building : player.getVillage().getBuildings().values()){
+                    if(building instanceof MajorBuilding){
+                        if(building.getLevel() >= 3)
+                            return true;
+                    }
+                }
+            }finally {
+                player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            player.getLock().readLock().unlock();
+        }
+        return false;
+    }
+
+    public static boolean checkResearchCenterBuildingForTrade(Player player){
+        player.getLock().readLock().lock();
+        try {
+            player.getVillage().getLock().readLock().lock();
+            try {
+                for (Building building : player.getVillage().getBuildings().values()){
+                    if(building instanceof ResearchCenter){
+                        if(building.getLevel() >= 2)
+                            return true;
+                    }
+                }
+            }finally {
+                player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            player.getLock().readLock().unlock();
+        }
+        return false;
+    }
+
+    public static boolean checkCustomHouseBuildingForTrade(Player player){
+        player.getLock().readLock().lock();
+        try {
+            player.getVillage().getLock().readLock().lock();
+            try {
+                for (Building building : player.getVillage().getBuildings().values()){
+                    if(building instanceof Customhouse){
+                        return true;
+                    }
+                }
+            }finally {
+                player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            player.getLock().readLock().unlock();
+        }
+        return false;
     }
 
     /*public int getTotalNeutralizationPower(){
