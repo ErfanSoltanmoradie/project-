@@ -11,7 +11,7 @@ public class Barrack extends Building implements Serializable {
     private int capacity;
 
     public Barrack(BuildingType type, Coordinate position) {
-        super(type, position);
+        super(type, position, 1, 1);
         this.capacity = 30;
     }
     private static final Map<Integer, UpgradeBuildingInfo> upgradeBarrackCost; //Integer ----> level

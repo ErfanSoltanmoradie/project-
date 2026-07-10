@@ -95,29 +95,29 @@ public class TaskProcessor {
             ResourcesManagement resourcesManagement = village.getResourcesManagement();
             Building building1 = null;
 
-            for (TaskResult task : taskResults){
+            for (TaskResult task : taskResults) {
 
 
                 village.getTimedOperation().putAll(task.getTasksToAdd());
 
                 //village.getBuildings().putAll(task.getBuildingsToAdd());
-                for (Building building : task.getBuildingsToAdd().values()){
-                    if(village.getGameMap().placeBuilding(building, building.getPosition().getX(), building.getPosition().getY())){
+                for (Building building : task.getBuildingsToAdd().values()) {
+                    if (village.getGameMap().placeBuilding(building, building.getPosition().getX(), building.getPosition().getY())) {
                         village.getBuildings().put(building.getId(), building);
                     }
                 }
 
-                for (Plant plant : task.getPlantsToAdd().values()){
-                    if(village.getGameMap().placePlant(plant, plant.getPosition().getX(), plant.getPosition().getY())){
+                for (Plant plant : task.getPlantsToAdd().values()) {
+                    if (village.getGameMap().placePlant(plant, plant.getPosition().getX(), plant.getPosition().getY())) {
                         village.getPlants().put(plant.getId(), plant);
                     }
                 }
 
-                for (UUID uuid : task.getTasksToRemove()){
+                for (UUID uuid : task.getTasksToRemove()) {
                     village.getTimedOperation().remove(uuid);
                 }
 
-                for (UUID uuid : task.getBuildingsToUpgrade()){
+                for (UUID uuid : task.getBuildingsToUpgrade()) {
                     Building building;
                     building = village.getBuildings().get(uuid);
 
@@ -131,44 +131,44 @@ public class TaskProcessor {
                     }
                 }
 
-                for (ResourcesType resourcesType : task.getResourcesToAdd().keySet()){
+                for (ResourcesType resourcesType : task.getResourcesToAdd().keySet()) {
                     resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
                 }
 
-                for (ResourcesType resourcesType : task.getResourcesToWithdraw().keySet()){
+                for (ResourcesType resourcesType : task.getResourcesToWithdraw().keySet()) {
                     resourcesManagement.withdrawResource(task.getResourcesToWithdraw().get(resourcesType), resourcesType);
                 }
 
-                for (UUID uuid : task.getProductionBuildingsToReschedule()){
+                for (UUID uuid : task.getProductionBuildingsToReschedule()) {
                     building1 = village.getBuildings().get(uuid);
 
-                    if(building1 == null)
+                    if (building1 == null)
                         continue;
 
                     System.out.println(building1.getBuildingStatus());
-                    if(building1.getBuildingStatus() == BuildingStatus.ACTIVE){
+                    if (building1.getBuildingStatus() == BuildingStatus.ACTIVE) {
                         ProductionTask nextTask = ProductionTaskFactory.buildProductionTask(building1);
-                        if(nextTask != null){
+                        if (nextTask != null) {
                             village.getTimedOperation().put(nextTask.getId(), nextTask);
                         }
                     }
                 }
 
-                for (EventType eventType : task.getEventType()){
+                for (EventType eventType : task.getEventType()) {
                     Event event = new Event(this.village);
-                    if(eventType == EventType.STORM)
+                    if (eventType == EventType.STORM)
                         event.storm();
-                    else if(eventType == EventType.DISEASE)
+                    else if (eventType == EventType.DISEASE)
                         event.disease();
                     else
                         event.discovery();
                 }
 
 
-                for (AllianceRequest allianceRequest : task.getAllianceRequestsToApply()){
+                for (AllianceRequest allianceRequest : task.getAllianceRequestsToApply()) {
                     if (!this.checkResearchCenterLevel(allianceRequest.getSender(), allianceRequest.getReceiver())) {
                         allianceRequest.setAllianceStatus(AllianceStatus.REJECTED);
-                    }else{
+                    } else {
                         allianceRequest.getReceiver().setAlliance(new Alliance(allianceRequest.getSender(), allianceRequest.getReceiver()));
                         allianceRequest.getSender().setAlliance(new Alliance(allianceRequest.getSender(), allianceRequest.getReceiver()));
                         this.applyAllianceBonus(allianceRequest);
@@ -176,16 +176,16 @@ public class TaskProcessor {
 
                 }
 
-                for (TradeOffer tradeOffer : task.getTradeOffers()){
+                for (TradeOffer tradeOffer : task.getTradeOffers()) {
 
-                    if (this.checkTradeCondition(tradeOffer)){
-                        for(Map.Entry<ResourcesType,Integer> entry : tradeOffer.getRequestedResources().entrySet()){
+                    if (this.checkTradeCondition(tradeOffer)) {
+                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getRequestedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
                             tradeOffer.getSenderVillage().getResourcesManagement().addResource(amount, resource);
                         }
 
-                        for(Map.Entry<ResourcesType,Integer> entry : tradeOffer.getOfferedResources().entrySet()){
+                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
                             tradeOffer.getReceiverVillage().getResourcesManagement().addResource(amount, resource);
@@ -199,14 +199,14 @@ public class TaskProcessor {
                     ArmyType trainedType = entry.getKey();
                     int count = entry.getValue();
 
-
+                    // 1. اضافه کردن نیروی جدید به اردوگاه (Storage)
                     village.getArmies().getArmyStorage().increaseArmy(trainedType, count);
 
+                    // 2. خارج کردن این نیرو از صف آموزش
                     village.getArmies().getArmyQueue().dequeue();
 
                     ArmyQueue queue = village.getArmies().getArmyQueue();
-
-
+                    // 3. اگر هنوز نیرویی در صف باقی مانده است، آموزش نیروی بعدی را کلید بزن
                     if (queue.isEmpty()) {
                         queue.setTraining(false);
                     } else {
@@ -227,11 +227,6 @@ public class TaskProcessor {
                 }
 
                 //battle
-
-                /*
-                for (Map.Entry<UUID, BattleStatus> entry1 : task.getBattleStatusChanges().entrySet()) {
-                    Battle battle = village.getBattles().get(entry1.getKey());
-
                 for (Map.Entry<UUID, BattleStatus> entry1 : task.getBattleStatusChange().entrySet()) {
 
                     System.out.println("BattleStatusChange = " + task.getBattleStatusChange());
@@ -239,25 +234,8 @@ public class TaskProcessor {
 
                     Battle battle = village.getActiveBattles().get(entry1.getKey());
 
-
                     if(battle == null)
                         continue;
-
-
-                    battle.setStatus(entry1.getValue());
-
-                    if(entry1.getValue() == BattleStatus.FIGHTING){
-
-                        BattleTask battleTask = new BattleTask(
-                                TimedOperation.getStartTime(),
-                                Duration.ofSeconds(20),
-                                battle
-                        );
-
-                        village.getTimedOperation().put(battleTask.getId(), battleTask);
-                    }
-                }*/
-
 
                     BattleWinner winner = task.getBattleWinners().get(battle.getBattleId());
 
@@ -308,7 +286,7 @@ public class TaskProcessor {
                         );
                         battle.getAttackerVillage().getTimedOperation().put(battleTask.getId(), battleTask);
 
-                    //the battle finished
+                        //the battle finished
                     }else if (entry1.getValue() == BattleStatus.RETURNING && battle.getAttackerVillage() == village){
 
                         ReturnFromBattleTask returnArmyTask = new ReturnFromBattleTask(
@@ -347,7 +325,7 @@ public class TaskProcessor {
                             );
                         }
 
-                    //return from battle
+                        //return from battle
                     }else if(entry1.getValue() == BattleStatus.FINISHED && battle.getAttackerVillage() == village){
 
                         // برگرداندن سربازهای مهاجم
@@ -399,8 +377,7 @@ public class TaskProcessor {
                         battle.getDefenderVillage().getActiveBattles().remove(battle.getBattleId());
                     }
                 }
-
-
+            }
             for (UUID uuid : removeTasks){
                 village.getTimedOperation().remove(uuid);
             }

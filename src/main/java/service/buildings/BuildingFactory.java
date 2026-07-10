@@ -1,7 +1,7 @@
 package service.buildings;
 
 import model.building.*;
-import model.military.Barracks;
+
 import model.time.BuildTask;
 
 public class BuildingFactory{
