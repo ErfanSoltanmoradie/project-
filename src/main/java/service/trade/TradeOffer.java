@@ -36,7 +36,6 @@ public class TradeOffer implements Serializable {
         this.tradeStatus = TradeStatus.PENDING;
         double distance = Math.sqrt(Math.pow(coordinateOfSender.getX() - coordinateOfReceiver.getX(), 2) + Math.pow(coordinateOfSender.getY() - coordinateOfReceiver.getY(), 2));
         this.tradeTime = (int) Math.ceil(distance / 10);
-
     }
 
     public UUID getUuid() {

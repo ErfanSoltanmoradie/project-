@@ -1,7 +1,5 @@
 package service.map;
 
-
-
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,19 +17,17 @@ import model.resources.ResourcesType;
 import model.time.TaskProcessor;
 import model.village.Village;
 import model.world.Coordinate;
+import service.alliance.AllianceRequest;
+import service.alliance.AllianceService;
 import service.buildings.BuildingsManagement;
 import service.resource.ResourcesManagement;
 import service.trade.TradeOffer;
 import service.trade.TradeService;
 import service.trade.TradeStatus;
 
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
-//import backend.Player;
 public class VillageController {
 
     private PlayerRepository playerRepository;
@@ -120,6 +116,22 @@ public class VillageController {
 
     @FXML VBox tradeRequestsContainer;
 
+    @FXML AnchorPane sentTradeRequestsPanel;
+
+    @FXML VBox tradeSentRequestsContainer;
+
+    @FXML Button allianceButton;
+
+    @FXML AnchorPane alliancePanel;
+
+    @FXML VBox allowedToAlliancePlayers;
+
+    @FXML AnchorPane allianceRequestsPanel;
+
+    @FXML Button managePendingAllianceRequests;
+
+    @FXML VBox allianceRequestContainer;
+
     private Player player;
     private TaskProcessor taskProcessor;
     private GameCanvasView gameCanvasView;
@@ -131,6 +143,8 @@ public class VillageController {
 
     private Player receiverTradeRequest;
     private Map<UUID, Player> traders = new HashMap<>();
+
+    private List<Player> allowedToAlliance = new ArrayList<>();
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -204,7 +218,7 @@ public class VillageController {
 
                 if(BuildingsManagement.checkResearchCenterBuildingForTrade(player1) &&
                         BuildingsManagement.checkCustomHouseBuildingForTrade(player1)&&
-                        BuildingsManagement.checkCustomHouseBuildingForTrade(player1)){
+                            BuildingsManagement.checkCustomHouseBuildingForTrade(player1)){
 
                     this.traders.put(player1.getPlayerId(), player1);
                 }
@@ -252,7 +266,7 @@ public class VillageController {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
 
-        Button selectBtn = new Button("choose");
+        Button selectBtn = new Button("CHOOSE");
         selectBtn.setStyle("-fx-background-color: #ff9800; " +
                 "-fx-text-fill: #121212; " +
                 "-fx-font-weight: bold; " +
@@ -262,7 +276,6 @@ public class VillageController {
         selectBtn.setOnAction(e -> {
             this.tradePanel.setVisible(false);
             this.openTradeOfferForm();
-            System.out.println("***" + targetPlayer.getUsername());
             this.setReceiverTradeRequest(targetPlayer);
         });
 
@@ -275,6 +288,66 @@ public class VillageController {
         return row;
     }
 
+    private void showSentTradeRequestsOnPanel(){
+        tradeSentRequestsContainer.getChildren().clear();
+
+        this.player.getVillage().getLock().readLock().lock();
+        try {
+            for(TradeOffer tradeOffer : player.getVillage().getSentTradeRequests()){
+                if(tradeOffer.getTradeStatus() == TradeStatus.PENDING){
+                    HBox playerRow = this.createSentTradeRequestsRowElement(tradeOffer) ;
+
+                    this.tradeSentRequestsContainer.getChildren().add(playerRow);
+                }
+            }
+        }finally {
+            this.player.getVillage().getLock().readLock().unlock();
+        }
+    }
+
+    private HBox createSentTradeRequestsRowElement(TradeOffer tradeOffer){
+        HBox row = new HBox();
+        row.setSpacing(15);
+
+        row.setStyle("-fx-padding: 10; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1; " +
+                "-fx-alignment: CENTER_LEFT;");
+
+
+        VBox playerVBox = new VBox();
+        playerVBox.setSpacing(5);
+
+        String receiverPlayerName = tradeOffer.getAlliancesreceiver().getUsername();
+        Label receiverLabel = new Label("receiver player [ " + receiverPlayerName + " ]");
+        receiverLabel.setStyle("-fx-text-fill: #FF9800FF; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        playerVBox.getChildren().addAll(receiverLabel);
+
+        VBox resourcesContainer = new VBox();
+        resourcesContainer.setSpacing(4);
+
+
+        String offeredStr = String.valueOf(tradeOffer.getOfferedResources().get(ResourcesType.WOOD));
+        String requestedStr = String.valueOf(tradeOffer.getRequestedResources().get(ResourcesType.IRON));
+
+        Label receiveLabel = new Label("RECEIVE: " + offeredStr);
+        receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
+
+        Label payLabel = new Label("SEND: " + requestedStr);
+        payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
+
+        resourcesContainer.getChildren().addAll(receiveLabel, payLabel);
+
+        row.getChildren().addAll(playerVBox, resourcesContainer);
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
+
+        return row;
+    }
 
 
 
@@ -382,10 +455,202 @@ public class VillageController {
         return row;
     }
 
+    private void findAllowedPlayerForAlliance(){
+
+        this.allowedToAlliance.clear();
+
+        if(this.player.getAlliance() == null){
+            for (Player player1 : this.playerRepository.getAllPlayers().values()){
+                boolean flag = false;
+                player1.getLock().readLock().lock();
+                try {
+                    player1.getVillage().getLock().readLock().lock();
+                    try {
+
+                        if(player1.getPlayerId().equals(this.player.getPlayerId())){
+                            continue;
+                        }
+
+
+                        if(player1.getAlliance() != null)
+                            continue;
+
+                        for (AllianceRequest allianceRequest : player1.getPendingRequests()){
+                            if(allianceRequest == null)
+                                continue;
+                            if(allianceRequest.getSender().equals(this.player) ||allianceRequest.getReceiver().equals(this.player)){
+                                flag = true;
+                            }
+
+                        }
+                        if (flag)
+                            continue;
+
+                        if(AllianceService.checkSenderAllianceRequestMajorBuildingLevel(player1)
+                                && AllianceService.checkCloudForAllianceSender(player1)
+                                && AllianceService.checkScienceLevelForAlliance(player1))
+
+                            this.allowedToAlliance.add(player1);
+
+                    }finally {
+                        player1.getVillage().getLock().readLock().unlock();
+                    }
+                }finally {
+                    player1.getLock().readLock().unlock();
+                }
+            }
+        }
+    }
+
+    private void showAllowedToAllianceOnPanel(List<Player> allowedToAlliance){
+
+        this.allowedToAlliancePlayers.getChildren().clear();
+        for (Player player1 : allowedToAlliance){
+
+            HBox playerRow = createAllianceRowElement(player1);
+
+            this.allowedToAlliancePlayers.getChildren().add(playerRow);
+        }
+    }
+
+    private HBox createAllianceRowElement(Player targetPlayer) {
+        HBox row = new HBox();
+        row.setSpacing(15);
+
+        row.setStyle("-fx-padding: 10; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1; " +
+                "-fx-alignment: CENTER_LEFT;");
+
+
+        VBox textContainer = new VBox();
+        textContainer.setSpacing(4);
+
+        String pName = targetPlayer.getUsername();
+        Label nameLabel = new Label("Player: " + pName);
+        nameLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        Coordinate coord = targetPlayer.getVillage().getCoordinate();
+        Label coordLabel = new Label("Positiont: [" + coord.getX() + " , " + coord.getY() + "]");
+        coordLabel.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 11px;");
+
+        textContainer.getChildren().addAll(nameLabel, coordLabel);
+
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+        Button selectBtn = new Button("CHOOSE");
+        selectBtn.setStyle("-fx-background-color: #ff9800; " +
+                "-fx-text-fill: #121212; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;");
+
+        selectBtn.setOnAction(e -> {
+            this.hideAlliancePanel();
+            AllianceService allianceService = new AllianceService();
+            allianceService.sendRequest(this.player, targetPlayer);
+        });
+
+        row.getChildren().addAll(textContainer, spacer, selectBtn);
+
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
+
+        return row;
+    }
+
+    private void showAllianceRequests(){
+        this.allianceRequestContainer.getChildren().clear();
+
+        for (AllianceRequest allianceRequest : this.player.getPendingRequests()){
+            if(!allianceRequest.getSender().equals(this.player) /*&& allianceRequest.getSender().getAlliance() != null*/){
+                HBox allianceRow = createAllianceRequestsElement(allianceRequest);
+                this.allianceRequestContainer.getChildren().add(allianceRow);
+            }
+        }
+    }
+
+    private HBox createAllianceRequestsElement(AllianceRequest allianceRequest){
+        HBox row = new HBox();
+        row.setSpacing(10);
+
+        row.setStyle("-fx-padding: 10; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1; " +
+                "-fx-alignment: CENTER_LEFT;");
+
+        VBox textContainer = new VBox();
+        textContainer.setSpacing(4);
+
+        String senderName = allianceRequest.getSender().getUsername();
+        Label usernameLabel = new Label("Player: " + senderName);
+        usernameLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        textContainer.getChildren().add(usernameLabel);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+        Button selectBtn = new Button("ACCEPT");
+        selectBtn.setStyle("-fx-background-color: #ff9800; " +
+                "-fx-text-fill: #121212; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;");
+
+        selectBtn.setOnAction(e -> {
+            this.hideAllianceRequestsPanel();
+            AllianceService allianceService = new AllianceService();
+            allianceService.acceptRequest(allianceRequest);
+        });
+
+        row.getChildren().addAll(textContainer, spacer, selectBtn);
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
+        return row;
+    }
+
     private void openTradeOfferForm(){
         this.showMakeATradePanel();
     }
 
+    @FXML
+    private void onManagePendingAllianceRequestsClicked(){
+        this.hideAlliancePanel();
+        this.showAllianceRequestsPanel();
+        this.showAllianceRequests();
+    }
+
+    @FXML
+    private void onAllianceButtonClicked(){
+        this.showAlliancePanel();
+        this.findAllowedPlayerForAlliance();
+        showAllowedToAllianceOnPanel(this.allowedToAlliance);
+    }
+
+    @FXML
+    private void onTradeButtonClicked(){
+        this.showTradePanel();
+        this.validPlayersToTrade();
+        this.showTradersOnPanel(this.traders);
+    }
+
+    @FXML
+    private void onPendingSentRequestButtonClicked(){
+        this.hideTradePanel();
+        this.showSentTradeRequestsPanel();
+        this.showSentTradeRequestsOnPanel();
+    }
 
     @FXML
     private void onMakeADealClicked(){
@@ -501,13 +766,6 @@ public class VillageController {
     }
 
     @FXML
-    private void onTradeButtonClicked(){
-        this.showTradePanel();
-        this.validPlayersToTrade();
-        this.showTradersOnPanel(this.traders);
-    }
-
-    @FXML
     private void onLeaveTradeButtonClicked(){
         this.hideTradePanel();
     }
@@ -541,7 +799,23 @@ public class VillageController {
             this.tradeButton.setDisable(false);
     }
 
+    private void setAllianceButtonEnable(){
+        this.player.getLock().readLock().lock();
+        try {
+            this.player.getVillage().getLock().readLock().lock();
+            try {
+                if(AllianceService.checkSenderAllianceRequestMajorBuildingLevel(this.player)
+                        && AllianceService.checkCloudForAllianceSender(this.player)
+                        && AllianceService.checkScienceLevelForAlliance(this.player))
 
+                    this.allianceButton.setDisable(false);
+            }finally {
+                this.player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            this.player.getLock().readLock().unlock();
+        }
+    }
 
     private void showMakeATradePanel(){
         this.makeATradePanel.setVisible(true);
@@ -578,6 +852,36 @@ public class VillageController {
         this.addBuildingPanel.setManaged(false);
     }
 
+    private void showSentTradeRequestsPanel(){
+        this.sentTradeRequestsPanel.setVisible(true);
+        this.sentTradeRequestsPanel.setManaged(true);
+    }
+
+   public void hideSentTradeRequestsPanel(){
+        this.sentTradeRequestsPanel.setVisible(false);
+        this.sentTradeRequestsPanel.setManaged(false);
+    }
+
+    public void hideAlliancePanel(){
+        this.alliancePanel.setVisible(false);
+        this.alliancePanel.setManaged(false);
+    }
+
+    private void showAlliancePanel(){
+        this.alliancePanel.setVisible(true);
+        this.alliancePanel.setManaged(true);
+    }
+
+    private void showAllianceRequestsPanel(){
+        this.allianceRequestsPanel.setVisible(true);
+        this.allianceRequestsPanel.setManaged(true);
+    }
+
+    public void hideAllianceRequestsPanel(){
+        this.allianceRequestsPanel.setVisible(false);
+        this.allianceRequestsPanel.setManaged(false);
+    }
+
     private void updateResourcesUI(){
         Resources resources = this.player.getVillage().getResources();
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
@@ -604,6 +908,7 @@ public class VillageController {
             public void handle(long now) {
 
                 setTradeButtonEnable();
+                setAllianceButtonEnable();
 
                 taskProcessor.process();
 
@@ -640,6 +945,14 @@ public class VillageController {
 
     public void setTraders(Map<UUID, Player> traders) {
         this.traders = traders;
+    }
+
+    public List<Player> getAllowedToAlliance() {
+        return allowedToAlliance;
+    }
+
+    public void setAllowedToAlliance(List<Player> allowedToAlliance) {
+        this.allowedToAlliance = allowedToAlliance;
     }
 }
 

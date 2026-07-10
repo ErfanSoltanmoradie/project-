@@ -167,6 +167,7 @@ public class TaskProcessor {
                         allianceRequest.getReceiver().setAlliance(new Alliance(allianceRequest.getSender(), allianceRequest.getReceiver()));
                         allianceRequest.getSender().setAlliance(new Alliance(allianceRequest.getSender(), allianceRequest.getReceiver()));
                         this.applyAllianceBonus(allianceRequest);
+                        System.out.println("SUCCESS");
                     }
 
                 }

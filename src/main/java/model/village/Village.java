@@ -3,10 +3,7 @@ package model.village;
 
 import model.army.Armies;
 import model.army.Army;
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.Customhouse;
-import model.building.Plant;
+import model.building.*;
 import model.resources.Resources;
 import model.time.RandomEventTask;
 import model.time.TimedOperation;
@@ -68,6 +65,12 @@ public class Village implements Serializable {
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
 
         Customhouse customhouse = new Customhouse(BuildingType.CUSTOMHOUSE, new Coordinate(20,  10));
+        MajorBuilding majorBuilding = new MajorBuilding(BuildingType.MAJOR_BUILDING, new Coordinate(12, 15));
+        ResearchCenter researchCenter = new ResearchCenter(BuildingType.RESEARCH_CENTER, new Coordinate(5, 9));
+        majorBuilding.setLevel(5);
+        researchCenter.setLevel(5);
+        this.getBuildings().put(majorBuilding.getId(), majorBuilding);
+        this.getBuildings().put(researchCenter.getId(), researchCenter);
         this.getBuildings().put(customhouse.getId(), customhouse);
     }
 

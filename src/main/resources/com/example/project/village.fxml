@@ -28,6 +28,11 @@
                   <Font name="Calibri Bold Italic" size="15.0" />
                </font>
             </Button>
+            <Button fx:id="allianceButton" disable="true" layoutX="284.0" layoutY="365.0" mnemonicParsing="false" onAction="#onAllianceButtonClicked" prefHeight="58.0" prefWidth="66.0" text="ALLIANCE" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="283.0">
+               <font>
+                  <Font name="System Bold Italic" size="11.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="443.0" prefWidth="200.0" StackPane.alignment="CENTER_RIGHT">
@@ -243,7 +248,7 @@
                </content>
             </ScrollPane>
             <Button fx:id="receivedtraderequests" layoutX="78.0" layoutY="364.0" mnemonicParsing="false" onAction="#onReceivedTradeRequests" prefHeight="27.0" prefWidth="148.0" text="received trade requests" />
-            <Button layoutX="366.0" layoutY="364.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="148.0" text="pending sent requests" />
+            <Button fx:id="pendingSentRequestButton" layoutX="366.0" layoutY="364.0" mnemonicParsing="false" onAction="#onPendingSentRequestButtonClicked" prefHeight="27.0" prefWidth="148.0" text="pending sent requests" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="makeATradePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="600.0" style="-fx-background-color: #1a1a2e;" visible="false" StackPane.alignment="CENTER">
@@ -353,7 +358,43 @@
          <children>
             <ScrollPane layoutX="-35.0" layoutY="-37.0" prefHeight="340.0" prefWidth="528.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <content>
-                  <VBox fx:id="tradeRequestsContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="631.0" />
+                  <VBox fx:id="tradeRequestsContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="631.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="sentTradeRequestsPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="441.0" prefWidth="634.0" style="-fx-background-color: black;" visible="false">
+         <children>
+            <ScrollPane layoutX="-35.0" layoutY="-37.0" prefHeight="340.0" prefWidth="528.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <content>
+                  <VBox fx:id="tradeSentRequestsContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="631.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="alliancePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="403.0" prefWidth="580.0" style="-fx-background-color: #1a1a2e;" visible="false">
+         <children>
+            <Label alignment="CENTER" layoutX="303.0" prefHeight="33.0" prefWidth="633.0" text="READY EMPIRES TO BE ALLIANCE WITH YOU SIR!" textFill="#ffcc00" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ScrollPane layoutX="7.0" layoutY="58.0" pannable="true" prefHeight="301.0" prefWidth="550.0" style="-fx-background-color: #56565d;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+               <content>
+                  <VBox fx:id="allowedToAlliancePlayers" prefHeight="295.0" prefWidth="534.0" />
+               </content></ScrollPane>
+            <Button fx:id="managePendingAllianceRequests" layoutX="189.0" layoutY="364.0" mnemonicParsing="false" onAction="#onManagePendingAllianceRequestsClicked" text="Manage pending alliance requestst" textFill="RED">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="allianceRequestsPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0" prefWidth="574.0" visible="false">
+         <children>
+            <ScrollPane layoutX="187.0" layoutY="87.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
+               <content>
+                  <VBox fx:id="allianceRequestContainer" prefHeight="312.0" prefWidth="492.0" />
                </content>
             </ScrollPane>
          </children>

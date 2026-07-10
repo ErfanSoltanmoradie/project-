@@ -18,14 +18,19 @@ public class AllianceService {
             AllianceService.lockVillages(sender, receiver);
             try {
 
-                if(!this.checkMajorBuildingLevel(sender, receiver)){
+                if(!AllianceService.checkScienceLevelForAlliance(sender) || !AllianceService.checkScienceLevelForAlliance(receiver))
+                    return;
+
+                if(!AllianceService.checkReceiverAllianceRequestMajorBuildingLevel(receiver)
+                            && !AllianceService.checkSenderAllianceRequestMajorBuildingLevel(sender)){
                     return;
                 }
 
                 if(this.hasAlliance(sender, receiver) || sender.getPlayerId().equals(receiver.getPlayerId()) || isRequestAlreadyExist(sender, receiver))
                     return;
 
-                if(!this.checkCloudForAlliance(sender, receiver)) return;
+                if(!AllianceService.checkCloudForAllianceSender(sender)
+                        && !AllianceService.checkCloudForAllianceReceiver(receiver)) return;
 
                 if(!this.checkAllianceCost(sender, receiver))
                     return;
@@ -46,9 +51,10 @@ public class AllianceService {
                     }
                 }
 
-
                 AllianceRequest allianceRequest = new AllianceRequest(sender, receiver);
                 this.addPendingRequest(allianceRequest, sender, receiver);
+                System.out.println("ALLIANCE REQUEST SENT SUCCESSFULLY");
+
             }finally {
                 AllianceService.unlockVillages(sender, receiver);
             }
@@ -57,34 +63,19 @@ public class AllianceService {
         }
     }
 
-    private void addPendingRequest(AllianceRequest allianceRequest, Player sender, Player receiver){
-        sender.addPendingRequest(allianceRequest);
-        receiver.addPendingRequest(allianceRequest);
-    }
-
-    private boolean checkCloudForAlliance(Player sender, Player receiver){
-
-        if(sender.getVillage().getCloud().getNeutralized()<200) return false;
-        if(receiver.getVillage().getCloud().getNeutralized()<200) return false;
-
-        return true;
-    }
-
-
-
     public void acceptRequest(AllianceRequest allianceRequest){
         if(allianceRequest==null) return;
-
-
 
         AllianceService.lockPlayers(allianceRequest.getSender(), allianceRequest.getReceiver());
         try {
             AllianceService.lockVillages(allianceRequest.getSender(), allianceRequest.getReceiver());
             try {
-                if(!this.checkCloudForAlliance(allianceRequest)) return;
+                if(!AllianceService.checkCloudForAlliance(allianceRequest)) return;
 
-                if(!this.checkMajorBuildingLevel(allianceRequest.getSender(), allianceRequest.getReceiver()))
+                if(!AllianceService.checkReceiverAllianceRequestMajorBuildingLevel(allianceRequest.getReceiver())
+                        && !AllianceService.checkSenderAllianceRequestMajorBuildingLevel(allianceRequest.getSender())){
                     return;
+                }
 
                 if(this.checkAllianceCost(allianceRequest.getSender(), allianceRequest.getReceiver())) {
                     this.withdrawAllianceCost(allianceRequest.getSender(), allianceRequest.getReceiver());
@@ -108,6 +99,13 @@ public class AllianceService {
         rejectRequest(allianceRequest);
 
     }
+
+    private void addPendingRequest(AllianceRequest allianceRequest, Player sender, Player receiver){
+        sender.addPendingRequest(allianceRequest);
+        receiver.addPendingRequest(allianceRequest);
+    }
+
+
 
     private void cleanUpAllPendingRequests(Player sender, Player receiver, AllianceRequest acceptedRequest) {
 
@@ -156,33 +154,6 @@ public class AllianceService {
         return true;
     }
 
-
-    public static void lockPlayers(Player p1, Player p2) {
-
-        if (p1.getPlayerId().compareTo(p2.getPlayerId()) < 0) {
-            p1.getLock().writeLock().lock();
-            p2.getLock().writeLock().lock();
-        } else {
-            p2.getLock().writeLock().lock();
-            p1.getLock().writeLock().lock();
-        }
-    }
-
-    public static void unlockPlayers(Player p1, Player p2) {
-        p1.getLock().writeLock().unlock();
-        p2.getLock().writeLock().unlock();
-    }
-
-    public static void lockVillages(Player p1, Player p2) {
-        if (p1.getPlayerId().compareTo(p2.getPlayerId()) < 0) {
-            p1.getVillage().getLock().writeLock().lock();
-            p2.getVillage().getLock().writeLock().lock();
-        } else {
-            p2.getVillage().getLock().writeLock().lock();
-            p1.getVillage().getLock().writeLock().lock();
-        }
-    }
-
     public static void unlockVillages(Player p1, Player p2) {
         p1.getVillage().getLock().writeLock().unlock();
         p2.getVillage().getLock().writeLock().unlock();
@@ -194,23 +165,7 @@ public class AllianceService {
 
             if(allianceRequest.getSender() != null && allianceRequest.getReceiver() != null)
                 this.removePendingRequests(allianceRequest);
-
         }
-
-    }
-
-    private boolean checkCloudForAlliance(AllianceRequest allianceRequest){
-
-        allianceRequest.getSender().getVillage().getLock().readLock().lock();
-
-        if(allianceRequest.getSender().getVillage().getCloud().getNeutralized()<200) return false;
-
-
-        allianceRequest.getReceiver().getVillage().getLock().readLock().lock();
-
-        if(allianceRequest.getReceiver().getVillage().getCloud().getNeutralized()<200) return false;
-
-        return true;
     }
 
 
@@ -239,16 +194,44 @@ public class AllianceService {
         return false;
     }
 
-    public boolean checkMajorBuildingLevel(Player senderPlayer, Player receiverPlayer){
-        Building receiverPlayerMajorBuilding= null;
-        Building senderPlayerMajorBuilding = null;
+    public static boolean checkCloudForAllianceSender(Player sender){
 
-        for(Building building : receiverPlayer.getVillage().getBuildings().values()){
-            if(building.getType() == BuildingType.MAJOR_BUILDING){
-                receiverPlayerMajorBuilding = building;
-                break;
+        if(sender.getVillage().getCloud().getNeutralized()<200) return false;
+
+
+        return true;
+    }
+
+    public static boolean checkCloudForAllianceReceiver(Player receiver){
+
+        if(receiver.getVillage().getCloud().getNeutralized()<200) return false;
+
+        return true;
+    }
+
+    public static boolean checkCloudForAlliance(AllianceRequest allianceRequest){
+
+        if(allianceRequest.getSender().getVillage().getCloud().getNeutralized()<200) return false;
+
+        if(allianceRequest.getReceiver().getVillage().getCloud().getNeutralized()<200) return false;
+
+        return true;
+    }
+
+    public static boolean checkScienceLevelForAlliance(Player player){
+        for (Building building : player.getVillage().getBuildings().values()){
+            if(building instanceof ResearchCenter){
+                if(building.getLevel() >= 2){
+                    return true;
+                }
             }
         }
+        return false;
+    }
+
+    public static boolean checkSenderAllianceRequestMajorBuildingLevel(Player senderPlayer){
+
+        Building senderPlayerMajorBuilding = null;
 
         for(Building building : senderPlayer.getVillage().getBuildings().values()){
             if(building.getType() == BuildingType.MAJOR_BUILDING){
@@ -257,12 +240,57 @@ public class AllianceService {
             }
         }
 
-        if (receiverPlayerMajorBuilding == null || senderPlayerMajorBuilding == null)
+        if(senderPlayerMajorBuilding == null)
             return false;
 
-        if(senderPlayerMajorBuilding.getLevel() >= 2 && receiverPlayerMajorBuilding.getLevel() >= 2)
+        if(senderPlayerMajorBuilding.getLevel() >= 2)
             return true;
 
         return false;
+    }
+
+    public static boolean checkReceiverAllianceRequestMajorBuildingLevel(Player receiverPlayer){
+        Building receiverPlayerMajorBuilding= null;
+
+        for(Building building : receiverPlayer.getVillage().getBuildings().values()){
+            if(building.getType() == BuildingType.MAJOR_BUILDING){
+                receiverPlayerMajorBuilding = building;
+                break;
+            }
+        }
+
+        if (receiverPlayerMajorBuilding == null)
+            return false;
+
+        if(receiverPlayerMajorBuilding.getLevel() >= 2)
+            return true;
+
+        return false;
+    }
+
+    public static void lockPlayers(Player p1, Player p2) {
+
+        if (p1.getPlayerId().compareTo(p2.getPlayerId()) < 0) {
+            p1.getLock().writeLock().lock();
+            p2.getLock().writeLock().lock();
+        } else {
+            p2.getLock().writeLock().lock();
+            p1.getLock().writeLock().lock();
+        }
+    }
+
+    public static void unlockPlayers(Player p1, Player p2) {
+        p1.getLock().writeLock().unlock();
+        p2.getLock().writeLock().unlock();
+    }
+
+    public static void lockVillages(Player p1, Player p2) {
+        if (p1.getPlayerId().compareTo(p2.getPlayerId()) < 0) {
+            p1.getVillage().getLock().writeLock().lock();
+            p2.getVillage().getLock().writeLock().lock();
+        } else {
+            p2.getVillage().getLock().writeLock().lock();
+            p1.getVillage().getLock().writeLock().lock();
+        }
     }
 }

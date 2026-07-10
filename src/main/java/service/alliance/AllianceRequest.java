@@ -2,10 +2,11 @@ package service.alliance;
 
 import model.player.Player;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
-public class AllianceRequest {
+public class AllianceRequest implements Serializable {
 
     private AllianceStatus allianceStatus;
     private UUID id;
