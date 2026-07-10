@@ -1,8 +1,6 @@
 package model.army;
 
-import java.io.Serializable;
-
-public class LinkedList<T> implements Serializable {
+public class LinkedList<T>{
 
     private class Node{
 
@@ -60,6 +58,16 @@ public class LinkedList<T> implements Serializable {
             return null;
         }
         return tail.data;
+    }
+
+    public void add(T data){
+        addNodeToTail(data);
+    }
+
+    public T remove(){
+        T data = getHead();
+        removeNodeFromHead();
+        return data;
     }
 
     public boolean isEmpty(){

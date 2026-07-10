@@ -25,6 +25,7 @@ public class ArmyMnagmentTest {
 
         Village village = player.getVillage();
 
+        // ساختمان‌های لازم
         Barrack barrack = new Barrack(BuildingType.BARRACKS, new Coordinate(0,0));
         ArmyProducer producer = new ArmyProducer(BuildingType.ARMY_PRODUCER, new Coordinate(1,0));
 
@@ -142,7 +143,7 @@ public class ArmyMnagmentTest {
 
         armyManagement.trainArmy(ArmyType.RAGNAR, 3);
 
-     
+        // منتظر می‌مانیم تا اولین سرباز آماده شود.
         Thread.sleep(5500);
 
         TaskProcessor processor = new TaskProcessor(village);

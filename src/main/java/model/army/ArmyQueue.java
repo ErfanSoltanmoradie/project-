@@ -1,8 +1,6 @@
 package model.army;
 
-import java.io.Serializable;
-
-public class ArmyQueue implements Serializable {
+public class ArmyQueue {
 
     private final LinkedList<QueuedArmy> queue;
     private boolean training;

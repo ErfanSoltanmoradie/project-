@@ -88,7 +88,7 @@ public class ArmyManagement {
 
                 armies.getArmyQueue().enqueue(queuedArmy);
 
-                statTime = finishTime;
+                statTime = finishTime; // زمان شروع برای دور بعدیِ حلقه باید زمان پایانِ قبلی باشد
             }
             if (isMachineIdle){
 

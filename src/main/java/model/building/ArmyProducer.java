@@ -10,7 +10,7 @@ import java.util.Map;
 public class ArmyProducer extends Building implements Serializable {
 
     public ArmyProducer(BuildingType type, Coordinate position) {
-        super(type, position, 1, 1);
+        super(type, position);
     }
 
     private static final Map<Integer, UpgradeBuildingInfo> upgradeArmyProducerCost; //Integer ----> level
