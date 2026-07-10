@@ -27,6 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Village implements Serializable {
 
+    private  String userName;
     private final UUID villageId;
     private Resources resources;
     private Coordinate coordinate;
@@ -171,6 +172,14 @@ public class Village implements Serializable {
 
     public Map<UUID, Plant> getPlants() {
         return plants;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     /*public Map<UUID, TradeOffer> getTradeOffers() {

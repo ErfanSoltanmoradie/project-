@@ -55,16 +55,13 @@ public class TradeService {
                     }
                 }
 
-                /*for (Map.Entry<ResourcesType, Integer> entry : requested.entrySet()) {
-                    ResourcesType type = entry.getKey();
-                    Integer amount = entry.getValue();
-                    if (receiverVillage.getResourcesManagement().getMaxCapacity(type) < amount) {
-                        System.out.println("FUCKED UP");
-                        return;
-                    }
-                }*/
 
-                TradeOffer tradeOffer = new TradeOffer(senderVillage, receiverVillage, sender, receiver, offered, requested);// for making & showing an offer in receiverVillage
+                TradeOffer tradeOffer =null;
+                if(sender.getAlliance().getAllianceId().equals(receiver.getAlliance().getAllianceId())){
+                    tradeOffer = new TradeOffer(senderVillage, receiverVillage, sender, receiver, offered, requested);// for making & showing an offer in receiverVillage
+                } else{
+                    tradeOffer = new TradeOffer(senderVillage, receiverVillage, null, null, offered, requested);// for making & showing an offer in receiverVillage
+                }
                 sender.getVillage().getSentTradeRequests().add(tradeOffer);
                 receiver.getVillage().getReceivedTradeRequests().add(tradeOffer);
 
@@ -115,7 +112,6 @@ public class TradeService {
                 ResourcesType type = entry.getKey();
                 Integer amount = entry.getValue();
                 if (offer.getReceiverVillage().getResources().getAmount(type) < amount) {
-                    System.out.println("FUCKED UP");
                     return;
                 }
             }

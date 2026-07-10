@@ -320,7 +320,7 @@ public class VillageController {
         VBox playerVBox = new VBox();
         playerVBox.setSpacing(5);
 
-        String receiverPlayerName = tradeOffer.getAlliancesreceiver().getUsername();
+        String receiverPlayerName = tradeOffer.getReceiverVillage().getUserName();
         Label receiverLabel = new Label("receiver player [ " + receiverPlayerName + " ]");
         receiverLabel.setStyle("-fx-text-fill: #FF9800FF; -fx-font-size: 14px; -fx-font-weight: bold;");
 
@@ -384,7 +384,7 @@ public class VillageController {
         senderContainer.setSpacing(4);
 
 
-        String senderName = offer.getAlliancesender().getUsername();
+        String senderName = offer.getSenderVillage().getUserName();
         Label senderLabel = new Label("SENDER PLAYER [ " + senderName + " ]");
         senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
 
