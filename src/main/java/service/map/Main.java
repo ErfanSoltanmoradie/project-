@@ -28,10 +28,19 @@ import java.util.UUID;
 
 
 public class Main extends Application {
+
+    private Start start = new Start();
+
+    public  Start getStart() {
+        return start;
+    }
+
+    public void setStart(Start start) {
+        this.start = start;
+    }
+
     @Override
     public void start(Stage primaryStage) throws IOException {
-
-        Start start = new Start();
 
         FXMLLoader authLoader = new FXMLLoader(getClass().getResource("/com/example/project/auth.fxml"));
         Parent authRoot = null;
@@ -41,7 +50,9 @@ public class Main extends Application {
             throw new RuntimeException(e);
         }
         AuthController authController = authLoader.getController();
+        authController.setPlayerRepository(start.getPlayerRepository());
         authController.setAuthService(start.getAuthService());
+
 
         Scene scene = new Scene(authRoot);
         primaryStage.setScene(scene);
@@ -53,6 +64,8 @@ public class Main extends Application {
             start.saveAllData();
         });
     }
+
+
 
     public static void main(String[] args) {
         launch(args);

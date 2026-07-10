@@ -85,6 +85,9 @@ public class GameMapController {
                 villageController.hideInfoPanel();
                 villageController.hideShopPanel();
                 villageController.hideAddBuildingPanel();
+                villageController.hideTradePanel();
+                villageController.hideMakeATradePanel();
+                villageController.hideReceivedTradeRequestsPanel();
             }
         }
     }

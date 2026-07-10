@@ -5,10 +5,11 @@ import model.resources.ResourcesType;
 import model.village.Village;
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class TradeOffer {
+public class TradeOffer implements Serializable {
     private final UUID uuid;
     private final Village sender;
     private final Village receiver;

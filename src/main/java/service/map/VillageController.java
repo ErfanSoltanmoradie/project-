@@ -8,23 +8,41 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import model.building.*;
 import model.player.Player;
+import model.repository.PlayerRepository;
 import model.resources.Resources;
 import model.resources.ResourcesType;
 import model.time.TaskProcessor;
 import model.village.Village;
+import model.world.Coordinate;
+import service.buildings.BuildingsManagement;
 import service.resource.ResourcesManagement;
+import service.trade.TradeOffer;
+import service.trade.TradeService;
+import service.trade.TradeStatus;
 
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 //import backend.Player;
 public class VillageController {
+
+    private PlayerRepository playerRepository;
+
+    public PlayerRepository getPlayerRepository() {
+        return playerRepository;
+    }
+
+    public void setPlayerRepository(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     @FXML private StackPane rootStackPane;
 
@@ -80,7 +98,27 @@ public class VillageController {
 
     @FXML private Button researchCenter;
 
-    //@FXML private ImageView borderImageView;
+    @FXML private AnchorPane tradePanel;
+
+    @FXML private Button leaveTradePanel;
+
+    @FXML private VBox tradePlayersContainer;
+
+    @FXML private Button makeADealButton;
+
+    @FXML AnchorPane makeATradePanel;
+
+    @FXML TextField receiveIronTextField;
+
+    @FXML TextField sendWoodTextField;
+
+    @FXML Button MakeADealButton;
+
+    @FXML Button receivedtraderequests;
+
+    @FXML AnchorPane receivedTradeRequestsPanel;
+
+    @FXML VBox tradeRequestsContainer;
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -91,6 +129,8 @@ public class VillageController {
     private double lastMouseX;
     private double lastMouseY;
 
+    private Player receiverTradeRequest;
+    private Map<UUID, Player> traders = new HashMap<>();
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -153,12 +193,224 @@ public class VillageController {
         });
     }
 
-    /*@FXML
-    private void onAddBuildingClicked(ActionEvent event) {
-        if (controller != null) {
-            controller.enterBuildMode(BuildingType.WOOD_MINE);
+
+    public void validPlayersToTrade(){
+        this.traders.clear();
+        try {
+            for (Player player1 : this.playerRepository.getAllPlayers().values()){
+
+                if(player1.getPlayerId().equals(this.player.getPlayerId()))
+                    continue;
+
+                if(BuildingsManagement.checkResearchCenterBuildingForTrade(player1) &&
+                        BuildingsManagement.checkCustomHouseBuildingForTrade(player1)&&
+                        BuildingsManagement.checkCustomHouseBuildingForTrade(player1)){
+
+                    this.traders.put(player1.getPlayerId(), player1);
+                }
+            }
+        }catch (NullPointerException e){
+            System.out.println("" + e);
         }
-    }*/
+    }
+
+    private void showTradersOnPanel(Map<UUID, Player> traders){
+        tradePlayersContainer.getChildren().clear();
+        for (Player player : traders.values()){
+            HBox playerRow = createPlayerRowElement(player);
+            tradePlayersContainer.getChildren().add(playerRow);
+        }
+    }
+
+    private HBox createPlayerRowElement(Player targetPlayer) {
+        HBox row = new HBox();
+        row.setSpacing(15);
+
+        row.setStyle("-fx-padding: 10; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1; " +
+                "-fx-alignment: CENTER_LEFT;");
+
+
+        VBox textContainer = new VBox();
+        textContainer.setSpacing(4);
+
+        String pName = targetPlayer.getUsername();
+        Label nameLabel = new Label("Player: " + pName);
+        nameLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        Coordinate coord = targetPlayer.getVillage().getCoordinate();
+        Label coordLabel = new Label("Positiont: [" + coord.getX() + " , " + coord.getY() + "]");
+        coordLabel.setStyle("-fx-text-fill: #aaaaaa; -fx-font-size: 11px;");
+
+        textContainer.getChildren().addAll(nameLabel, coordLabel);
+
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+        Button selectBtn = new Button("choose");
+        selectBtn.setStyle("-fx-background-color: #ff9800; " +
+                "-fx-text-fill: #121212; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;");
+
+        selectBtn.setOnAction(e -> {
+            this.tradePanel.setVisible(false);
+            this.openTradeOfferForm();
+            System.out.println("***" + targetPlayer.getUsername());
+            this.setReceiverTradeRequest(targetPlayer);
+        });
+
+        row.getChildren().addAll(textContainer, spacer, selectBtn);
+
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
+
+        return row;
+    }
+
+
+
+
+    private void showTradeRequestsOnPanel(Player player){
+        tradeRequestsContainer.getChildren().clear();
+        player.getVillage().getLock().readLock().lock();
+        try {
+            for (TradeOffer receivedTradeRequests : player.getVillage().getReceivedTradeRequests()){
+                if(receivedTradeRequests.getTradeStatus() == (TradeStatus.PENDING)){
+                    HBox playerRow = createTradeRequestsRowElement(receivedTradeRequests);
+                    tradeRequestsContainer.getChildren().add(playerRow);
+                }
+            }
+        }finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+    }
+
+    private HBox createTradeRequestsRowElement(TradeOffer offer) {
+
+        TradeService tradeService = new TradeService();
+
+        HBox row = new HBox();
+        row.setSpacing(15);
+
+        row.setStyle("-fx-padding: 12; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1; " +
+                "-fx-alignment: CENTER_LEFT;");
+
+        VBox senderContainer = new VBox();
+        senderContainer.setSpacing(4);
+
+
+        String senderName = offer.getAlliancesender().getUsername();
+        Label senderLabel = new Label("SENDER PLAYER [ " + senderName + " ]");
+        senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
+
+        Label timeLabel = new Label("TRANSFER TIME: " + offer.getTradeTime() + " seconds");
+        timeLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
+
+        senderContainer.getChildren().addAll(senderLabel, timeLabel);
+
+
+        VBox resourcesContainer = new VBox();
+        resourcesContainer.setSpacing(4);
+
+
+        String offeredStr = String.valueOf(offer.getOfferedResources().get(ResourcesType.WOOD));
+        String requestedStr = String.valueOf(offer.getRequestedResources().get(ResourcesType.IRON));
+
+        Label receiveLabel = new Label("RECEIVE: " + offeredStr);
+        receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
+
+        Label payLabel = new Label("SEND: " + requestedStr);
+        payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
+
+        resourcesContainer.getChildren().addAll(receiveLabel, payLabel);
+
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+        HBox actionButtons = new HBox(8);
+        actionButtons.setStyle("-fx-alignment: CENTER_RIGHT;");
+
+
+        Button acceptBtn = new Button("ACCEPT");
+        acceptBtn.setStyle("-fx-background-color: #4CAF50; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;");
+        acceptBtn.setOnAction(e -> {
+
+            System.out.println("ACCEPTED");
+            tradeService.acceptOffer(offer);
+        });
+
+
+        Button rejectBtn = new Button("REJECT");
+        rejectBtn.setStyle("-fx-background-color: #f44336; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;");
+        rejectBtn.setOnAction(e -> {
+
+            tradeService.rejectOffer(offer);
+            System.out.println("REJECTED");
+        });
+
+        actionButtons.getChildren().addAll(acceptBtn, rejectBtn);
+
+
+        row.getChildren().addAll(senderContainer, resourcesContainer, spacer, actionButtons);
+
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
+
+        return row;
+    }
+
+    private void openTradeOfferForm(){
+        this.showMakeATradePanel();
+    }
+
+
+    @FXML
+    private void onMakeADealClicked(){
+
+       Map<ResourcesType , Integer> offeredResources = new HashMap<>();
+       Map<ResourcesType , Integer> requestedResources = new HashMap<>();
+
+       offeredResources.put(ResourcesType.WOOD, Integer.parseInt(this.sendWoodTextField.getText()));
+       requestedResources.put((ResourcesType.IRON), Integer.parseInt(this.receiveIronTextField.getText()));
+
+
+        TradeService tradeService = new TradeService();
+        tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
+
+
+        this.hideMakeATradePanel();
+    }
+
+    @FXML
+    private void onReceivedTradeRequests(){
+        this.hideTradePanel();
+        this.showReceivedTradeRequestsPanel();
+        this.showTradeRequestsOnPanel(this.player);
+    }
+
 
     @FXML
     private void onUpgradeClicked(ActionEvent event) {
@@ -250,52 +502,55 @@ public class VillageController {
 
     @FXML
     private void onTradeButtonClicked(){
+        this.showTradePanel();
+        this.validPlayersToTrade();
+        this.showTradersOnPanel(this.traders);
+    }
 
+    @FXML
+    private void onLeaveTradeButtonClicked(){
+        this.hideTradePanel();
+    }
+
+
+    private void showReceivedTradeRequestsPanel(){
+        this.receivedTradeRequestsPanel.setVisible(true);
+        this.receivedTradeRequestsPanel.setManaged(true);
+    }
+
+    public void hideReceivedTradeRequestsPanel(){
+        this.receivedTradeRequestsPanel.setVisible(false);
+        this.receivedTradeRequestsPanel.setManaged(false);
+    }
+
+    public void showTradePanel(){
+        this.tradePanel.setVisible(true);
+        this.tradePanel.setManaged(true);
+    }
+
+    public void hideTradePanel(){
+        this.tradePanel.setVisible(false);
+        this.tradePanel.setManaged(false);
     }
 
     private void setTradeButtonEnable(){
-        if(this.checkTradeResearchBuildingCondition() && this.checkTradeMajorBuildingCondition())
+        if(BuildingsManagement.checkResearchCenterBuildingForTrade(this.player) &&
+                BuildingsManagement.checkCustomHouseBuildingForTrade(this.player)&&
+                BuildingsManagement.checkCustomHouseBuildingForTrade(this.player))
+
             this.tradeButton.setDisable(false);
     }
 
-    private boolean checkTradeMajorBuildingCondition(){
-        this.player.getLock().readLock().lock();
-        try {
-            this.player.getVillage().getLock().readLock().lock();
-            try {
-                for (Building building : this.player.getVillage().getBuildings().values()){
-                    if(building instanceof MajorBuilding ){
-                        if(building.getLevel() >= 3)
-                            return true;
-                    }
-                }
-            }finally {
-                this.player.getVillage().getLock().readLock().unlock();
-            }
-        }finally {
-            this.player.getLock().readLock().unlock();
-        }
-        return false;
+
+
+    private void showMakeATradePanel(){
+        this.makeATradePanel.setVisible(true);
+        this.makeATradePanel.setManaged(true);
     }
 
-    private boolean checkTradeResearchBuildingCondition(){
-        this.player.getLock().readLock().lock();
-        try {
-            this.player.getVillage().getLock().readLock().lock();
-            try {
-                for (Building building : this.player.getVillage().getBuildings().values()){
-                    if(building instanceof ResearchCenter ){
-                        if(building.getLevel() >= 2)
-                            return true;
-                    }
-                }
-            }finally {
-                this.player.getVillage().getLock().readLock().unlock();
-            }
-        }finally {
-            this.player.getLock().readLock().unlock();
-        }
-        return false;
+    public void hideMakeATradePanel(){
+        this.makeATradePanel.setVisible(false);
+        this.makeATradePanel.setManaged(false);
     }
 
     public void showBuildingInfo(Building building){
@@ -369,6 +624,22 @@ public class VillageController {
 
     public AnimationTimer getGameLoop() {
         return gameLoop;
+    }
+
+    public Player getReceiverTradeRequest() {
+        return receiverTradeRequest;
+    }
+
+    public void setReceiverTradeRequest(Player receiverTradeRequest) {
+        this.receiverTradeRequest = receiverTradeRequest;
+    }
+
+    public Map<UUID, Player> getTraders() {
+        return traders;
+    }
+
+    public void setTraders(Map<UUID, Player> traders) {
+        this.traders = traders;
     }
 }
 

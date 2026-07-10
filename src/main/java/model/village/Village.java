@@ -4,6 +4,8 @@ package model.village;
 import model.army.Armies;
 import model.army.Army;
 import model.building.Building;
+import model.building.BuildingType;
+import model.building.Customhouse;
 import model.building.Plant;
 import model.resources.Resources;
 import model.time.RandomEventTask;
@@ -23,9 +25,7 @@ import service.trade.TradeOffer;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Village implements Serializable {
@@ -45,6 +45,9 @@ public class Village implements Serializable {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private GameMap gameMap = new GameMap(70, 70, 10);
 
+    private final List<TradeOffer> receivedTradeRequests = new ArrayList<>();
+    private final List<TradeOffer> sentTradeRequests = new ArrayList<>();
+
     private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
     private AllianceRequest allianceRequest;
 
@@ -63,11 +66,22 @@ public class Village implements Serializable {
         this.resourcesManagement = new ResourcesManagement(this);
         this.armies = new Armies();
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
+
+        Customhouse customhouse = new Customhouse(BuildingType.CUSTOMHOUSE, new Coordinate(20,  10));
+        this.getBuildings().put(customhouse.getId(), customhouse);
     }
 
     public void runTimeServices(){  // we want the logic after loading the game
         this.resourcesManagement = new ResourcesManagement(this);
         this.loadService = new LoadService();
+    }
+
+    public List<TradeOffer> getReceivedTradeRequests() {
+        return receivedTradeRequests;
+    }
+
+    public List<TradeOffer> getSentTradeRequests() {
+        return sentTradeRequests;
     }
 
     public Map<UUID, TradeOffer> getTradeOffers() {

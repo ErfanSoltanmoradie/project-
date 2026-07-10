@@ -12,6 +12,7 @@ import model.building.Building;
 import model.building.BuildingType;
 import model.building.MinerBuilding;
 import model.player.Player;
+import model.repository.PlayerRepository;
 import model.resources.ResourcesType;
 import service.map.VillageController;
 
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class AuthController {
 
     private AuthService authService;
+    private PlayerRepository playerRepository;
 
     @FXML
     private StackPane authPanel;
@@ -83,6 +85,8 @@ public class AuthController {
         }
         VillageController villageController = loader.getController();
         villageController.setPlayer(player);
+
+        villageController.setPlayerRepository(this.playerRepository);
 
         Stage stage = new Stage();
 
@@ -217,6 +221,13 @@ public class AuthController {
         return amount;
     }
 
+    public PlayerRepository getPlayerRepository() {
+        return playerRepository;
+    }
+
+    public void setPlayerRepository(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     public AuthService getAuthService() {
         return authService;

@@ -13,9 +13,9 @@ public class AllianceService {
 
     public void sendRequest(Player sender, Player receiver){
 
-        this.lockPlayers(sender, receiver);
+        AllianceService.lockPlayers(sender, receiver);
         try {
-            this.lockVillages(sender, receiver);
+            AllianceService.lockVillages(sender, receiver);
             try {
 
                 if(!this.checkMajorBuildingLevel(sender, receiver)){
@@ -50,10 +50,10 @@ public class AllianceService {
                 AllianceRequest allianceRequest = new AllianceRequest(sender, receiver);
                 this.addPendingRequest(allianceRequest, sender, receiver);
             }finally {
-                this.unlockVillages(sender, receiver);
+                AllianceService.unlockVillages(sender, receiver);
             }
         }finally {
-            this.unlockPlayers(sender, receiver);
+            AllianceService.unlockPlayers(sender, receiver);
         }
     }
 
@@ -77,9 +77,9 @@ public class AllianceService {
 
 
 
-        this.lockPlayers(allianceRequest.getSender(), allianceRequest.getReceiver());
+        AllianceService.lockPlayers(allianceRequest.getSender(), allianceRequest.getReceiver());
         try {
-            this.lockVillages(allianceRequest.getSender(), allianceRequest.getReceiver());
+            AllianceService.lockVillages(allianceRequest.getSender(), allianceRequest.getReceiver());
             try {
                 if(!this.checkCloudForAlliance(allianceRequest)) return;
 
@@ -99,10 +99,10 @@ public class AllianceService {
                 }
 
             }finally {
-                this.unlockVillages(allianceRequest.getSender(), allianceRequest.getReceiver());
+                AllianceService.unlockVillages(allianceRequest.getSender(), allianceRequest.getReceiver());
             }
         }finally {
-            this.unlockPlayers(allianceRequest.getSender(), allianceRequest.getReceiver());
+            AllianceService.unlockPlayers(allianceRequest.getSender(), allianceRequest.getReceiver());
         }
 
         rejectRequest(allianceRequest);
@@ -157,7 +157,7 @@ public class AllianceService {
     }
 
 
-    private void lockPlayers(Player p1, Player p2) {
+    public static void lockPlayers(Player p1, Player p2) {
 
         if (p1.getPlayerId().compareTo(p2.getPlayerId()) < 0) {
             p1.getLock().writeLock().lock();
@@ -168,12 +168,12 @@ public class AllianceService {
         }
     }
 
-    private void unlockPlayers(Player p1, Player p2) {
+    public static void unlockPlayers(Player p1, Player p2) {
         p1.getLock().writeLock().unlock();
         p2.getLock().writeLock().unlock();
     }
 
-    private void lockVillages(Player p1, Player p2) {
+    public static void lockVillages(Player p1, Player p2) {
         if (p1.getPlayerId().compareTo(p2.getPlayerId()) < 0) {
             p1.getVillage().getLock().writeLock().lock();
             p2.getVillage().getLock().writeLock().lock();
@@ -183,7 +183,7 @@ public class AllianceService {
         }
     }
 
-    private void unlockVillages(Player p1, Player p2) {
+    public static void unlockVillages(Player p1, Player p2) {
         p1.getVillage().getLock().writeLock().unlock();
         p2.getVillage().getLock().writeLock().unlock();
     }
