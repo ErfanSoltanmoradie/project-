@@ -14,11 +14,15 @@ public class Battle implements Serializable {
     private final Village attackerVillage;
     private final Village defenderVillage;
     private final BattleArmy attackerArmy;
-    private final Duration travelTime;
+    //private final Duration travelTime;
+    private final long travelTime;
     private BattleArmy defenderArmy;
     private BattleStatus status;
     private BattleWinner winner;
     private Instant finishedTime;
+
+    private String attackerUsername;
+    private String defenderUsername;
 
     public Battle(Village attackerVillage, Village defenderVillage, BattleArmy attackerArmy) {
 
@@ -28,7 +32,11 @@ public class Battle implements Serializable {
         this.attackerArmy = attackerArmy;
         this.status = BattleStatus.GOING;
         this.travelTime = BattleTravelTime.calculateTravelTime(attackerVillage, defenderVillage);
+
+        this.attackerUsername = attackerVillage.getUserName();
+        this.defenderUsername = defenderVillage.getUserName();
     }
+
 
     public UUID getBattleId() {
         return battleId;
@@ -62,7 +70,7 @@ public class Battle implements Serializable {
         return finishedTime;
     }
 
-    public Duration getTravelTime() {
+    public long getTravelTime() {
         return travelTime;
     }
 
@@ -83,4 +91,19 @@ public class Battle implements Serializable {
         this.finishedTime = finishedTime;
     }
 
+    public String getAttackerUsername() {
+        return attackerUsername;
+    }
+
+    public void setAttackerUsername(String attackerUsername) {
+        this.attackerUsername = attackerUsername;
+    }
+
+    public String getDefenderUsername() {
+        return defenderUsername;
+    }
+
+    public void setDefenderUsername(String defenderUsername) {
+        this.defenderUsername = defenderUsername;
+    }
 }

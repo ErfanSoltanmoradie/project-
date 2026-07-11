@@ -11,6 +11,8 @@ import model.building.Barrack;
 import model.building.Building;
 import model.building.BuildingType;
 import model.village.Village;
+
+import java.time.Duration;
 import java.time.Instant;
 
 public class BattleManagement {
@@ -34,11 +36,13 @@ public class BattleManagement {
         if(attackerVillage == defenderVillage) {return false;}
 
         //checking the allied village
+
+
         /*
         if (attackerVillage.getAlliance() != null &&
                 (attackerVillage.getAlliance().getSender().equals(defender) ||
                  attackerVillage.getAlliance().getReceiver().equals(defender))) {
-            return; // حمله ممنوعه
+            return;
         }
         */
         System.out.println("Attacker Active Battles : "
@@ -47,13 +51,16 @@ public class BattleManagement {
         System.out.println("Defender Active Battles : "
                 + defenderVillage.getActiveBattles().size());
 
-        // هر دهکده فقط می‌تواند در یک جنگ فعال شرکت کند
+
         if (!attackerVillage.getActiveBattles().isEmpty() || !defenderVillage.getActiveBattles().isEmpty()) {
             return false;
         }
 
         //army count must be > 0
-        if(attackerArmy.getTotalArmyCount()==0) {return false;}
+        if(attackerArmy.getTotalArmyCount()==0) {
+            System.out.println("attackerArmy.getTotalArmyCount()=  : " +  attackerArmy.getTotalArmyCount());
+            return false;
+        }
 
         ArmyProducer producer = getArmyProducer();
         if (producer == null) {return false;}
@@ -61,11 +68,15 @@ public class BattleManagement {
         Barrack barrack = getBarrack();
         if (barrack == null) {return false;}
 
+
+        /*  Comment this because i want to test
         //check the number of requested armies
         for(ArmyType type : ArmyType.values()){
             if(attackerArmy.getArmyCount(type) > armies.getArmyStorage().getArmyCount(type))
                 return false;
         }
+        */
+
         return true;
     }
 
@@ -93,6 +104,7 @@ public class BattleManagement {
         return null;
     }
 
+    /*
     private void withdrawArmy(BattleArmy attackerArmy) {
 
         ArmyStorage armyStorage = armies.getArmyStorage();
@@ -106,6 +118,7 @@ public class BattleManagement {
             }
         }
     }
+    */
 
     public boolean startBattle(BattleArmy attackerArmy) {
 
@@ -116,7 +129,7 @@ public class BattleManagement {
             if (!canStartBattle(attackerArmy))
                 return false;
 
-            withdrawArmy(attackerArmy);
+            //withdrawArmy(attackerArmy);
 
             Battle battle = new Battle(
                     attackerVillage,
@@ -137,7 +150,7 @@ public class BattleManagement {
             TravelToBattleTask travelTask =
                     new TravelToBattleTask(
                             Instant.now(),
-                            battle.getTravelTime(),
+                            Duration.ofSeconds(battle.getTravelTime()),
                             battle
                     );
 

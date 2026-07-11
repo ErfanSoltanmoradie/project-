@@ -92,6 +92,8 @@ public class GameMapController {
                 villageController.hideSentTradeRequestsPanel();
                 villageController.hideAlliancePanel();
                 villageController.hideAllianceRequestsPanel();
+                villageController.hideAttackPanel();
+                villageController.hideAttackHistoryPanel();
             }
         }
     }

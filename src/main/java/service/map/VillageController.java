@@ -9,6 +9,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import model.army.LinkedList;
+import model.battle.BattleArmy;
+import model.battle.BattleHistory;
+import model.battle.BattleStatus;
+import model.battle.BattleWinner;
 import model.building.*;
 import model.player.Player;
 import model.repository.PlayerRepository;
@@ -19,12 +24,15 @@ import model.village.Village;
 import model.world.Coordinate;
 import service.alliance.AllianceRequest;
 import service.alliance.AllianceService;
+import service.battle.BattleManagement;
+import service.battle.BattleTravelTime;
 import service.buildings.BuildingsManagement;
 import service.resource.ResourcesManagement;
 import service.trade.TradeOffer;
 import service.trade.TradeService;
 import service.trade.TradeStatus;
 
+import java.time.Duration;
 import java.util.*;
 
 
@@ -132,6 +140,18 @@ public class VillageController {
 
     @FXML VBox allianceRequestContainer;
 
+    @FXML Button battleButton;
+
+    @FXML VBox playersContainerForAttack;
+
+    @FXML AnchorPane battlePanel;
+
+    @FXML Button battleHistoryButton;
+
+    @FXML VBox battleHistoryContainer;
+
+    @FXML AnchorPane battleHistoryPannel;
+
     private Player player;
     private TaskProcessor taskProcessor;
     private GameCanvasView gameCanvasView;
@@ -143,8 +163,8 @@ public class VillageController {
 
     private Player receiverTradeRequest;
     private Map<UUID, Player> traders = new HashMap<>();
-
     private List<Player> allowedToAlliance = new ArrayList<>();
+    private List<Player> enemies = new ArrayList<>();
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -620,8 +640,191 @@ public class VillageController {
         return row;
     }
 
+    private void setEnemies(){
+        this.enemies.clear();
+
+        this.enemies.addAll(this.playerRepository.getAllPlayers().values());
+    }
+
+    private void showEnemies(){
+
+        this.playersContainerForAttack.getChildren().clear();
+
+        for (Player targetPlayer : this.enemies){
+            AllianceService.lockPlayers(this.player, targetPlayer);
+            try {
+                AllianceService.lockVillages(this.player, targetPlayer);
+                try {
+                        if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
+                            HBox playerRow = this.createEnemiesElement(targetPlayer);
+
+                            this.playersContainerForAttack.getChildren().add(playerRow);
+                        }
+                }finally {
+                    AllianceService.unlockVillages(this.player, targetPlayer);
+                }
+            }finally {
+                AllianceService.unlockPlayers(this.player, targetPlayer);
+            }
+        }
+    }
+
+    private HBox createEnemiesElement(Player targetPlayer){
+        HBox row = new HBox();
+        row.setSpacing(10);
+
+        row.setStyle("-fx-padding: 10; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1; " +
+                "-fx-alignment: CENTER_LEFT;");
+
+        VBox textContainer = new VBox();
+        textContainer.setSpacing(4);
+
+        String defenderName = targetPlayer.getUsername();
+        Label usernameLabel = new Label("Defender Player: " + defenderName);
+        usernameLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        long travelTime = BattleTravelTime.calculateTravelTime(this.player.getVillage(), targetPlayer.getVillage());
+        Label timeLabel = new Label("TRANSFER TIME: " + travelTime + " seconds");
+        timeLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
+
+        textContainer.getChildren().addAll(usernameLabel, timeLabel);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button selectBtn = new Button("BATTLE");
+        selectBtn.setStyle("-fx-background-color: #ff9800; " +
+                "-fx-text-fill: #121212; " +
+                "-fx-font-weight: bold; " +
+                "-fx-background-radius: 5; " +
+                "-fx-cursor: hand;");
+
+        selectBtn.setOnAction(e -> {
+            // do the attack
+            this.hideAttackPanel();
+            this.doAttack(targetPlayer);
+        });
+
+        row.getChildren().addAll(textContainer, spacer, selectBtn);
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
+
+        return row;
+    }
+
+    private void doAttack(Player targetPlayer){
+
+        BattleManagement battleManagement = new BattleManagement(this.player.getVillage(), targetPlayer.getVillage());
+        BattleArmy battleArmy = new BattleArmy(10, 10, 10);
+        //you need to create an army first it's just a test
+         battleManagement.startBattle(battleArmy);
+         this.battleButton.setDisable(true);
+    }
+
+    private void showAttackHistory(){
+
+        this.battleHistoryContainer.getChildren().clear();
+
+        player.getLock().readLock().lock();
+        try {
+            player.getVillage().getLock().readLock().lock();
+            try {
+                for (BattleHistory battleHistory : player.getVillage().getBattleHistory()){
+                    HBox row = createAttackHistoryElements(battleHistory);
+                    this.battleHistoryContainer.getChildren().add(row);
+                }
+
+            }finally {
+                player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            player.getLock().readLock().unlock();
+        }
+    }
+
+    private HBox createAttackHistoryElements(BattleHistory battleHistory){
+        HBox row = new HBox();
+        row.setSpacing(15);
+
+        row.setStyle("-fx-padding: 10; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1; " +
+                "-fx-alignment: CENTER_LEFT;");
+
+        VBox textContainer = new VBox();
+        textContainer.setSpacing(4);
+
+        String defenderName = battleHistory.getDefenderUsername();
+        Label defenderUsernameLabel = new Label("Defender: " + defenderName);
+        defenderUsernameLabel.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        String attackerName = battleHistory.getAttackerUsername();
+        Label attackerUsername = new Label("Attacker: " + attackerName);
+        attackerUsername.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        textContainer.getChildren().addAll(defenderUsernameLabel, attackerUsername);
+
+        Region spacer1 = new Region();
+        HBox.setHgrow(spacer1, Priority.ALWAYS);
+
+        VBox statusVBox = new VBox();
+        statusVBox.setSpacing(15);
+
+        Label status = new Label("WINNER: " + battleHistory.getWinner().toString());
+        status.setStyle("-fx-text-fill: #ff0000; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+        statusVBox.getChildren().add(status);
+
+        VBox lootVBox = new VBox();
+        lootVBox.setSpacing(3);
+
+        Region spacer2 = new Region();
+        HBox.setHgrow(spacer2, Priority.ALWAYS);
+
+
+        for(Map.Entry<ResourcesType, Integer> entry : battleHistory.getAttackerLoot().entrySet()){
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if(amount > 0){
+                Label loot = new Label("" + resourcesType.toString() + ": " + amount);
+                loot.setStyle("-fx-text-fill: #00ffff; -fx-font-size: 14px; -fx-font-weight: bold;");
+                lootVBox.getChildren().add(loot);
+            }
+        }
+
+
+        row.getChildren().addAll(textContainer,spacer1 ,statusVBox, spacer2,lootVBox);
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
+
+
+        return row;
+    }
+
+
     private void openTradeOfferForm(){
         this.showMakeATradePanel();
+    }
+
+    @FXML
+    private void onBattleHistoryClicked(){
+        showAttackHistoryPanel();
+        this.showAttackHistory();
+    }
+
+    @FXML
+    private void onBattleButtonClicked(){
+        this.showAttackPanel();
+        this.setEnemies();
+        this.showEnemies();
     }
 
     @FXML
@@ -882,6 +1085,26 @@ public class VillageController {
         this.allianceRequestsPanel.setManaged(false);
     }
 
+    public void hideAttackPanel(){
+        this.battlePanel.setVisible(false);
+        this.battlePanel.setManaged(false);
+    }
+
+    private void showAttackPanel(){
+        this.battlePanel.setVisible(true);
+        this.battlePanel.setManaged(true);
+    }
+
+    private void showAttackHistoryPanel(){
+        this.battleHistoryPannel.setVisible(true);
+        this.battleHistoryPannel.setManaged(true);
+    }
+
+    public void hideAttackHistoryPanel(){
+        this.battleHistoryPannel.setVisible(false);
+        this.battleHistoryPannel.setManaged(false);
+    }
+
     private void updateResourcesUI(){
         Resources resources = this.player.getVillage().getResources();
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
@@ -911,6 +1134,16 @@ public class VillageController {
                 setAllianceButtonEnable();
 
                 taskProcessor.process();
+
+                if(player.getVillage().getActiveBattles().isEmpty()){
+                    battleButton.setDisable(false);
+                }else {
+                    battleButton.setDisable(true);
+                }
+
+                if(taskProcessor.isBattleFinished()){
+                    battleButton.setDisable(false);
+                }
 
                 if(player != null)
                     updateResourcesUI();
@@ -953,6 +1186,14 @@ public class VillageController {
 
     public void setAllowedToAlliance(List<Player> allowedToAlliance) {
         this.allowedToAlliance = allowedToAlliance;
+    }
+
+    public List<Player> getEnemies() {
+        return enemies;
+    }
+
+    public void setEnemies(List<Player> enemies) {
+        this.enemies = enemies;
     }
 }
 

@@ -12,7 +12,7 @@ public class BattleTravelTime {
 
     private BattleTravelTime() {}
 
-    public static Duration calculateTravelTime(Village attackerVillage, Village defenderVillage) {
+    public static long calculateTravelTime(Village attackerVillage, Village defenderVillage) {
 
         Coordinate attackerCoordinate = attackerVillage.getCoordinate();
         Coordinate defenderCoordinate = defenderVillage.getCoordinate();
@@ -26,6 +26,8 @@ public class BattleTravelTime {
 
         long travelMinutes = Math.round(travelHours * ONE_HOUR_MINUTES);
 
-        return Duration.ofMinutes(travelMinutes);
+        long travelSeconds = Math.round(travelMinutes * 60);
+
+        return 10;
     }
 }

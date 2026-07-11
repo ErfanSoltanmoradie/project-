@@ -41,6 +41,7 @@ public class TaskProcessor {
     private final AtomicBoolean processing = new AtomicBoolean(false);
     private long lastCloudNeutralization;
     private boolean firstCloudNeutralization = false;
+    private boolean isBattleFinished;
 
     private void cloudNeutralization(){
 
@@ -200,14 +201,12 @@ public class TaskProcessor {
                     ArmyType trainedType = entry.getKey();
                     int count = entry.getValue();
 
-                    // 1. اضافه کردن نیروی جدید به اردوگاه (Storage)
                     village.getArmies().getArmyStorage().increaseArmy(trainedType, count);
 
-                    // 2. خارج کردن این نیرو از صف آموزش
                     village.getArmies().getArmyQueue().dequeue();
 
                     ArmyQueue queue = village.getArmies().getArmyQueue();
-                    // 3. اگر هنوز نیرویی در صف باقی مانده است، آموزش نیروی بعدی را کلید بزن
+
                     if (queue.isEmpty()) {
                         queue.setTraining(false);
                     } else {
@@ -266,10 +265,8 @@ public class TaskProcessor {
 
                                 if (count == 0) continue;
 
-                                // انتقال سربازها به BattleArmy
                                 defenderArmy.increaseArmy(type, count);
 
-                                // خارج کردن از ArmyStorage
                                 armyStorage.decreaseArmy(type, count);
                             }
 
@@ -292,7 +289,7 @@ public class TaskProcessor {
 
                         ReturnFromBattleTask returnArmyTask = new ReturnFromBattleTask(
                                 Instant.now(),
-                                battle.getTravelTime(),
+                                Duration.ofSeconds(battle.getTravelTime()),
                                 battle,
                                 task.getAttackerReturningArmies(),
                                 task.getDefenderReturningArmies(),
@@ -329,13 +326,11 @@ public class TaskProcessor {
                         //return from battle
                     }else if(entry1.getValue() == BattleStatus.FINISHED && battle.getAttackerVillage() == village){
 
-                        // برگرداندن سربازهای مهاجم
                         for (Map.Entry<ArmyType, Integer> army : task.getAttackerReturningArmies().entrySet()) {
 
                             village.getArmies().getArmyStorage().increaseArmy(army.getKey(), army.getValue());
                         }
 
-                        // اضافه شدن غنیمت
                         for (Map.Entry<ResourcesType, Integer> loot :
                                 task.getAttackerLoot().entrySet()) {
 
@@ -350,7 +345,7 @@ public class TaskProcessor {
 
                             ArmyStorage armyStorage = battle.getDefenderVillage().getArmies().getArmyStorage();
 
-                            // برگرداندن سربازهای مدافع
+
                             for (Map.Entry<ArmyType, Integer> army : task.getDefenderReturningArmies().entrySet()) {
                                 armyStorage.increaseArmy(army.getKey(), army.getValue());
                             }
@@ -362,20 +357,24 @@ public class TaskProcessor {
                         System.out.println(task.getDefenderArmyLosses());
                         System.out.println("===========================");
 
-                        //ثبت تاریخجه جنگ
+
                         BattleHistory history = new BattleHistory(
                                 battle,
                                 task.getAttackerArmyLosses(),
                                 task.getDefenderArmyLosses(),
-                                task.getAttackerLoot()
-                        );
+                                task.getAttackerLoot(),
+                                battle.getDefenderUsername(),
+                                battle.getAttackerUsername());
 
+                        /*battle.getAttackerVillage().getBattleHistory().put(history.getBattleId(), history);
+                        battle.getDefenderVillage().getBattleHistory().put(history.getBattleId(), history);*/
                         battle.getAttackerVillage().getBattleHistory().add(history);
                         battle.getDefenderVillage().getBattleHistory().add(history);
 
-                        //حذف جنگ از هر دو دهکده
                         battle.getAttackerVillage().getActiveBattles().remove(battle.getBattleId());
                         battle.getDefenderVillage().getActiveBattles().remove(battle.getBattleId());
+
+                        this.isBattleFinished =true;
                     }
                 }
             }
@@ -387,8 +386,8 @@ public class TaskProcessor {
             village.getLock().writeLock().unlock();
             processing.set(false);
         }
+        this.isBattleFinished = false;
     }
-
 
 
 
@@ -487,6 +486,14 @@ public class TaskProcessor {
             tradeOffer.getSenderVillage().getLock().writeLock().unlock();
         }
         return false;
+    }
+
+    public boolean isBattleFinished() {
+        return isBattleFinished;
+    }
+
+    public void setBattleFinished(boolean battleFinished) {
+        isBattleFinished = battleFinished;
     }
 }
 

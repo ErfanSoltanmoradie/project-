@@ -20,11 +20,15 @@ public class BattleHistory implements Serializable {
     private final Map<ArmyType, Integer> defenderLosses;
     private final Map<ResourcesType, Integer> attackerLoot;
 
+    private String attackerUsername;
+    private String defenderUsername;
+
     public BattleHistory(
             Battle battle,
             Map<ArmyType, Integer> attackerLosses,
             Map<ArmyType, Integer> defenderLosses,
-            Map<ResourcesType, Integer> attackerLoot) {
+            Map<ResourcesType, Integer> attackerLoot,
+            String attackerUsername, String defenderUsername) {
 
         this.battleId = battle.getBattleId();
         this.attackerVillageId = battle.getAttackerVillage().getVillageId();
@@ -34,6 +38,9 @@ public class BattleHistory implements Serializable {
         this.attackerLosses = new HashMap<>(attackerLosses);
         this.defenderLosses = new HashMap<>(defenderLosses);
         this.attackerLoot = new HashMap<>(attackerLoot);
+
+        this.defenderUsername = defenderUsername;
+        this.attackerUsername = attackerUsername;
     }
 
     public UUID getBattleId() {
@@ -66,5 +73,21 @@ public class BattleHistory implements Serializable {
 
     public Map<ResourcesType, Integer> getAttackerLoot() {
         return attackerLoot;
+    }
+
+    public String getAttackerUsername() {
+        return attackerUsername;
+    }
+
+    public void setAttackerUsername(String attackerUsername) {
+        this.attackerUsername = attackerUsername;
+    }
+
+    public String getDefenderUsername() {
+        return defenderUsername;
+    }
+
+    public void setDefenderUsername(String defenderUsername) {
+        this.defenderUsername = defenderUsername;
     }
 }

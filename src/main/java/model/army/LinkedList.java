@@ -1,10 +1,34 @@
 package model.army;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
-public class LinkedList<T> implements Serializable {
+public class LinkedList<T> implements Serializable, Iterable<T> {
 
-    private class Node{
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+
+            private LinkedList<T>.Node current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new java.util.NoSuchElementException();
+                }
+                T data = current.data;
+                current = current.link; // رفتن به نود بعدی
+                return data;
+            }
+        };
+    }
+
+    private class Node implements Serializable{
 
         private T data;
         private Node link;
