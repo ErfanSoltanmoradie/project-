@@ -5,6 +5,9 @@ package service.map;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -13,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.building.*;
 import model.player.Player;
 import model.resources.Resources;
@@ -21,6 +25,7 @@ import model.time.TaskProcessor;
 import model.village.Village;
 import service.resource.ResourcesManagement;
 
+import java.io.IOException;
 
 
 //import backend.Player;
@@ -79,6 +84,11 @@ public class VillageController {
     @FXML private Button majorBuildingButton;
 
     @FXML private Button researchCenter;
+
+    @FXML private Button armyProducerBuildButton;
+
+    @FXML private Button barrackBuildButton;
+
 
     //@FXML private ImageView borderImageView;
 
@@ -253,6 +263,23 @@ public class VillageController {
 
     }
 
+    @FXML
+    private void onArmyProducerBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
+        }
+
+    }
+
+    @FXML
+    private void oneBarrackBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.BARRACKS);
+        }
+    }
+
     private void setTradeButtonEnable(){
         if(this.checkTradeResearchBuildingCondition() && this.checkTradeMajorBuildingCondition())
             this.tradeButton.setDisable(false);
@@ -370,5 +397,52 @@ public class VillageController {
     public AnimationTimer getGameLoop() {
         return gameLoop;
     }
+
+    public void openArmyProducer(ArmyProducer armyProducer) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/project/armyProducer.fxml")
+            );
+
+            Parent root = loader.load();
+
+            ArmyProducerController controller = loader.getController();
+            controller.setPlayer(player,armyProducer);
+
+            Stage stage = new Stage();
+            stage.setTitle("Army Producer");
+            stage.setScene(new Scene(root));
+            stage.show();
+            stage.setOnHidden(e -> controller.stopRefresh());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void openBarrack(Barrack barrack) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/project/barrack.fxml")
+            );
+
+            Parent root = loader.load();
+
+            BarrackController controller = loader.getController();
+            controller.setPlayer(player, barrack);
+
+            Stage stage = new Stage();
+            stage.setTitle("Barrack");
+            stage.setScene(new Scene(root));
+            stage.show();
+            stage.setOnHidden(e -> controller.stopRefresh());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
 

@@ -1,8 +1,10 @@
 package model.army;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class LinkedList<T> implements Serializable {
+public class LinkedList<T> implements Serializable,Iterable<T> {
 
     private class Node{
 
@@ -69,4 +71,31 @@ public class LinkedList<T> implements Serializable {
     public int size(){
         return this.size;
     }
+
+    @Override
+    public Iterator<T> iterator() {
+
+        return new Iterator<>() {
+
+            private Node current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+
+                if (current == null)
+                    throw new NoSuchElementException();
+
+                T data = current.data;
+                current = current.link;
+
+                return data;
+            }
+        };
+    }
+
 }

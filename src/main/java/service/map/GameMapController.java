@@ -1,5 +1,7 @@
 package service.map;
 
+import model.building.ArmyProducer;
+import model.building.Barrack;
 import model.building.Building;
 import model.building.BuildingType;
 import model.village.Village;
@@ -75,6 +77,22 @@ public class GameMapController {
             this.selectedBuilding = clickedBuilding;
             System.out.println("Selected: " + selectedBuilding.getType() + " level: " + selectedBuilding.getLevel()
              + " Status: " + selectedBuilding.getBuildingStatus());
+
+            System.out.println(clickedBuilding.getClass().getName());
+
+            if(clickedBuilding instanceof ArmyProducer && villageController != null) {
+                System.out.println("Army producer selected");
+                villageController.openArmyProducer((ArmyProducer)clickedBuilding);
+                return;
+            }
+
+            if (clickedBuilding instanceof Barrack && villageController != null) {
+                System.out.println("Barrack selected");
+                villageController.openBarrack((Barrack) clickedBuilding);
+                return;
+            }
+
+            System.out.println("Selected: " + selectedBuilding.getType());
 
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);

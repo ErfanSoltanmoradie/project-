@@ -205,6 +205,19 @@
                               <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
                               <Button fx:id="StoneMineBuildButton1" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children></VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label prefHeight="32.0" prefWidth="132.0" text="Army Producer" />
+                              <Button fx:id="armyProducerBuildButton" mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children></VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label prefHeight="32.0" prefWidth="132.0" text="Barrack" />
+                              <Button fx:id="barrackBuildButton" mnemonicParsing="false" onAction="#oneBarrackBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children></VBox>
+
                      </children>
                   </HBox>
                </content>

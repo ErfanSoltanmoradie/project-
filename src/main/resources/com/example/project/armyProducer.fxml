@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="service.map.ArmyProducerController"
+      alignment="CENTER"
+      spacing="15"
+      prefWidth="400"
+      prefHeight="300">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Army Producer"/>
+
+    <Label fx:id="levelLabel" text="Level: 1"/>
+    <Label fx:id="capacityLabel" text="Capacity: 0"/>
+    <Label fx:id="queueLabel" text="Queue: 0"/>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Label text="Ragnar" prefWidth="70"/>
+        <Spinner fx:id="ragnarSpinner"/>
+        <Label fx:id="ragnarCostLabel"/>
+    </HBox>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Label text="Rosoo" prefWidth="70"/>
+        <Spinner fx:id="rosooSpinner"/>
+        <Label fx:id="rosooCostLabel"/>
+
+    </HBox>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Label text="Lagerta" prefWidth="70"/>
+        <Spinner fx:id="lagertaSpinner"/>
+        <Label fx:id="lagertaCostLabel"/>
+
+    </HBox>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="trainButton"
+                text="Train"
+                onAction="#trainArmy"/>
+
+        <Button fx:id="upgradeButton"
+                text="Upgrade"
+                onAction="#upgrade"/>
+
+    </HBox>
+
+    <Separator/>
+
+    <Label text="Training Queue"/>
+
+    <ListView fx:id="queueListView"
+              prefHeight="150"
+              prefWidth="300"/>
+
+</VBox>
