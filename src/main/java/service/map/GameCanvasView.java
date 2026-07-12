@@ -3,11 +3,14 @@ package service.map;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 import model.building.Building;
+import model.building.BuildingType;
 import model.village.Village;
 import model.world.Coordinate;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -28,7 +31,9 @@ public class GameCanvasView extends Canvas {
     private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/grass.png")));
     private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree3.png")));
     private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree2.png")));
-    private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/labbbbbbbbbbbbbbbbbbb.png")));
+    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png")));
+
+    private final Map<BuildingType, BuildingGraphicProperties> buildingGraphics = new HashMap<>();
 
     public Village getVillage() {
         return village;
@@ -50,8 +55,36 @@ public class GameCanvasView extends Canvas {
         this.village = village;
         this.gameMap = village.getGameMap();
 
+        loadBuildingGraphic();
+
         widthProperty().addListener((obs, oldVal, newVal) -> draw());
         heightProperty().addListener((obs, oldVal, newVal) -> draw());
+    }
+
+    private void loadBuildingGraphic() {
+        try {
+        /*buildingGraphics.put(BuildingType.WOOD_MINE, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/wood_mine.png"))),
+                1.4, 0.75
+        ));
+
+        buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/iron_mine.png"))),
+
+        ));*/
+
+        buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major_building.png"))),
+                1.2,0.6, 0.72
+        ));
+
+        buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png"))),
+                1.2, 1.2, 0.72
+        ));
+        } catch(NullPointerException e) {
+            System.err.println("Error loading building graphics: " + e.getMessage());
+        }
     }
 
     public void moveCamera(double dx, double dy) {
@@ -98,7 +131,14 @@ public class GameCanvasView extends Canvas {
                     Tile tile = gameMap.getTile(r, c);
 
                     if (grassTile != null && !grassTile.isError()) {
-                        gc.drawImage(grassTile, isoX, isoY, tileWidth + 1.0, tileHeight + 1.0);
+
+                        double renderX = Math.floor(isoX);
+                        double renderY = Math.floor(isoY);
+
+                        double renderWidth = tileWidth +12;
+                        double renderHeight = tileHeight + 12;
+
+                        gc.drawImage(grassTile, renderX, renderY, renderWidth, renderHeight);
                     }
 
                     if (tile.getType() == Tile.Type.BORDER) {
@@ -151,35 +191,34 @@ public class GameCanvasView extends Canvas {
                 }
 
 
-                if (tile.getBuilding() != null && buildingImage != null) {
+                if (tile.getBuilding() != null) {
                     Building b = tile.getBuilding();
                     Coordinate pos = b.getPosition();
 
                     if (pos.getX() == r && pos.getY() == c) {
-                        int bW = b.getWidth();
-                        int bH = b.getHeight();
+                        BuildingGraphicProperties props = buildingGraphics.get(b.getType());
 
-                        double baseTopX = originX + (c - r) * (tileWidth / 2) + tileWidth / 2;
-                        double baseTopY = originY + (c + r) * (tileHeight / 2);
+                        if (props != null && props.image != null && !props.image.isError()) {
+                            int bW = b.getWidth();
+                            int bH = b.getHeight();
 
-                        double baseLeftX = originX + (c - (r + bW - 1)) * (tileWidth / 2);
-                        double baseLeftY = originY + (c + (r + bW - 1)) * (tileHeight / 2) + tileHeight / 2;
+                            int bottomRow = r + bH - 1;
+                            int bottomCol = c + bW - 1;
 
-                        double baseRightX = originX + ((c + bH - 1) - r) * (tileWidth / 2) + tileWidth;
-                        double baseRightY = originY + ((c + bH - 1) + r) * (tileHeight / 2) + tileHeight / 2;
+                            double baseBottomX = originX + (bottomCol - bottomRow) * (tileWidth / 2);
+                            double baseBottomY = originY + (bottomCol + bottomRow) * (tileHeight / 2) + tileHeight;
 
-                        double baseBottomX = (originX + ((c + bH - 1) - (r + bW - 1)) * (tileWidth / 2) + tileWidth / 2) ;
-                        double baseBottomY = originY + ((c + bH - 1) + (r + bW - 1)) * (tileHeight / 2) + tileHeight;
+                            double customWidth = tileWidth * Math.max(bW, bH) * 1.0 * props.widthScale;
 
-                        double customWidth = baseRightX - baseLeftX ;
-                        double customHeight = customWidth * (buildingImage.getHeight() / buildingImage.getWidth()) * 1.4;
+                            double imageRatio = props.image.getHeight() / props.image.getWidth();
+                            double customHeight = customWidth * imageRatio * props.heightScale;
 
-                        double offsetX = baseLeftX;
+                            double offsetX = baseBottomX - (customWidth / 2);
 
-                        double offsetY = baseBottomY - (customHeight * 0.75) ;
+                            double offsetY = baseBottomY - (customHeight * props.yOffsetScale);
 
-                        gc.drawImage(buildingImage, offsetX, offsetY, customWidth, customHeight);
-
+                            gc.drawImage(props.image, offsetX, offsetY, customWidth, customHeight);
+                        }
                     }
                 }
             }
@@ -226,4 +265,20 @@ public class GameCanvasView extends Canvas {
 
         return new Coordinate(row, col);
     }
+
+
+    private static class BuildingGraphicProperties {
+        final Image image;
+        final double heightScale;
+        final double widthScale;
+        final double yOffsetScale;
+
+        public BuildingGraphicProperties(Image image, double heightScale, double widthScale, double yOffsetScale) {
+            this.image = image;
+            this.heightScale = heightScale;
+            this.widthScale = widthScale;
+            this.yOffsetScale = yOffsetScale;
+        }
+    }
 }
+

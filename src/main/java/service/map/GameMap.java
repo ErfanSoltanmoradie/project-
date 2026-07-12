@@ -22,7 +22,7 @@ public class GameMap implements Serializable {
     }
 
     private void createTiles() {
-        int borderSize = 15;
+        int borderSize = 24;
 
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
