@@ -55,7 +55,7 @@ public class Main extends Application {
         AuthController authController = authLoader.getController();
         authController.setPlayerRepository(start.getPlayerRepository());
         authController.setAuthService(start.getAuthService());
-
+        authController.setStart(start);
 
         Scene scene = new Scene(authRoot);
         primaryStage.setScene(scene);

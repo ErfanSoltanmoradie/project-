@@ -51,28 +51,7 @@ public class GameMap implements Serializable {
             }
         }
     }
-    /*
-    private void createTiles(){
-        int borderSize = 10;
 
-        for (int i = 0; i < this.rows; i++) {
-            for (int j = 0; j < this.columns; j++) {
-                tiles[i][j] = new Tile(i, j);
-                if (i < borderSize || i >= this.rows - borderSize ||
-                j < borderSize || j >= this.columns - borderSize) {
-                    tiles[i][j].setType(Tile.Type.BORDER);
-                    if (Math.random() < 0.3) {
-                        tiles[i][j].setType(Tile.Type.BORDER_WITH_TREE);
-                    } else {
-                        tiles[i][j].setType(Tile.Type.BORDER);
-                    }
-
-                }
-            }
-        }
-
-    }
-    */
     public boolean isInside(int row, int column){
         if((row >= 0 && row < this.rows) && (column >= 0 && column < this.columns))
             return true;

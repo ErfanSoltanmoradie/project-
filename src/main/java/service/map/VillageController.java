@@ -3,12 +3,15 @@ package service.map;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import model.army.LinkedList;
 import model.battle.BattleArmy;
 import model.battle.BattleHistory;
@@ -1144,6 +1147,9 @@ public class VillageController {
                 if(taskProcessor.isBattleFinished()){
                     battleButton.setDisable(false);
                 }
+
+                if(player.getAlliance() != null)
+                    allianceButton.setDisable(true);
 
                 if(player != null)
                     updateResourcesUI();

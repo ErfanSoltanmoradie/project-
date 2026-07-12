@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.building.Building;
 import model.building.BuildingType;
 import model.building.MinerBuilding;
@@ -27,6 +28,7 @@ public class AuthController {
 
     private AuthService authService;
     private PlayerRepository playerRepository;
+    private Start start;
 
     private double xOffset= 0;
     private double yOffset = 0;
@@ -88,7 +90,8 @@ public class AuthController {
 
     @FXML
     private void onExitClicked(){
-
+        this.start.saveAllData();
+        System.exit(0);
     }
 
     @FXML
@@ -314,5 +317,13 @@ public class AuthController {
 
     public void setAuthService(AuthService authService) {
         this.authService = authService;
+    }
+
+    public Start getStart() {
+        return start;
+    }
+
+    public void setStart(Start start) {
+        this.start = start;
     }
 }
