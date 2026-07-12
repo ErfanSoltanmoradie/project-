@@ -29,7 +29,7 @@ public enum BuildingType {
     BARRACKS(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
 
     LABORATORY(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
-    RESEARCH_CENTER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
+    RESEARCH_CENTER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),3, 3),
     ARMY_PRODUCER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
     MAJOR_BUILDING(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
     PURIFICATION(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),

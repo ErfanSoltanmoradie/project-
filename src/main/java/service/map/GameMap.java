@@ -21,14 +21,58 @@ public class GameMap implements Serializable {
         this.createTiles();
     }
 
-    private void createTiles(){
-        for (int i = 0; i <this.rows ; i++) {
+    private void createTiles() {
+        int borderSize = 15;
+
+        for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
                 tiles[i][j] = new Tile(i, j);
+
+                if (i < borderSize || i >= this.rows - borderSize|| j < borderSize || j >= this.columns - borderSize) {
+
+                    tiles[i][j].setType(Tile.Type.BORDER);
+
+                    if (Math.random() < 0.3) {
+                        double rand = Math.random();
+
+                        if (rand < 0.3) {
+                            tiles[i][j].setDecorateType(Tile.DecorateType.WHITE_TREE);
+                        /*} else if (rand < 0.5) {
+                            tiles[i][j].setDecorateType(Tile.DecorateType.LARGE_BUSH);
+                        } else if (rand < 0.75) {
+                            tiles[i][j].setDecorateType(Tile.DecorateType.OAK_TREE);
+                        } else if (rand < 0.9) {
+                            tiles[i][j].setDecorateType(Tile.DecorateType.PINE_TREE);*/
+                        } else {
+                            tiles[i][j].setDecorateType(Tile.DecorateType.BROWN_TREE);
+                        }
+                    }
+                }
             }
         }
     }
+    /*
+    private void createTiles(){
+        int borderSize = 10;
 
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                tiles[i][j] = new Tile(i, j);
+                if (i < borderSize || i >= this.rows - borderSize ||
+                j < borderSize || j >= this.columns - borderSize) {
+                    tiles[i][j].setType(Tile.Type.BORDER);
+                    if (Math.random() < 0.3) {
+                        tiles[i][j].setType(Tile.Type.BORDER_WITH_TREE);
+                    } else {
+                        tiles[i][j].setType(Tile.Type.BORDER);
+                    }
+
+                }
+            }
+        }
+
+    }
+    */
     public boolean isInside(int row, int column){
         if((row >= 0 && row < this.rows) && (column >= 0 && column < this.columns))
             return true;

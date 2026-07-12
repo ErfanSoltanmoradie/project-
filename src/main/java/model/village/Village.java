@@ -43,7 +43,7 @@ public class Village implements Serializable {
 
     private final Map<UUID, Plant> plants = new HashMap<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private GameMap gameMap = new GameMap(70, 70, 10);
+    private GameMap gameMap = new GameMap(100, 100, 20);
 
 
     private final Map<UUID, Battle> activeBattles;

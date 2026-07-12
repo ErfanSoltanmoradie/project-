@@ -3,19 +3,22 @@ package service.map;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 import model.building.Building;
 import model.village.Village;
 import model.world.Coordinate;
 import java.util.Objects;
 
+
+
 public class GameCanvasView extends Canvas {
 
     private final Village village;
     private final GameMap gameMap;
 
-    private double tileWidth = 40;
-    private double tileHeight = 20;
+    private double tileWidth = 50;
+    private double tileHeight = 25;
     private double cameraX;
     private double cameraY;
 
@@ -23,7 +26,9 @@ public class GameCanvasView extends Canvas {
     private final double MAX_TILE_WIDTH = 50;
 
     private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/grass.png")));
-
+    private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree3.png")));
+    private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree2.png")));
+    private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/labbbbbbbbbbbbbbbbbbb.png")));
 
     public Village getVillage() {
         return village;
@@ -64,10 +69,8 @@ public class GameCanvasView extends Canvas {
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, width, height);
 
-
         gc.setFill(Color.web("#4c7828"));
         gc.fillRect(0, 0, width, height);
-
 
         gc.setImageSmoothing(false);
 
@@ -78,7 +81,6 @@ public class GameCanvasView extends Canvas {
         int cols = gameMap.getColumns();
 
         int padding = 25;
-
 
         for (int r = -padding; r < rows + padding; r++) {
             for (int c = -padding; c < cols + padding; c++) {
@@ -93,97 +95,97 @@ public class GameCanvasView extends Canvas {
                 boolean isInsideMap = (r >= 0 && r < rows && c >= 0 && c < cols);
 
                 if (isInsideMap) {
+                    Tile tile = gameMap.getTile(r, c);
+
                     if (grassTile != null && !grassTile.isError()) {
                         gc.drawImage(grassTile, isoX, isoY, tileWidth + 1.0, tileHeight + 1.0);
-                    } else {
+                    }
+
+                    if (tile.getType() == Tile.Type.BORDER) {
                         double[] xPoints = {isoX + tileWidth / 2, isoX + tileWidth, isoX + tileWidth / 2, isoX};
                         double[] yPoints = {isoY, isoY + tileHeight / 2, isoY + tileHeight, isoY + tileHeight / 2};
-                        gc.setFill(Color.web("#5c8e32"));
+
+                        gc.setFill(Color.rgb(15, 15, 15, 0.35));
                         gc.fillPolygon(xPoints, yPoints, 4);
                     }
-                } else {
-                    double[] xPoints = {isoX + tileWidth / 2, isoX + tileWidth, isoX + tileWidth / 2, isoX};
-                    double[] yPoints = {isoY, isoY + tileHeight / 2, isoY + tileHeight, isoY + tileHeight / 2};
-                    if ((r + c) % 2 == 0) {
-                        gc.setFill(Color.web("#2e471a"));
-                    } else {
-                        gc.setFill(Color.web("#263b15"));
+                }
+            }
+        }
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = cols - 1; c >= 0; c--) {
+
+                double isoX = originX + (c - r) * (tileWidth / 2);
+                double isoY = originY + (c + r) * (tileHeight / 2);
+
+                Tile tile = gameMap.getTile(r, c);
+                Tile.DecorateType deco = tile.getDecorateType();
+
+                if (deco != Tile.DecorateType.NONE) {
+                    Image currentImg = null;
+                    double wFactor = 1.0;
+                    double hFactor = 1.0;
+
+                    switch (deco) {
+                        case BROWN_TREE:
+                            currentImg = brownTree;
+                            wFactor = 2.0;
+                            hFactor = 4.0;
+                            break;
+                        case WHITE_TREE:
+                            currentImg = whiteTree;
+                            wFactor = 1.8;
+                            hFactor = 3.5;
+                            break;
                     }
-                    gc.fillPolygon(xPoints, yPoints, 4);
+
+                    if (currentImg != null) {
+                        double customWidth = tileWidth * wFactor;
+                        double customHeight = tileHeight * hFactor;
+
+                        double offsetX = isoX - (customWidth - tileWidth) / 2;
+                        double offsetY = isoY - (customHeight - tileHeight);
+
+                        gc.drawImage(currentImg, offsetX, offsetY, customWidth, customHeight);
+                    }
+                }
+
+
+                if (tile.getBuilding() != null && buildingImage != null) {
+                    Building b = tile.getBuilding();
+                    Coordinate pos = b.getPosition();
+
+                    if (pos.getX() == r && pos.getY() == c) {
+                        int bW = b.getWidth();
+                        int bH = b.getHeight();
+
+                        double baseTopX = originX + (c - r) * (tileWidth / 2) + tileWidth / 2;
+                        double baseTopY = originY + (c + r) * (tileHeight / 2);
+
+                        double baseLeftX = originX + (c - (r + bW - 1)) * (tileWidth / 2);
+                        double baseLeftY = originY + (c + (r + bW - 1)) * (tileHeight / 2) + tileHeight / 2;
+
+                        double baseRightX = originX + ((c + bH - 1) - r) * (tileWidth / 2) + tileWidth;
+                        double baseRightY = originY + ((c + bH - 1) + r) * (tileHeight / 2) + tileHeight / 2;
+
+                        double baseBottomX = (originX + ((c + bH - 1) - (r + bW - 1)) * (tileWidth / 2) + tileWidth / 2) ;
+                        double baseBottomY = originY + ((c + bH - 1) + (r + bW - 1)) * (tileHeight / 2) + tileHeight;
+
+                        double customWidth = baseRightX - baseLeftX ;
+                        double customHeight = customWidth * (buildingImage.getHeight() / buildingImage.getWidth()) * 1.4;
+
+                        double offsetX = baseLeftX;
+
+                        double offsetY = baseBottomY - (customHeight * 0.75) ;
+
+                        gc.drawImage(buildingImage, offsetX, offsetY, customWidth, customHeight);
+
+                    }
                 }
             }
         }
 
         gc.setImageSmoothing(true);
-
-
-        for (Building building : village.getBuildings().values()) {
-            Coordinate pos = building.getPosition();
-            int r = pos.getX();
-            int c = pos.getY();
-
-            if (building.getBuildingStatus() == model.building.BuildingStatus.ACTIVE) {
-                int bW = building.getWidth();
-                int bH = building.getHeight();
-
-
-                double baseTopX = originX + (c - r) * (tileWidth / 2) + tileWidth / 2;
-                double baseTopY = originY + (c + r) * (tileHeight / 2);
-
-                double baseLeftX = originX + (c - (r + bW - 1)) * (tileWidth / 2);
-                double baseLeftY = originY + (c + (r + bW - 1)) * (tileHeight / 2) + tileHeight / 2;
-
-                double baseRightX = originX + ((c + bH - 1) - r) * (tileWidth / 2) + tileWidth;
-                double baseRightY = originY + ((c + bH - 1) + r) * (tileHeight / 2) + tileHeight / 2;
-
-                double baseBottomX = originX + ((c + bH - 1) - (r + bW - 1)) * (tileWidth / 2) + tileWidth / 2;
-                double baseBottomY = originY + ((c + bH - 1) + (r + bW - 1)) * (tileHeight / 2) + tileHeight;
-
-
-                double bHeight = tileHeight * 1.5;
-
-
-                double roofTopX = baseTopX;       double roofTopY = baseTopY - bHeight;
-                double roofLeftX = baseLeftX;     double roofLeftY = baseLeftY - bHeight;
-                double roofRightX = baseRightX;   double roofRightY = baseRightY - bHeight;
-                double roofBottomX = baseBottomX; double roofBottomY = baseBottomY - bHeight;
-
-                gc.setFill(Color.web("#5d4037"));
-                gc.fillPolygon(
-                        new double[]{baseLeftX, baseBottomX, roofBottomX, roofLeftX},
-                        new double[]{baseLeftY, baseBottomY, roofBottomY, roofLeftY},
-                        4
-                );
-
-
-                gc.setFill(Color.web("#8d6e63"));
-                gc.fillPolygon(
-                        new double[]{baseRightX, baseBottomX, roofBottomX, roofRightX},
-                        new double[]{baseRightY, baseBottomY, roofBottomY, roofRightY},
-                        4
-                );
-
-
-                gc.setFill(Color.web("#a1887f"));
-                gc.fillPolygon(
-                        new double[]{roofTopX, roofRightX, roofBottomX, roofLeftX},
-                        new double[]{roofTopY, roofRightY, roofBottomY, roofLeftY},
-                        4
-                );
-
-
-                gc.setStroke(Color.web("#3e2723", 0.7));
-                gc.setLineWidth(1.2);
-
-                gc.strokePolygon(
-                        new double[]{roofTopX, roofRightX, roofBottomX, roofLeftX},
-                        new double[]{roofTopY, roofRightY, roofBottomY, roofLeftY},
-                        4
-                );
-
-                gc.strokeLine(baseBottomX, baseBottomY, roofBottomX, roofBottomY);
-            }
-        }
     }
 
     public void zoom(double factor, double mouseX, double mouseY) {
