@@ -13,7 +13,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+<<<<<<< HEAD
 import javafx.scene.paint.Color;
+=======
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 import model.building.*;
 import model.player.Player;
 import model.resources.Resources;
@@ -89,6 +92,7 @@ public class VillageController {
 
     @FXML private Button StoneMineBuildButton;
 
+<<<<<<< HEAD
     @FXML private Button laboratoryBuildButton;
 
     @FXML private Button customhouseBuildButton;
@@ -98,6 +102,13 @@ public class VillageController {
     @FXML private Button snrcBuildButton;
 
     @FXML private Button psnrcBuildButton;
+=======
+    @FXML private Button tradeButton;
+
+    @FXML private Button majorBuildingButton;
+
+    @FXML private Button researchCenter;
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 
     //@FXML private ImageView borderImageView;
 
@@ -282,16 +293,24 @@ public class VillageController {
     }
 
     @FXML
+<<<<<<< HEAD
     private void onCustomhouseBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             this.hideAddBuildingPanel();
             if(!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return ;
             else
                 controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
+=======
+    private void onMajorBuildingBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.MAJOR_BUILDING);
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
         }
     }
 
     @FXML
+<<<<<<< HEAD
     private void onNRCBuildClicked(ActionEvent actionEvent){
         if(controller != null) {
             this.hideAddBuildingPanel();
@@ -300,6 +319,64 @@ public class VillageController {
                 controller.enterPlantBuildMode(PlantType.NRC);
         }
     }
+=======
+    private void onResearchCenterBuildClicked(){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.RESEARCH_CENTER);
+        }
+    }
+
+    @FXML
+    private void onTradeButtonClicked(){
+
+    }
+
+    private void setTradeButtonEnable(){
+        if(this.checkTradeResearchBuildingCondition() && this.checkTradeMajorBuildingCondition())
+            this.tradeButton.setDisable(false);
+    }
+
+    private boolean checkTradeMajorBuildingCondition(){
+        this.player.getLock().readLock().lock();
+        try {
+            this.player.getVillage().getLock().readLock().lock();
+            try {
+                for (Building building : this.player.getVillage().getBuildings().values()){
+                    if(building instanceof MajorBuilding ){
+                        if(building.getLevel() >= 3)
+                            return true;
+                    }
+                }
+            }finally {
+                this.player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            this.player.getLock().readLock().unlock();
+        }
+        return false;
+    }
+
+    private boolean checkTradeResearchBuildingCondition(){
+        this.player.getLock().readLock().lock();
+        try {
+            this.player.getVillage().getLock().readLock().lock();
+            try {
+                for (Building building : this.player.getVillage().getBuildings().values()){
+                    if(building instanceof ResearchCenter ){
+                        if(building.getLevel() >= 2)
+                            return true;
+                    }
+                }
+            }finally {
+                this.player.getVillage().getLock().readLock().unlock();
+            }
+        }finally {
+            this.player.getLock().readLock().unlock();
+        }
+        return false;
+    }
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 
     @FXML
     private void onSNRCBuildClicked(ActionEvent actionEvent){
@@ -412,6 +489,8 @@ public class VillageController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
+
+                setTradeButtonEnable();
 
                 taskProcessor.process();
 

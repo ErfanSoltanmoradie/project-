@@ -24,6 +24,12 @@ public class MovementTask extends TimedOperation implements Serializable {
 
     @Override
     public TaskResult execute() {
+        /*
+        TaskResult taskResult = new TaskResult();
+        // جلوگیری از NullPointerException با برگرداندن شیء خالی اما معتبر
+        taskResult.getTasksToRemove().add(getId());
+        return taskResult;
+         */
         return null;
     }
 }

@@ -1,6 +1,6 @@
 package model.military;
 
-public class Millitary {
+public abstract class Millitary {
     private int attackStr;
     private int defenceStr;
 

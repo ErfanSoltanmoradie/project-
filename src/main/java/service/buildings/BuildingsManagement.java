@@ -34,6 +34,7 @@ public class BuildingsManagement{
             //Build and add a task
             BuildTask buildTask = new BuildTask(Instant.now(),
                     cost.getNeededTime(), buildingType, coordinate);
+
             village.getTimedOperation().put(buildTask.getId(), buildTask);
 
         }finally {

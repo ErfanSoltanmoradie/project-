@@ -36,7 +36,7 @@ public class Cost  implements Serializable {
     public static Cost upgradeCost(Building building){
 
         return switch (building.getType()) {
-            case WOOD_MINE, STONE_MINE, SOIL_PURIFIER, DIRTY_WATER_MINE, GUNPOWDER_MINE ->
+            case WOOD_MINE, STONE_MINE, IRON_MINE , SOIL_PURIFIER, DIRTY_WATER_MINE, GUNPOWDER_MINE ->
                     MinerBuilding.getMineUpgradeInfo(building.getLevel()).getCost();
 
             case WATER_STORAGE, SOIL_STORAGE, STONE_STORAGE, WOOD_STORAGE, IRON_STORAGE, GUNPOWDER_STORAGE ->
@@ -50,15 +50,33 @@ public class Cost  implements Serializable {
 
             case LABORATORY -> Laboratory.upgradeBuildingInfo(building.getLevel()).getCost();
 
+<<<<<<< HEAD
             //case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
+=======
+            case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
+
+            case BARRACKS           -> Barrack.getBarrackUpgradeInfo(building.getLevel()).getCost();
+
+            case ARMY_PRODUCER      -> ArmyProducer.getArmyProducerUpgradeInfo(building.getLevel()).getCost();
+
+            case MAJOR_BUILDING -> MajorBuilding.upgradeBuildingInfo(building.getLevel()).getCost();
+
+            case RESEARCH_CENTER -> ResearchCenter.upgradeBuildingInfo(building.getLevel()).getCost();
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 
             default -> new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(0));
         };
     }
 
+<<<<<<< HEAD
     /*public static Cost allianceCost(){
         return new Cost(500, 500, 300, 0, 0, 0, 100,Duration.ofMinutes(0));
     }*/
+=======
+    public static Cost allianceCost(){
+        return new Cost(500, 500, 300, 0, 0, 0, 100,Duration.ofMinutes(0));
+    }
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 
     public int getWood() {return wood;}
 

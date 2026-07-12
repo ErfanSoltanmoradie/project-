@@ -1,6 +1,7 @@
 package model.village;
 
 
+import model.army.Armies;
 import model.army.Army;
 import model.building.Building;
 import model.building.Plant;
@@ -9,9 +10,18 @@ import model.time.RandomEventTask;
 import model.time.TimedOperation;
 import model.time.TimedOperationType;
 import model.world.Coordinate;
+<<<<<<< HEAD
+=======
+
+import service.alliance.AllianceRequest;
+import service.buildings.BuildingFactory;
+import service.buildings.BuildingsManagement;
+
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 import service.filehandeling.LoadService;
 import service.map.GameMap;
 import service.resource.ResourcesManagement;
+import service.trade.TradeOffer;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -32,12 +42,20 @@ public class Village implements Serializable {
     private transient LoadService loadService;
     private Cloud cloud;
     private Army army;
+    private Armies armies;
     private int health;
     private final Map<UUID, Plant> plants = new HashMap<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private GameMap gameMap = new GameMap(70, 70, 10);
+<<<<<<< HEAD
     /*private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
     private AllianceRequest allianceRequest;*/
+=======
+
+    private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
+    private AllianceRequest allianceRequest;
+
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
     public GameMap getGameMap() {
         return gameMap;
     }
@@ -51,12 +69,25 @@ public class Village implements Serializable {
         this.cloud = new Cloud();
         this.health = health;
         this.resourcesManagement = new ResourcesManagement(this);
+        this.armies = new Armies();
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
     }
 
     public void runTimeServices(){  // we want the logic after loading the game
         this.resourcesManagement = new ResourcesManagement(this);
         this.loadService = new LoadService();
+    }
+
+    public Map<UUID, TradeOffer> getTradeOffers() {
+        return tradeOffers;
+    }
+
+    public AllianceRequest getAllianceRequest() {
+        return allianceRequest;
+    }
+
+    public void setAllianceRequest(AllianceRequest allianceRequest) {
+        this.allianceRequest = allianceRequest;
     }
 
     public UUID getVillageId() {
@@ -110,6 +141,8 @@ public class Village implements Serializable {
     public Army getArmy() {
         return army;
     }
+
+    public Armies getArmies(){return armies;}
 
     public void setArmy(Army army) {
         this.army = army;
