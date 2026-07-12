@@ -49,7 +49,7 @@ public class GameMapController {
         System.out.println("Select a place for your plant: " + plantType);
         this.plantModeActive = true;
         this.selectedPlantType = plantType;
-        this.buildModeActive = false; // مود سازه عادی خاموش شود
+        this.buildModeActive = false;
         if (villageController != null) villageController.hideInfoPanel();
     }
 
@@ -60,7 +60,6 @@ public class GameMapController {
         int row = coordinate.getX();
         int col = coordinate.getY();
 
-        // ================= حالت ساخت گیاه =================
         if (plantModeActive && selectedPlantType != null) {
             if (!this.gameMap.isAreaFree(row, col, 1, 1)) {
                 this.selectedPlantType = null;
@@ -75,18 +74,15 @@ public class GameMapController {
 
             java.util.Optional<javafx.scene.control.ButtonType> result = confirmAlert.showAndWait();
 
-            // ⚡ اصلاح منطق: دستور ساخت فقط و فقط در صورت زدن دکمه OK صادر می‌شود
             if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
                 this.buildingsManagement.buildPlant(this.selectedPlantType, coordinate);
             }
 
-            // پاکسازی وضعیت مود ساخت در هر دو حالت (تایید یا لغو)
             this.selectedPlantType = null;
             this.plantModeActive = false;
             return;
         }
 
-        // ================= حالت ساخت ساختمان =================
         if (buildModeActive && selectedBuildingType != null) {
             if (!this.gameMap.isAreaFree(row, col, selectedBuildingType.getWidth(), selectedBuildingType.getHeight())) {
                 this.selectedBuildingType = null;
@@ -97,11 +93,10 @@ public class GameMapController {
             Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmAlert.setTitle("Final approval");
             confirmAlert.setHeaderText("Are you sure about this?");
-            confirmAlert.setContentText("building " + selectedBuildingType + " will begin"); // اصلاح نام متغیر به selectedBuildingType
+            confirmAlert.setContentText("building " + selectedBuildingType + " will begin");
 
             java.util.Optional<javafx.scene.control.ButtonType> result = confirmAlert.showAndWait();
 
-            // ⚡ اصلاح منطق: دستور ساخت از بیرون بلاک حذف شد و فقط اینجا اجرا می‌شود
             if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
                 this.buildingsManagement.build(selectedBuildingType, coordinate);
             }
@@ -111,7 +106,6 @@ public class GameMapController {
             return;
         }
 
-        // ================= حالت کلیک و انتخاب روی نقشه =================
         Building clickedBuilding = null;
         for (Building building : village.getBuildings().values()) {
             Coordinate position = building.getPosition();
@@ -124,7 +118,7 @@ public class GameMapController {
 
         Plant clickedPlant = null;
         if (clickedBuilding == null) {
-            this.selectedBuilding = null; // اصلاح فیلد به جای انتساب خودِ متغیرِ null
+            this.selectedBuilding = null;
             for (Plant plant : village.getPlants().values()) {
                 Coordinate position = plant.getPosition();
                 if (position != null && row >= position.getX() && row < position.getX() + plant.getHeight() &&
@@ -135,7 +129,6 @@ public class GameMapController {
             }
         }
 
-        // اعمال خروجی روی UI پنل اطلاعات
         if (clickedBuilding != null) {
             this.selectedBuilding = clickedBuilding;
             this.selectedPlant = null;

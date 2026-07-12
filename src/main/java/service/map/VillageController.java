@@ -36,6 +36,11 @@ public class VillageController {
 
     @FXML private Button buyBuilding;
 
+    @FXML private Label infoPanelTitleLabel;
+    @FXML private Label buildingLevelLabel;
+    @FXML private Label plantsCountLabel;
+    @FXML private Label neutralizationPowerLabel;
+
     @FXML private Label woodLabel;
 
     @FXML private Label ironLabel;
@@ -316,17 +321,46 @@ public class VillageController {
         }
     }
 
-    public void showBuildingInfo(Building building){
-        if(building == null) return;
+    public void showBuildingInfo(Building building) {
+        if (building == null) return;
+
+        // ۱. بروزرسانی لایبل‌های متنی لول و عنوان
+        infoPanelTitleLabel.setText(building.getType().toString());
+        buildingLevelLabel.setText("Level: " + building.getLevel());
+
+        // ۲. منطق اختصاصی مربوط به آزمایشگاه
+        if (building.getType() == BuildingType.LABORATORY) {
+            plantsCountLabel.setVisible(true);
+            neutralizationPowerLabel.setVisible(true);
+
+            int totalPlants = player.getVillage().getPlants().size();
+            plantsCountLabel.setText("Total Plants: " + totalPlants);
+
+            double totalPower = 0;
+            for (model.building.Plant plant : player.getVillage().getPlants().values()) {
+                totalPower += plant.getNeutralizationPower();
+            }
+            neutralizationPowerLabel.setText("Neutralization Power: " + totalPower);
+        } else {
+            // پنهان کردن لایبل‌های گیاه برای سایر ساختمان‌ها
+            plantsCountLabel.setVisible(false);
+            neutralizationPowerLabel.setVisible(false);
+        }
+
+        // ۳. مدیریت دکمه آپگرید (متن و وضعیت فعال/غیرفعال بودن)
         this.upgradeButton.setText("Upgrade " + building.getType().toString() + " (Lvl " + building.getLevel() + ")");
-        if(building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING){
+
+        if (building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING) {
             this.upgradeButton.setDisable(true);
-        }else {
+        } else {
             this.upgradeButton.setDisable(false);
         }
-        System.out.println("UI Panel updated for: " + building.getType() + " Level: " + building.getLevel());
+
+        // ۴. نمایان کردن پنل اطلاعات
         this.infoPanel.setVisible(true);
         this.infoPanel.setManaged(true);
+
+        System.out.println("UI Panel updated for: " + building.getType() + " Level: " + building.getLevel());
     }
 
     public void showPlantInfo(Plant plant){

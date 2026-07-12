@@ -146,21 +146,21 @@
                               <Button fx:id="StoneMineBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" minWidth="120.0" prefHeight="200.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                               <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Label" />
                               <Button minWidth="100.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" minWidth="120.0" prefHeight="200.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                               <Label alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="Label" />
                               <Button minWidth="100.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" minWidth="120.0" prefHeight="200.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -171,7 +171,7 @@
                               <Button fx:id="laboratoryBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onLaboratoryBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" minWidth="120.0" prefHeight="200.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -182,18 +182,18 @@
                               <Button fx:id="customhouseBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onCustomhouseBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" minWidth="120.0" prefHeight="200.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../../NRC.jpg" />
+                                    <Image url="@../../../NRC.png" />
                                  </image>
                               </ImageView>
                               <Label fx:id="nrcLabel" alignment="CENTER" prefHeight="32.0" prefWidth="132.0" text="NRC" />
                               <Button fx:id="nrcBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onNRCBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" minWidth="120.0" prefHeight="200.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -204,7 +204,7 @@
                               <Button fx:id="snrcBuildButton" minWidth="100.0" mnemonicParsing="false" onAction="#onSNRCBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" minWidth="120.0" prefWidth="120.0">
+                        <VBox alignment="TOP_CENTER" minWidth="120.0" prefHeight="200.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -226,7 +226,10 @@
             <Insets />
          </StackPane.margin>
          <children>
-            <Button fx:id="upgradeButton" alignment="BOTTOM_CENTER" layoutX="73.0" layoutY="138.0" mnemonicParsing="false" onAction="#onUpgradeClicked" prefHeight="26.0" prefWidth="148.0" text="UPGRADE" />
+            <Button fx:id="upgradeButton" alignment="BOTTOM_CENTER" layoutX="86.0" layoutY="165.0" mnemonicParsing="false" onAction="#onUpgradeClicked" prefHeight="30.0" prefWidth="148.0" text="UPGRADE" />
+            <Label fx:id="infoPanelTitleLabel" alignment="CENTER" layoutX="10.0" layoutY="15.0" prefWidth="300.0" style="-fx-text-fill: #bfa15f; -fx-font-weight: bold; -fx-font-size: 16px;" text="BuildingInfo" />
+            <Label fx:id="buildingLevelLabel" layoutX="20.0" layoutY="55.0" prefWidth="280.0" style="-fx-text-fill: #ffffff; -fx-font-size: 14px;" text="Level: 1" />
+            <Label fx:id="plantsCountLabel" layoutX="20.0" layoutY="85.0" prefWidth="280.0" style="-fx-text-fill: #ffffff; -fx-font-size: 14px;" text="Total Plants: 0" visible="false" />
          </children>
       </AnchorPane>
       <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
