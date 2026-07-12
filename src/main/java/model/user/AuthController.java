@@ -2,10 +2,13 @@ package model.user;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.building.Building;
@@ -16,6 +19,7 @@ import model.repository.PlayerRepository;
 import model.resources.ResourcesType;
 import service.map.VillageController;
 
+import javax.swing.event.AncestorEvent;
 import java.io.IOException;
 
 
@@ -23,6 +27,9 @@ public class AuthController {
 
     private AuthService authService;
     private PlayerRepository playerRepository;
+
+    private double xOffset= 0;
+    private double yOffset = 0;
 
     @FXML
     private StackPane authPanel;
@@ -40,6 +47,27 @@ public class AuthController {
     private TextField passwordTextField;
 
     @FXML
+    private TextField usernameTextField1;
+
+    @FXML
+    private TextField passwordTextField1;
+
+    @FXML
+    private AnchorPane signupPanel;
+
+    @FXML
+    private AnchorPane loginPanel;
+
+    @FXML
+    public String getUsername1(){
+        return this.usernameTextField1.getText();
+    }
+
+    public String getPassword1(){
+        return this.passwordTextField1.getText();
+    }
+
+    @FXML
     public String getUsername(){
        return this.usernameTextField.getText();
     }
@@ -49,16 +77,46 @@ public class AuthController {
     }
 
     @FXML
+    private void onFirstSignupClicked(){
+        this.showSignupPanel();
+    }
+
+    @FXML
+    private void onFirstLoginClicked(){
+        this.showLoginPanel();
+    }
+
+    @FXML
+    private void onExitClicked(){
+
+    }
+
+    @FXML
+    private void handleMousePressed(MouseEvent mouseEvent){
+        this.xOffset = mouseEvent.getSceneX();
+        this.yOffset = mouseEvent.getSceneY();
+    }
+
+    @FXML
+    private void handleMouseDragged(MouseEvent event){
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        stage.setX(event.getScreenX() - xOffset);
+        stage.setY(event.getScreenY() - yOffset);
+    }
+
+    @FXML
     public void onLoginClicked(){
-        AuthResult authResult = this.authService.login(this.getUsername(), this.getPassword());
+        AuthResult authResult = this.authService.login(this.getUsername1(), this.getPassword1());
         System.out.println(authResult.getAuthStatus().toString());
 
         if(authResult.getAuthStatus() == AuthStatus.SUCCESS && authResult.getPlayer().isOnlineStatus() == false){
-            this.usernameTextField.clear();
-            this.passwordTextField.clear();
+            this.usernameTextField1.clear();
+            this.passwordTextField1.clear();
             authResult.getPlayer().setOnlineStatus(true);
             this.addProducedResources(authResult.getPlayer());
             showVillage(authResult.getPlayer());
+            hideLoginPanel();
         }
     }
 
@@ -72,6 +130,7 @@ public class AuthController {
             this.passwordTextField.clear();
             authResult.getPlayer().setOnlineStatus(true);
             showVillage(authResult.getPlayer());
+            hideSignupPanel();
         }
     }
 
@@ -90,7 +149,7 @@ public class AuthController {
 
         Stage stage = new Stage();
 
-        Scene scene = new Scene(root, 1024, 768);
+        Scene scene = new Scene(root, 800, 600);
 
         stage.setScene(scene);
         stage.setResizable(true);
@@ -219,6 +278,26 @@ public class AuthController {
             }
         }
         return amount;
+    }
+
+    private void hideLoginPanel(){
+        this.loginPanel.setVisible(false);
+        this.loginPanel.setManaged(false);
+    }
+
+    private void hideSignupPanel(){
+        this.signupPanel.setVisible(false);
+        this.signupPanel.setManaged(false);
+    }
+
+    private void showSignupPanel(){
+        this.signupPanel.setVisible(true);
+        this.signupPanel.setManaged(true);
+    }
+
+    private void showLoginPanel(){
+        this.loginPanel.setVisible(true);
+        this.loginPanel.setManaged(true);
     }
 
     public PlayerRepository getPlayerRepository() {

@@ -1,10 +1,12 @@
 package service.map;
 
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import model.player.Player;
 import model.player.PlayerFactory;
@@ -39,6 +41,7 @@ public class Main extends Application {
         this.start = start;
     }
 
+
     @Override
     public void start(Stage primaryStage) throws IOException {
 
@@ -56,6 +59,8 @@ public class Main extends Application {
 
         Scene scene = new Scene(authRoot);
         primaryStage.setScene(scene);
+
+        primaryStage.initStyle(StageStyle.UNDECORATED);
 
         primaryStage.setResizable(false);
         primaryStage.show();
