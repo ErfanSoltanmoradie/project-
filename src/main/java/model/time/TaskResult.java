@@ -25,6 +25,13 @@ public class TaskResult {
     private final List<UUID> productionBuildingsToReschedule = new ArrayList<>();
     private final List<EventType> eventType = new ArrayList<>();
 
+<<<<<<< HEAD
+    public Map<UUID, Plant> getPlantsToAdd() {
+        return plantsToAdd;
+    }
+
+    public List<EventType> getEventType() {
+=======
     private final List<TradeOffer> tradeOffers = new ArrayList<>();
 
     public List<TradeOffer> getTradeOffers() {
@@ -48,6 +55,7 @@ public class TaskResult {
     }
 
     public List<EventType> getEventType () {
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
         return eventType;
     }
 

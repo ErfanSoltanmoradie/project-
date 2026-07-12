@@ -10,11 +10,14 @@ import model.time.RandomEventTask;
 import model.time.TimedOperation;
 import model.time.TimedOperationType;
 import model.world.Coordinate;
+<<<<<<< HEAD
+=======
 
 import service.alliance.AllianceRequest;
 import service.buildings.BuildingFactory;
 import service.buildings.BuildingsManagement;
 
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 import service.filehandeling.LoadService;
 import service.map.GameMap;
 import service.resource.ResourcesManagement;
@@ -44,10 +47,15 @@ public class Village implements Serializable {
     private final Map<UUID, Plant> plants = new HashMap<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private GameMap gameMap = new GameMap(70, 70, 10);
+<<<<<<< HEAD
+    /*private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
+    private AllianceRequest allianceRequest;*/
+=======
 
     private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
     private AllianceRequest allianceRequest;
 
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
     public GameMap getGameMap() {
         return gameMap;
     }

@@ -1,10 +1,10 @@
 package service.map;
 
 
-
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import model.building.*;
 import model.player.Player;
 import model.resources.Resources;
@@ -22,63 +23,128 @@ import model.village.Village;
 import service.resource.ResourcesManagement;
 
 
-
 //import backend.Player;
 public class VillageController {
 
-    @FXML private StackPane rootStackPane;
+    @FXML
+    private StackPane rootStackPane;
 
-    @FXML private AnchorPane infoPanel;
+    @FXML
+    private AnchorPane infoPanel;
 
-    @FXML private AnchorPane shopPanel;
+    @FXML
+    private AnchorPane shopPanel;
 
-    @FXML private Button upgradeButton;
+    @FXML
+    private Button upgradeButton;
 
-    @FXML private Button buyBuilding;
+    @FXML
+    private Button buyBuilding;
 
-    @FXML private Label woodLabel;
+    @FXML
+    private Label infoPanelTitleLabel;
+    @FXML
+    private Label buildingLevelLabel;
+    @FXML
+    private Label plantsCountLabel;
+    @FXML
+    private Label neutralizationPowerLabel;
 
-    @FXML private Label ironLabel;
+    @FXML
+    private Label woodLabel;
 
-    @FXML private Label stoneLabel;
+    @FXML
+    private Label ironLabel;
 
-    @FXML private Label gunPowderLabel;
+    @FXML
+    private Label stoneLabel;
 
-    @FXML private Label cleanWaterLabel;
+    @FXML
+    private Label gunPowderLabel;
 
-    @FXML private Label cleanSoilLabel;
+    @FXML
+    private Label cleanWaterLabel;
 
-    @FXML private Button shopButton;
+    @FXML
+    private Label cleanSoilLabel;
 
-    @FXML private AnchorPane addBuildingPanel;
+    @FXML
+    private Button shopButton;
 
-    @FXML private ScrollPane addBuildingScrollPane;
+    @FXML
+    private AnchorPane addBuildingPanel;
 
-    @FXML private HBox addBuildingHBox;
+    @FXML
+    private ScrollPane addBuildingScrollPane;
 
-    @FXML private VBox addBuildingVBox;
+    @FXML
+    private HBox addBuildingHBox;
 
-    @FXML private ImageView woodMineImage;
+    @FXML
+    private VBox addBuildingVBox;
 
-    @FXML private Label woodMineLabel;
+    @FXML
+    private ImageView woodMineImage;
 
-    @FXML private Button woodMineBuildButton;
+    @FXML
+    private Label woodMineLabel;
 
-    @FXML private Button ironMineBuildButton;
+    @FXML
+    private Label laboratoryLabel;
 
-    @FXML private Button waterMineBuildButton;
+    @FXML
+    private Label customhouseLabel;
 
-    @FXML private Button soilMineBuildButton;
+    @FXML
+    private Label nrcLabel;
 
-    @FXML private Button gunPowderMineBuildButton;
+    @FXML
+    private Label snrcLabel;
 
-    @FXML private Button StoneMineBuildButton;
+    @FXML
+    private Label psnrcLabel;
 
-    @FXML private Button tradeButton;
+    @FXML
+    private Button woodMineBuildButton;
 
-    @FXML private Button majorBuildingButton;
+    @FXML
+    private Button ironMineBuildButton;
 
-    @FXML private Button researchCenter;
+    @FXML
+    private Button waterMineBuildButton;
+
+    @FXML
+    private Button soilMineBuildButton;
+
+    @FXML
+    private Button gunPowderMineBuildButton;
+
+    @FXML
+    private Button StoneMineBuildButton;
+
+    @FXML
+    private Button laboratoryBuildButton;
+
+    @FXML
+    private Button customhouseBuildButton;
+
+    @FXML
+    private Button nrcBuildButton;
+
+    @FXML
+    private Button snrcBuildButton;
+
+    @FXML
+    private Button psnrcBuildButton;
+
+    @FXML
+    private Button tradeButton;
+
+    @FXML
+    private Button majorBuildingButton;
+
+    @FXML
+    private Button researchCenter;
 
     //@FXML private ImageView borderImageView;
 
@@ -107,7 +173,7 @@ public class VillageController {
         this.gameCanvasView = new GameCanvasView(village);
 
         //this.borderImageView.fitWidthProperty().bind(rootStackPane.widthProperty());
-       // this.borderImageView.fitHeightProperty().bind(rootStackPane.heightProperty());
+        // this.borderImageView.fitHeightProperty().bind(rootStackPane.heightProperty());
         this.gameCanvasView.widthProperty().bind(rootStackPane.widthProperty());
         this.gameCanvasView.heightProperty().bind(rootStackPane.heightProperty());
 
@@ -128,7 +194,7 @@ public class VillageController {
             this.lastMouseX = event.getX();
             this.lastMouseY = event.getY();
         });
-////////////////////////////////////////////////////////////////////////////
+
         this.gameCanvasView.setOnMouseClicked(event -> {
             if (controller != null) {
                 this.controller.handleMapClick(event.getX(), event.getY());
@@ -163,20 +229,29 @@ public class VillageController {
     @FXML
     private void onUpgradeClicked(ActionEvent event) {
         if (this.controller != null) {
-            this.controller.handleUpgradeClicked();
-            this.hideInfoPanel();
+            if (this.controller.getSelectedPlant() != null) {
+                this.player.getVillage().getPlants().remove(this.controller.getSelectedPlant().getId());
+                this.player.getVillage().getGameMap().getTile(
+                        this.controller.getSelectedPlant().getPosition().getX(),
+                        this.controller.getSelectedPlant().getPosition().getY()
+                ).setPlant(null);
+                this.hideInfoPanel();
+            } else {
+                this.controller.handleUpgradeClicked(); // روال عادی آپگرید ساختمان
+                this.hideInfoPanel();
+            }
         }
     }
 
     @FXML
-    private void onShopClicked(ActionEvent event){
+    private void onShopClicked(ActionEvent event) {
         this.buyBuilding.setVisible(true);
         this.shopPanel.setVisible(true);
         this.shopPanel.setManaged(true);
     }
 
     @FXML
-    private void onBuyBuildingClicked(ActionEvent actionEvent){
+    private void onBuyBuildingClicked(ActionEvent actionEvent) {
         this.hideShopPanel();
         this.addBuildingPanel.setVisible(true);
         this.addBuildingPanel.setManaged(true);
@@ -185,145 +260,240 @@ public class VillageController {
     }
 
     @FXML
-    private void onWoodMineBuildClicked(ActionEvent actionEvent){
+    private void onWoodMineBuildClicked(ActionEvent actionEvent) {
         if (controller != null) {
             this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.WOOD_MINE);
+            if (!checkResourcesAndAlert(BuildingType.WOOD_MINE)) return;
+            else
+                controller.enterBuildMode(BuildingType.WOOD_MINE);
         }
     }
 
     @FXML
-    private void onIronMineBuildClicked(ActionEvent actionEvent){
+    private void onIronMineBuildClicked(ActionEvent actionEvent) {
         if (controller != null) {
             this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.IRON_MINE);
+            if (!checkResourcesAndAlert(BuildingType.IRON_MINE)) return;
+            else
+                controller.enterBuildMode(BuildingType.IRON_MINE);
         }
     }
 
     @FXML
-    private void onStoneMineBuildClicked(ActionEvent actionEvent){
+    private void onStoneMineBuildClicked(ActionEvent actionEvent) {
         if (controller != null) {
             this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.STONE_MINE);
+            if (!checkResourcesAndAlert(BuildingType.STONE_MINE)) return;
+            else
+                controller.enterBuildMode(BuildingType.STONE_MINE);
         }
     }
 
     @FXML
-    private void onWaterMineBuildClicked(ActionEvent actionEvent){
+    private void onWaterMineBuildClicked(ActionEvent actionEvent) {
         if (controller != null) {
             this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.DIRTY_WATER_MINE);
+            if (!checkResourcesAndAlert(BuildingType.WATER_STORAGE)) return;
+            else
+                controller.enterBuildMode(BuildingType.DIRTY_WATER_MINE);
         }
     }
 
     @FXML
-    private void onSoilMineBuildClicked(ActionEvent actionEvent){
+    private void onSoilMineBuildClicked(ActionEvent actionEvent) {
         if (controller != null) {
             this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.DIRTY_SOIL_MINE);
+            if (!checkResourcesAndAlert(BuildingType.SOIL_STORAGE)) return;
+            else
+                controller.enterBuildMode(BuildingType.DIRTY_SOIL_MINE);
         }
     }
 
     @FXML
-    private void onGunPowderMineBuildClicked(ActionEvent actionEvent){
+    private void onGunPowderMineBuildClicked(ActionEvent actionEvent) {
         if (controller != null) {
             this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.GUNPOWDER_MINE);
+            if (!checkResourcesAndAlert(BuildingType.GUNPOWDER_MINE)) return;
+            else
+                controller.enterBuildMode(BuildingType.GUNPOWDER_MINE);
         }
     }
 
     @FXML
-    private void onMajorBuildingBuildClicked(ActionEvent actionEvent){
-        if(controller != null){
+    private void onLaboratoryBuildClicked(ActionEvent actionEvent) {
+        if (controller != null) {
+            this.hideAddBuildingPanel();
+            if (!checkResourcesAndAlert(BuildingType.LABORATORY)) return;
+            else
+                controller.enterBuildMode(BuildingType.LABORATORY);
+        }
+    }
+
+    @FXML
+    private void onCustomhouseBuildClicked(ActionEvent actionEvent) {
+        if (controller != null) {
+            this.hideAddBuildingPanel();
+            if (!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
+            else
+                controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
+        }
+    }
+    private void onMajorBuildingBuildClicked (ActionEvent actionEvent){
+        if (controller != null) {
             this.hideAddBuildingPanel();
             controller.enterBuildMode(BuildingType.MAJOR_BUILDING);
         }
     }
 
-    @FXML
-    private void onResearchCenterBuildClicked(){
-        if(controller != null){
+    private void onNRCBuildClicked(ActionEvent actionEvent) {
+        if (controller != null) {
+            this.hideAddBuildingPanel();
+            if (!checkResourcesAndAlert(PlantType.NRC)) return;
+            else
+                controller.enterPlantBuildMode(PlantType.NRC);
+        }
+    }
+    private void onResearchCenterBuildClicked () {
+        if (controller != null) {
             this.hideAddBuildingPanel();
             controller.enterBuildMode(BuildingType.RESEARCH_CENTER);
         }
     }
 
     @FXML
-    private void onTradeButtonClicked(){
+    private void onTradeButtonClicked () {
 
     }
 
-    private void setTradeButtonEnable(){
-        if(this.checkTradeResearchBuildingCondition() && this.checkTradeMajorBuildingCondition())
+    private void setTradeButtonEnable () {
+        if (this.checkTradeResearchBuildingCondition() && this.checkTradeMajorBuildingCondition())
             this.tradeButton.setDisable(false);
     }
 
-    private boolean checkTradeMajorBuildingCondition(){
+    private boolean checkTradeMajorBuildingCondition () {
         this.player.getLock().readLock().lock();
         try {
             this.player.getVillage().getLock().readLock().lock();
             try {
-                for (Building building : this.player.getVillage().getBuildings().values()){
-                    if(building instanceof MajorBuilding ){
-                        if(building.getLevel() >= 3)
+                for (Building building : this.player.getVillage().getBuildings().values()) {
+                    if (building instanceof MajorBuilding) {
+                        if (building.getLevel() >= 3)
                             return true;
                     }
                 }
-            }finally {
+            } finally {
                 this.player.getVillage().getLock().readLock().unlock();
             }
-        }finally {
+        } finally {
             this.player.getLock().readLock().unlock();
         }
         return false;
     }
 
-    private boolean checkTradeResearchBuildingCondition(){
+    private boolean checkTradeResearchBuildingCondition () {
         this.player.getLock().readLock().lock();
         try {
             this.player.getVillage().getLock().readLock().lock();
             try {
-                for (Building building : this.player.getVillage().getBuildings().values()){
-                    if(building instanceof ResearchCenter ){
-                        if(building.getLevel() >= 2)
+                for (Building building : this.player.getVillage().getBuildings().values()) {
+                    if (building instanceof ResearchCenter) {
+                        if (building.getLevel() >= 2)
                             return true;
                     }
                 }
-            }finally {
+            } finally {
                 this.player.getVillage().getLock().readLock().unlock();
             }
-        }finally {
+        } finally {
             this.player.getLock().readLock().unlock();
         }
         return false;
     }
+    @FXML
+    private void onSNRCBuildClicked (ActionEvent actionEvent){
+        if (controller != null) {
+            this.hideAddBuildingPanel();
+            if (!checkResourcesAndAlert(PlantType.SNRC)) return;
+            else
+                controller.enterPlantBuildMode(PlantType.SNRC);
+        }
+    }
 
-    public void showBuildingInfo(Building building){
-        if(building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING){
+    @FXML
+    private void onPSNRCBuildClicked (ActionEvent actionEvent){
+        if (controller != null) {
+            this.hideAddBuildingPanel();
+            if (!checkResourcesAndAlert(PlantType.PSNRC)) return;
+            else
+                controller.enterPlantBuildMode(PlantType.PSNRC);
+        }
+    }
+
+    public void showBuildingInfo (Building building){
+        if (building == null) return;
+        infoPanelTitleLabel.setText(building.getType().toString());
+        buildingLevelLabel.setText("Level: " + building.getLevel());
+
+                // ۲. منطق اختصاصی مربوط به آزمایشگاه
+        if (building.getType() == BuildingType.LABORATORY) {
+            plantsCountLabel.setVisible(true);
+            neutralizationPowerLabel.setVisible(true);
+
+            int totalPlants = player.getVillage().getPlants().size();
+            plantsCountLabel.setText("Total Plants: " + totalPlants);
+
+            double totalPower = 0;
+            for (model.building.Plant plant : player.getVillage().getPlants().values()) {
+                totalPower += plant.getNeutralizationPower();
+            }
+            neutralizationPowerLabel.setText("Neutralization Power: " + totalPower);
+        } else {
+                    // پنهان کردن لایبل‌های گیاه برای سایر ساختمان‌ها
+            plantsCountLabel.setVisible(false);
+            neutralizationPowerLabel.setVisible(false);
+        }
+                // ۳. مدیریت دکمه آپگرید (متن و وضعیت فعال/غیرفعال بودن)
+        this.upgradeButton.setText("Upgrade " + building.getType().toString() + " (Lvl " + building.getLevel() + ")");
+        if (building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING) {
             this.upgradeButton.setDisable(true);
-        }else {
+        } else {
             this.upgradeButton.setDisable(false);
         }
+        // ۴. نمایان کردن پنل اطلاعات
+        this.infoPanel.setVisible(true);
+        this.infoPanel.setManaged(true);
+
+        System.out.println("UI Panel updated for: " + building.getType() + " Level: " + building.getLevel());
+    }
+
+    public void showPlantInfo (Plant plant){
+        if (plant == null) {
+            return;
+        }
+        this.upgradeButton.setText("Remove " + plant.getType().toString() + " (Power: " + plant.getNeutralizationPower() + ")");
+        this.upgradeButton.setDisable(false);
+        this.upgradeButton.setVisible(true);
+
         this.infoPanel.setVisible(true);
         this.infoPanel.setManaged(true);
     }
 
-    public void hideInfoPanel(){
+    public void hideInfoPanel () {
         this.infoPanel.setVisible(false);
         this.infoPanel.setManaged(false);
     }
 
-    public void hideShopPanel(){
+    public void hideShopPanel () {
         this.shopPanel.setVisible(false);
         this.shopPanel.setManaged(false);
     }
 
-    public void hideAddBuildingPanel(){
+    public void hideAddBuildingPanel () {
         this.addBuildingPanel.setVisible(false);
         this.addBuildingPanel.setManaged(false);
     }
 
-    private void updateResourcesUI(){
+    private void updateResourcesUI () {
         Resources resources = this.player.getVillage().getResources();
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
 
@@ -342,7 +512,6 @@ public class VillageController {
         this.cleanSoilLabel.setText("SOIL: " + "" + resources.getAmount(ResourcesType.CLEAN_SOIL) + " / " + maxCleanSoilCapacity);
         this.gunPowderLabel.setText("GUN POWDER: " + "" + resources.getAmount(ResourcesType.GUN_POWDER) + " / " + maxGunPowderCapacity);
     }
-
     private void startGameLoop() {
         gameLoop = new AnimationTimer() {
             @Override
@@ -352,8 +521,9 @@ public class VillageController {
 
                 taskProcessor.process();
 
-                if(player != null)
+                if (player != null)
                     updateResourcesUI();
+                updateShopButtonsAvailability();
 
                 if (gameCanvasView != null) {
                     gameCanvasView.draw();
@@ -363,12 +533,87 @@ public class VillageController {
         gameLoop.start();
     }
 
-    public void stopGameLoop(AnimationTimer gameLoop){
+    public void stopGameLoop (AnimationTimer gameLoop){
         gameLoop.stop();
     }
 
-    public AnimationTimer getGameLoop() {
+    public AnimationTimer getGameLoop () {
         return gameLoop;
+    }
+
+    private void updateShopButtonsAvailability () {
+        int labLevel = 0;
+        for (model.building.Building b : player.getVillage().getBuildings().values()) {
+            if (b.getType() == model.building.BuildingType.LABORATORY && b.getBuildingStatus() == model.building.BuildingStatus.ACTIVE) {
+                labLevel = b.getLevel();
+                break;
+            }
+        }
+        // ۲. بررسی پیش‌نیاز گیاه NRC (نیاز به آزمایشگاه لول ۱)
+        if (labLevel < 1) {
+            nrcBuildButton.setDisable(true);
+            nrcLabel.setText("NRC (Lab Lvl 1 Required) -> Current: " + labLevel); // در FXML شما اسمش snrcLabel است
+            nrcLabel.setTextFill(Color.RED);
+        } else {
+            nrcBuildButton.setDisable(false);
+            nrcLabel.setText("NRC");
+            nrcLabel.setTextFill(Color.GREEN);
+        }
+
+        // ۳. بررسی پیش‌نیاز گیاه SNRC (نیاز به آزمایشگاه لول ۲)
+        if (labLevel < 2) {
+            snrcBuildButton.setDisable(true);
+            snrcLabel.setText("SNRC (Lab Lvl 2 Required) -> Current: " + labLevel);
+            snrcLabel.setTextFill(Color.RED);
+        } else {
+            snrcBuildButton.setDisable(false);
+            snrcLabel.setText("SNRC");
+            snrcLabel.setTextFill(Color.GREEN);
+        }
+
+        // ۴. بررسی پیش‌نیاز گیاه PSNRC (نیاز به آزمایشگاه لول ۳)
+        if (labLevel < 3) {
+            psnrcBuildButton.setDisable(true);
+            psnrcLabel.setText("PSNRC (Lab Lvl 3 Required) -> Current: " + labLevel);
+            psnrcLabel.setTextFill(Color.RED);
+        } else {
+            psnrcBuildButton.setDisable(false);
+            psnrcLabel.setText("PSNRC");
+            psnrcLabel.setTextFill(Color.GREEN);
+        }
+    }
+    private boolean checkResourcesAndAlert (PlantType plant){
+        Cost cost = plant.getBasePlantCost();
+        if (cost == null) return true;
+
+        // بررسی اینکه آیا منابع بازیکن در انبار (resourcesManagement) کافی است یا خیر
+        boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
+        if (!hasResources) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("error in building");
+            alert.setHeaderText("you don't have enough resources!");
+            alert.setContentText("for building " + plant + " you need " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkResourcesAndAlert (BuildingType type){
+        model.building.Cost cost = model.building.Cost.buildCost(type);
+        if (cost == null) return true;
+
+        // بررسی اینکه آیا منابع بازیکن در انبار (resourcesManagement) کافی است یا خیر
+        boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
+        if (!hasResources) {
+            javafx.scene.control.Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("error in building");
+            alert.setHeaderText("you don't have enough resources!");
+            alert.setContentText("for building " + type + " you need " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
     }
 }
 

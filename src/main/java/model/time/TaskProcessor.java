@@ -1,5 +1,8 @@
 package model.time;
 
+<<<<<<< HEAD
+import model.building.*;
+=======
 
 import model.building.*;
 
@@ -11,6 +14,7 @@ import model.army.TrainArmyTask;
 import model.building.Building;
 import model.building.BuildingStatus;
 
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 import model.event.Event;
 import model.event.EventType;
 import model.player.Player;
@@ -252,6 +256,11 @@ public class TaskProcessor {
         }
     }
 
+<<<<<<< HEAD
+    public Village getVillage() {
+        return village;
+    }
+=======
 
 
     public Village getVillage() {
@@ -350,5 +359,6 @@ public class TaskProcessor {
         }
         return false;
     }
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 }
 

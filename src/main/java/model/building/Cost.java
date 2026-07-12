@@ -50,6 +50,9 @@ public class Cost  implements Serializable {
 
             case LABORATORY -> Laboratory.upgradeBuildingInfo(building.getLevel()).getCost();
 
+<<<<<<< HEAD
+            //case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
+=======
             case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
 
             case BARRACKS           -> Barrack.getBarrackUpgradeInfo(building.getLevel()).getCost();
@@ -59,14 +62,21 @@ public class Cost  implements Serializable {
             case MAJOR_BUILDING -> MajorBuilding.upgradeBuildingInfo(building.getLevel()).getCost();
 
             case RESEARCH_CENTER -> ResearchCenter.upgradeBuildingInfo(building.getLevel()).getCost();
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 
             default -> new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(0));
         };
     }
 
+<<<<<<< HEAD
+    /*public static Cost allianceCost(){
+        return new Cost(500, 500, 300, 0, 0, 0, 100,Duration.ofMinutes(0));
+    }*/
+=======
     public static Cost allianceCost(){
         return new Cost(500, 500, 300, 0, 0, 0, 100,Duration.ofMinutes(0));
     }
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 
     public int getWood() {return wood;}
 

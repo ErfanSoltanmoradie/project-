@@ -28,12 +28,17 @@ public class BuildingFactory{
             case CATAPULT_DEFENSIVE -> new Catapult(BuildingType.CATAPULT_DEFENSIVE, buildTask.getCoordinate());
             case SENTINEL_DEFENSIVE -> new Sentinel(BuildingType.SENTINEL_DEFENSIVE, buildTask.getCoordinate());
 
+<<<<<<< HEAD
+            case LABORATORY ->  new Laboratory(BuildingType.LABORATORY, buildTask.getCoordinate());
+           // case CUSTOMHOUSE -> new Customhouse(BuildingType.CUSTOMHOUSE, buildTask.getCoordinate());
+=======
             case BARRACKS      ->  new Barrack(BuildingType.BARRACKS, buildTask.getCoordinate());
             case ARMY_PRODUCER ->  new ArmyProducer(BuildingType.ARMY_PRODUCER, buildTask.getCoordinate());
 
             case MAJOR_BUILDING -> new MajorBuilding(BuildingType.MAJOR_BUILDING, buildTask.getCoordinate());
 
             case RESEARCH_CENTER -> new ResearchCenter(BuildingType.RESEARCH_CENTER, buildTask.getCoordinate());
+>>>>>>> 8f79b4d52b278d0d7991a8f6e08fac50fa5ee007
 
             // more building need to be added
             default -> null;
