@@ -1,10 +1,17 @@
 package service.map;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import model.building.Building;
 import model.building.BuildingType;
+import model.building.Plant;
+import model.building.PlantType;
 import model.village.Village;
 import model.world.Coordinate;
+import service.buildings.BuildingLimitExceededException;
 import service.buildings.BuildingsManagement;
+
+import java.util.Optional;
 
 public class GameMapController {
 
@@ -13,10 +20,13 @@ public class GameMapController {
     private final GameMap gameMap;
 
     private boolean buildModeActive = false;
+    private boolean plantModeActive = false;
     private BuildingType selectedBuildingType = null;
+    private PlantType selectedPlantType = null;
     private final BuildingsManagement buildingsManagement;
 
     private Building selectedBuilding = null;
+    private Plant selectedPlant;
     private VillageController villageController;
 
     public GameMapController(Village village, GameCanvasView gameCanvasView) {
@@ -37,12 +47,37 @@ public class GameMapController {
         if (villageController != null) villageController.hideInfoPanel();
     }
 
+    public void enterPlantBuildMode(model.building.PlantType plantType) {
+        System.out.println("Select a place for your plant: " + plantType);
+        this.plantModeActive = true;
+        this.selectedPlantType = plantType;
+        this.buildModeActive = false;
+        if (villageController != null) villageController.hideInfoPanel();
+    }
+
     public void handleMapClick(double pixelX, double pixelY) {
-        villageController.hideAddBuildingPanel();
+        if(villageController != null) villageController.hideAddBuildingPanel();
 
         Coordinate coordinate = gameCanvasView.getCoordinateFromPixels(pixelX, pixelY);
         int row = coordinate.getX();
         int col = coordinate.getY();
+
+        if (plantModeActive && selectedPlantType != null) {
+            if (!this.gameMap.isAreaFree(row, col, selectedPlantType.getWidth(), selectedPlantType.getHeight())) {
+                this.selectedPlantType = null;
+                this.plantModeActive = false;
+                return;
+            }
+
+            try {
+                this.buildingsManagement.buildPlant(this.selectedPlantType, coordinate);
+            } catch (BuildingLimitExceededException e) {
+                System.err.println(e.getMessage());
+            }
+            this.selectedPlantType = null;
+            this.plantModeActive = false;
+            return;
+        }
 
         if (buildModeActive && selectedBuildingType != null) {
 
@@ -52,7 +87,12 @@ public class GameMapController {
                 return;
             }
 
-            this.buildingsManagement.build(this.selectedBuildingType, coordinate);
+            try {
+                this.buildingsManagement.build(this.selectedBuildingType, coordinate);
+            }catch(BuildingLimitExceededException e ){
+                System.err.println(e.getMessage());
+            }
+
             this.selectedBuildingType = null;
             this.buildModeActive = false;
 
@@ -70,6 +110,18 @@ public class GameMapController {
                 break;
             }
         }
+        Plant clickedPlant = null;
+        if (clickedBuilding == null) {
+            this.selectedBuilding = null;
+            for (Plant plant : village.getPlants().values()) {
+                Coordinate position = plant.getPosition();
+                if (position != null && row >= position.getX() && row < position.getX() + plant.getHeight() &&
+                        col >= position.getY() && col < position.getY() + plant.getWidth()) {
+                    clickedPlant = plant;
+                    break;
+                }
+            }
+        }
 
         if (clickedBuilding != null) {
             this.selectedBuilding = clickedBuilding;
@@ -78,6 +130,13 @@ public class GameMapController {
 
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);
+            }
+        } else if (clickedPlant != null) {
+            this.selectedPlant = clickedPlant;
+            this.selectedBuilding = null;
+            System.out.println("Selected Plant: " + selectedPlant.getType());
+            if (villageController != null) {
+                villageController.showPlantInfo(clickedPlant);
             }
         } else {
             this.selectedBuilding = null;
@@ -105,5 +164,8 @@ public class GameMapController {
                 villageController.showBuildingInfo(selectedBuilding);
             }
         }
+    }
+    public Plant getSelectedPlant() {
+        return selectedPlant;
     }
 }

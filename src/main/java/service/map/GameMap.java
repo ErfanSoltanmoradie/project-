@@ -118,14 +118,15 @@ public class GameMap implements Serializable {
     }
 
     public void removeBuilding(Building building){
+        if (building == null || building.getPosition() == null) return;
 
-        int row = building.getPosition().getX();
-        int column = building.getPosition().getY();
+        int startRow = building.getPosition().getX();
+        int startCol = building.getPosition().getY();
 
-        for (row = building.getPosition().getX(); row < building.getPosition().getX() + building.getHeight(); row++) {
-            for ( column =  building.getPosition().getY(); column < building.getPosition().getY() + building.getWidth(); column++) {
-                if (tiles[row][column].getBuilding() == building) {
-                    tiles[row][column].setBuilding(null);
+        for (int i = startRow; i < startRow + building.getHeight(); i++) {
+            for (int j = startCol; j < startCol + building.getWidth(); j++) {
+                if (tiles[i][j].getBuilding() == building) {
+                    tiles[i][j].setBuilding(null);
                 }
             }
         }
