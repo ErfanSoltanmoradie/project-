@@ -23,7 +23,37 @@ public class BuildingsManagement{
 
     }
 
+    private int getMaxAllowedCount(BuildingType type) {
+        return switch (type){
+            case WOOD_MINE, STONE_MINE, IRON_MINE -> 5;
+            case GUNPOWDER_MINE, DIRTY_WATER_MINE, DIRTY_SOIL_MINE,
+                 WOOD_STORAGE, STONE_STORAGE, IRON_STORAGE, GUNPOWDER_STORAGE -> 4;
+            case WATER_PURIFIER, SOIL_PURIFIER,
+                 WATER_STORAGE, SOIL_STORAGE -> 3;
+            case BALLISTA_DEFENSIVE -> 8;
+            case CATAPULT_DEFENSIVE , SENTINEL_DEFENSIVE -> 6;
+            case MAJOR_BUILDING, RESEARCH_CENTER, CUSTOMHOUSE -> 1;
+            default -> Integer.MAX_VALUE;
+        };
+    }
+
+    private int getCurrentBuildingCount(BuildingType type) {
+        int count = 0;
+        for (Building building : village.getBuildings().values()) {
+            if (building.getType() == type) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void build(BuildingType buildingType, Coordinate coordinate){
+        int currentCount = getCurrentBuildingCount(buildingType);
+        int maxAllowed = getMaxAllowedCount(buildingType);
+
+        if(currentCount >= maxAllowed){
+            throw new BuildingLimitExceededException(buildingType, maxAllowed);
+        }
 
         village.getLock().writeLock().lock();
         try {
