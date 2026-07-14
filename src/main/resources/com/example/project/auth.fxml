@@ -9,14 +9,9 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Button fx:id="backToWelcomeButton" mnemonicParsing="false" onAction="#onBackToWelcomeClicked" style="-fx-background-color: #0b0710; -fx-background-radius: 6; -fx-border-color: #b026ff; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-text-fill: white; -fx-font-weight: bold;" text="← Back" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
             <ImageView fitHeight="503.0" fitWidth="757.0" mouseTransparent="true">
                <image>
-                  <Image url="@../../../login%20(2).png" />
+                  <Image url="@../../../login (2).png" />
                </image>
             </ImageView>
             <Button layoutX="280.0" layoutY="335.0" mnemonicParsing="false" onAction="#onFirstSignupClicked" prefHeight="44.0" prefWidth="198.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="SIGNUP" textFill="WHITE" />
@@ -59,7 +54,7 @@
          <children>
             <ImageView fitHeight="503.0" fitWidth="757.0" mouseTransparent="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
-                  <Image url="@../../../login%20(2).png" />
+                  <Image url="@../../../login (2).png" />
                </image>
             </ImageView>
             <Label alignment="CENTER" prefHeight="51.0" prefWidth="277.0" text="PASSWORD" textFill="WHITE">

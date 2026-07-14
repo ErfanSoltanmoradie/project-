@@ -6,6 +6,7 @@ import model.building.Building;
 import model.building.BuildingType;
 import model.building.Plant;
 import model.building.PlantType;
+import model.finalPart.GlobalTower;
 import model.village.Village;
 import model.world.Coordinate;
 import service.buildings.BuildingLimitExceededException;
@@ -21,6 +22,7 @@ public class GameMapController {
 
     private boolean buildModeActive = false;
     private boolean plantModeActive = false;
+    private boolean globalTowerModeActive = false;
     private BuildingType selectedBuildingType = null;
     private PlantType selectedPlantType = null;
     private final BuildingsManagement buildingsManagement;
@@ -40,6 +42,10 @@ public class GameMapController {
         this.villageController = villageController;
     }
 
+    public BuildingsManagement getBuildingsManagement() {
+        return buildingsManagement;
+    }
+
     public void enterBuildMode(BuildingType buildingType) {
         System.out.println("Select a place for your building " + buildingType);
         this.buildModeActive = true;
@@ -55,12 +61,35 @@ public class GameMapController {
         if (villageController != null) villageController.hideInfoPanel();
     }
 
+    public void enterGlobalTowerBuildMode() {
+        System.out.println("Select a place for your Global Tower");
+        this.globalTowerModeActive = true;
+        this.buildModeActive = false;
+        this.plantModeActive = false;
+        if (villageController != null) villageController.hideInfoPanel();
+    }
+
     public void handleMapClick(double pixelX, double pixelY) {
         if(villageController != null) villageController.hideAddBuildingPanel();
 
         Coordinate coordinate = gameCanvasView.getCoordinateFromPixels(pixelX, pixelY);
         int row = coordinate.getX();
         int col = coordinate.getY();
+
+        if (globalTowerModeActive) {
+            if (!this.gameMap.isAreaFree(row, col, GlobalTower.WIDTH, GlobalTower.HEIGHT)) {
+                this.globalTowerModeActive = false;
+                return;
+            }
+
+            try {
+                this.buildingsManagement.buildGlobalTower(coordinate);
+            } catch (IllegalStateException e) {
+                System.err.println(e.getMessage());
+            }
+            this.globalTowerModeActive = false;
+            return;
+        }
 
         if (plantModeActive && selectedPlantType != null) {
             if (!this.gameMap.isAreaFree(row, col, selectedPlantType.getWidth(), selectedPlantType.getHeight())) {
@@ -125,8 +154,9 @@ public class GameMapController {
 
         if (clickedBuilding != null) {
             this.selectedBuilding = clickedBuilding;
+            this.selectedPlant = null;
             System.out.println("Selected: " + selectedBuilding.getType() + " level: " + selectedBuilding.getLevel()
-             + " Status: " + selectedBuilding.getBuildingStatus());
+                    + " Status: " + selectedBuilding.getBuildingStatus());
 
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);
@@ -140,8 +170,8 @@ public class GameMapController {
             }
         } else {
             this.selectedBuilding = null;
+            this.selectedPlant = null;
             if (villageController != null) {
-
                 villageController.hideInfoPanel();
                 villageController.hideShopPanel();
                 villageController.hideAddBuildingPanel();
@@ -153,6 +183,7 @@ public class GameMapController {
                 villageController.hideAllianceRequestsPanel();
                 villageController.hideAttackPanel();
                 villageController.hideAttackHistoryPanel();
+                villageController.hideGlobalTowerPanel();
             }
         }
     }

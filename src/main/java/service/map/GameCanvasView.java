@@ -293,10 +293,6 @@ public class GameCanvasView extends Canvas {
 
                             gc.drawImage(props.image, offsetX, offsetY, customWidth, customHeight);
                         } else {
-                            // هیچ تصویری برای این نوع ساختمان ثبت نشده (buildingGraphics ناقصه)
-                            // به‌جای نامرئی موندن، یه جعبه‌ی جایگزین با اسم نوع ساختمان رسم می‌کنیم
-                            // تا حداقل روی نقشه دیده بشه. بعداً برای این نوع، تصویر واقعی اضافه کن
-                            // به loadBuildingGraphic() در همین فایل.
                             double placeholderWidth = tileWidth * Math.max(bW, bH);
                             double placeholderHeight = tileHeight * Math.max(bW, bH) * 0.6;
 

@@ -21,6 +21,8 @@ public class Cloud implements Serializable {
     public void setNeutralized(int neutralized) {
         this.neutralized = neutralized;
     }
+
+    public boolean isFullyNeutralized() {
+        return this.radiation <= 0;
+    }
 }
-
-

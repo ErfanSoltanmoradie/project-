@@ -19,6 +19,7 @@ import model.battle.BattleHistory;
 import model.battle.BattleStatus;
 import model.battle.BattleWinner;
 import model.building.*;
+import model.finalPart.GlobalTower;
 import model.player.Player;
 import model.repository.PlayerRepository;
 import model.resources.Resources;
@@ -44,6 +45,7 @@ import java.util.*;
 public class VillageController {
 
     private PlayerRepository playerRepository;
+    private int lastSeenAnnouncementCount = 0;
 
     public PlayerRepository getPlayerRepository() {
         return playerRepository;
@@ -63,12 +65,11 @@ public class VillageController {
 
     @FXML private Button buyBuilding;
 
-    @FXML private Button backToMainMenuButton;
-
     @FXML private Label infoPanelTitleLabel;
     @FXML private Label buildingLevelLabel;
     @FXML private Label plantsCountLabel;
     @FXML private Label neutralizationPowerLabel;
+    @FXML private Label towerAnnouncementLabel;
 
     @FXML private Label woodLabel;
 
@@ -261,6 +262,16 @@ public class VillageController {
     @FXML VBox battleHistoryContainer;
 
     @FXML AnchorPane battleHistoryPannel;
+
+    @FXML Button towerButton;
+    @FXML AnchorPane globalTowerPanel;
+    @FXML Label towerStatusLabel;
+    @FXML Label towerHpLabel;
+    @FXML ProgressBar towerHpBar;
+    @FXML Label towerProtectionLabel;
+    @FXML Label towerRequirementWarningLabel;
+    @FXML Button buildTowerButton;
+    @FXML Button leaveTowerPanelButton;
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -1017,7 +1028,6 @@ public class VillageController {
 
             this.hideInfoPanel();
         } else {
-            // در غیر این صورت فرآیند ارتقای ساختمان یا منوی اصلی را صدا می‌زند
             this.controller.handleUpgradeClicked();
             this.hideInfoPanel();
         }
@@ -1285,12 +1295,19 @@ public class VillageController {
         }
 
         //  مدیریت دکمه آپگرید (متن و وضعیت فعال/غیرفعال بودن)
-        this.upgradeButton.setText("Upgrade " + building.getType().toString() + " (Lvl " + building.getLevel() + ")");
+        boolean isMaxLevel = Cost.upgradeCost(building).isMaxLevelReached();
 
-        if (building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING) {
+        if (isMaxLevel) {
+            this.upgradeButton.setText("حداکثر سطح");
             this.upgradeButton.setDisable(true);
         } else {
-            this.upgradeButton.setDisable(false);
+            this.upgradeButton.setText("Upgrade " + building.getType().toString() + " (Lvl " + building.getLevel() + ")");
+
+            if (building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING) {
+                this.upgradeButton.setDisable(true);
+            } else {
+                this.upgradeButton.setDisable(false);
+            }
         }
 
         //  پنل اطلاعات
@@ -1380,6 +1397,81 @@ public class VillageController {
         this.battleHistoryPannel.setManaged(false);
     }
 
+    @FXML
+    private void onTowerButtonClicked(){
+        this.refreshGlobalTowerPanel();
+        this.showGlobalTowerPanel();
+    }
+
+    @FXML
+    private void onLeaveTowerPanelClicked(){
+        this.hideGlobalTowerPanel();
+    }
+
+    @FXML
+    private void onBuildGlobalTowerClicked(){
+        BuildingsManagement buildingsManagement = this.controller.getBuildingsManagement();
+
+        if (!buildingsManagement.canBuildGlobalTower()) {
+            this.refreshGlobalTowerPanel();
+            return;
+        }
+
+        this.hideGlobalTowerPanel();
+        this.controller.enterGlobalTowerBuildMode();
+    }
+
+    private void showGlobalTowerPanel(){
+        this.globalTowerPanel.setVisible(true);
+        this.globalTowerPanel.setManaged(true);
+    }
+
+    public void hideGlobalTowerPanel(){
+        this.globalTowerPanel.setVisible(false);
+        this.globalTowerPanel.setManaged(false);
+    }
+
+    private void refreshGlobalTowerPanel(){
+        GlobalTower tower = this.player.getVillage().getGlobalTower();
+        BuildingsManagement buildingsManagement = this.controller.getBuildingsManagement();
+
+        if (tower == null || !tower.isActive()) {
+
+            this.towerStatusLabel.setText(tower != null ? "Status: destroyed" : "Status: not built ");
+            this.towerHpLabel.setText("health: -- / " + (tower != null ? tower.getMaxHp() : 1200));
+            this.towerHpBar.setProgress(0);
+            this.towerProtectionLabel.setText("");
+
+            boolean canBuild = buildingsManagement.canBuildGlobalTower();
+            this.buildTowerButton.setDisable(!canBuild);
+            this.buildTowerButton.setVisible(true);
+            this.towerRequirementWarningLabel.setText(canBuild
+                    ? ""
+                    : "(The construction requirements are not fully met (the main building and the research center must be at level 5, and you need sufficient resources).");
+
+        } else {
+
+            this.towerStatusLabel.setText("Status: active");
+            this.towerHpLabel.setText("Health: " + tower.getHp() + " / " + tower.getMaxHp());
+            this.towerHpBar.setProgress((double) tower.getHp() / tower.getMaxHp());
+
+            java.time.LocalDateTime completeTime = tower.getConstructionCompleteTime();
+            if (completeTime != null) {
+                java.time.LocalDateTime protectionEnds = completeTime.plusHours(24);
+                if (java.time.LocalDateTime.now().isBefore(protectionEnds)) {
+                    long minutesLeft = java.time.Duration.between(java.time.LocalDateTime.now(), protectionEnds).toMinutes();
+                    this.towerProtectionLabel.setText("in protecting: " + minutesLeft + "remained ");
+                } else {
+                    this.towerProtectionLabel.setText("");
+                }
+            }
+
+            this.buildTowerButton.setDisable(true);
+            this.buildTowerButton.setVisible(false);
+            this.towerRequirementWarningLabel.setText("");
+        }
+    }
+
     private void updateResourcesUI(){
         Resources resources = this.player.getVillage().getResources();
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
@@ -1431,6 +1523,24 @@ public class VillageController {
 
                 if (gameCanvasView != null) {
                     gameCanvasView.draw();
+                }
+
+                int currentAnnouncementCount = model.finalPart.GlobalTowerAnnouncer.getAnnouncementCount();
+                if (currentAnnouncementCount > lastSeenAnnouncementCount) {
+                    java.util.List<String> announcements = model.finalPart.GlobalTowerAnnouncer.getAnnouncements();
+                    String latest = announcements.get(announcements.size() - 1);
+                    towerAnnouncementLabel.setText(latest);
+                    towerAnnouncementLabel.setVisible(true);
+                    towerAnnouncementLabel.setManaged(true);
+
+                    javafx.animation.PauseTransition hideDelay = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(8));
+                    hideDelay.setOnFinished(e -> {
+                        towerAnnouncementLabel.setVisible(false);
+                        towerAnnouncementLabel.setManaged(false);
+                    });
+                    hideDelay.play();
+
+                    lastSeenAnnouncementCount = currentAnnouncementCount;
                 }
             }
         };
@@ -1707,23 +1817,6 @@ public class VillageController {
         }
     }
 
-    @FXML
-    void onBackToMainMenuClicked(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/project/auth.fxml"));
-            if (loader.getLocation() == null) {
-                System.err.println("error: file not found");
-                return;
-            }
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public AnimationTimer getGameLoop() {
         return gameLoop;
@@ -1761,4 +1854,3 @@ public class VillageController {
         this.enemies = enemies;
     }
 }
-

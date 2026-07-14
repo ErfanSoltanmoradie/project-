@@ -70,6 +70,8 @@ public class GameMap implements Serializable {
             for (int j = column; j < column + width; j++) {
                 if(tiles[i][j].getBuilding() != null)
                     return false;
+                if(tiles[i][j].getObject() != null)
+                    return false;
             }
         }
         return true;
@@ -117,6 +119,27 @@ public class GameMap implements Serializable {
         return true;
     }
 
+    public boolean placeGlobalTower(model.finalPart.GlobalTower tower, int row, int column){
+        if(!this.isInside(row, column))
+            return false;
+
+        if (!isInside(row + model.finalPart.GlobalTower.HEIGHT - 1, column + model.finalPart.GlobalTower.WIDTH - 1))
+            return false;
+
+        if(!this.isAreaFree(row, column, model.finalPart.GlobalTower.WIDTH, model.finalPart.GlobalTower.HEIGHT))
+            return false;
+
+        for (int i = row; i < row + model.finalPart.GlobalTower.HEIGHT; i++) {
+            for (int j = column; j < column + model.finalPart.GlobalTower.WIDTH; j++) {
+                tiles[i][j].setObject(tower);
+            }
+        }
+
+        tower.setPosition(new Coordinate(row, column));
+
+        return true;
+    }
+
     public void removeBuilding(Building building){
         if (building == null || building.getPosition() == null) return;
 
@@ -148,17 +171,4 @@ public class GameMap implements Serializable {
         return tiles[row][column];
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

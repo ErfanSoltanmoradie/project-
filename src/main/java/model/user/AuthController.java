@@ -40,7 +40,6 @@ public class AuthController {
     @FXML private TextField passwordTextField1;
     @FXML private AnchorPane signupPanel;
     @FXML private AnchorPane loginPanel;
-    @FXML private Button backToWelcomeButton;
 
     @FXML
     public String getUsername1() { return this.usernameTextField1.getText(); }
@@ -93,7 +92,8 @@ public class AuthController {
         AuthResult authResult = this.authService.register(this.getUsername(), this.getPassword());
         System.out.println(authResult.getAuthStatus().toString());
 
-        if (authResult.getAuthStatus() == AuthStatus.SUCCESS && authResult.getPlayer().getUsername().equalsIgnoreCase(this.getUsername())) {
+        if (authResult.getAuthStatus() == AuthStatus.SUCCESS
+                && authResult.getPlayer().getUsername().equalsIgnoreCase(this.getUsername())) {
             this.usernameTextField.clear();
             this.passwordTextField.clear();
             authResult.getPlayer().setOnlineStatus(true);
@@ -129,23 +129,6 @@ public class AuthController {
         });
 
         stage.show();
-
-        if (loginButton != null && loginButton.getScene() != null) {
-            Stage loginStage = (Stage) loginButton.getScene().getWindow();
-            loginStage.close();
-        }
-    }
-
-    @FXML
-    void onBackToWelcomeClicked(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/project/auth.fxml"));  Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void addProducedResources(Player player) {
