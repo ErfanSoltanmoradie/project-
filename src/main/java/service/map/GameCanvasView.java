@@ -74,8 +74,8 @@ public class GameCanvasView extends Canvas {
         ));*/
 
         buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major_building.png"))),
-                1.2,0.6, 0.72
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major.png"))),
+                0.8,1.1, 0.72
         ));
 
         buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(

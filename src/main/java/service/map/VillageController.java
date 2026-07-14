@@ -3,11 +3,9 @@ package service.map;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -107,7 +105,6 @@ public class VillageController {
 
     @FXML private AnchorPane tradePanel;
 
-    @FXML private Button leaveTradePanel;
 
     @FXML private VBox tradePlayersContainer;
 
@@ -118,6 +115,8 @@ public class VillageController {
     @FXML TextField receiveIronTextField;
 
     @FXML TextField sendWoodTextField;
+
+    @FXML TextField receiveWoodTextField;
 
     @FXML Button MakeADealButton;
 
@@ -154,6 +153,40 @@ public class VillageController {
     @FXML VBox battleHistoryContainer;
 
     @FXML AnchorPane battleHistoryPannel;
+
+    @FXML ProgressBar woodProgressBar;
+
+    @FXML ProgressBar ironProgressBar;
+
+    @FXML ProgressBar stoneProgressBar;
+
+    @FXML ProgressBar cleanWaterProgressBar;
+
+    @FXML ProgressBar cleanSoilProgressBar;
+
+    @FXML ProgressBar gunPowderProgressBar;
+
+    @FXML AnchorPane decidePanel;
+
+    @FXML Button makeTradeButton;
+
+    @FXML TextField sendIronTextField;
+
+    @FXML TextField sendGunPowderTextField;
+
+    @FXML TextField receiveGunPowderTextField;
+
+    @FXML TextField sendSoilTextField;
+
+    @FXML TextField receiveSoilTextField;
+
+    @FXML TextField sendStoneTextField;
+
+    @FXML TextField receiveStoneTextField;
+
+    @FXML TextField sendWaterTextField;
+
+    @FXML TextField receiveWaterTextField;
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -328,8 +361,73 @@ public class VillageController {
         }
     }
 
-    private HBox createSentTradeRequestsRowElement(TradeOffer tradeOffer){
+    private HBox createSentTradeRequestsRowElement(TradeOffer offer){
+        TradeService tradeService = new TradeService();
+
         HBox row = new HBox();
+        row.setSpacing(15);
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        row.setStyle("-fx-padding: 12; " +
+                "-fx-background-color: #2b2b2b; " +
+                "-fx-background-radius: 8; " +
+                "-fx-border-color: #444444; " +
+                "-fx-border-width: 1;");
+
+        VBox senderContainer = new VBox();
+        senderContainer.setSpacing(4);
+        senderContainer.setMinWidth(120);
+        senderContainer.setPrefWidth(120);
+
+        String receiverName = offer.getReceiverVillage().getUserName();
+        Label receiverLabel = new Label("RECEIVER: " + receiverName);
+        receiverLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
+        receiverLabel.setAlignment(Pos.CENTER);
+
+        senderContainer.getChildren().addAll(receiverLabel);
+
+        VBox offeredResourcesContainer = new VBox();
+        offeredResourcesContainer.setSpacing(4);
+        offeredResourcesContainer.setMinWidth(140);
+
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #ff0000; -fx-font-size: 11px; -fx-font-weight: bold;");
+                offeredResourcesContainer.getChildren().add(label);
+            }
+        }
+
+        VBox requestedResourcesContainer = new VBox();
+        requestedResourcesContainer.setSpacing(4);
+        requestedResourcesContainer.setMinWidth(100);
+
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #08ff00; -fx-font-size: 11px; -fx-font-weight: bold;");
+                requestedResourcesContainer.getChildren().add(label);
+            }
+        }
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Region spacer2 = new Region();
+        HBox.setHgrow(spacer2, Priority.ALWAYS);
+
+        row.getChildren().addAll(senderContainer, spacer, offeredResourcesContainer, spacer2, requestedResourcesContainer);
+
+        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2d2d2d; -fx-border-color: #ff9800;"));
+        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #333333;"));
+
+
+        return row;
+        /*HBox row = new HBox();
         row.setSpacing(15);
 
         row.setStyle("-fx-padding: 10; " +
@@ -369,7 +467,7 @@ public class VillageController {
         row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
         row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
 
-        return row;
+        return row;*/
     }
 
 
@@ -390,87 +488,95 @@ public class VillageController {
     }
 
     private HBox createTradeRequestsRowElement(TradeOffer offer) {
-
         TradeService tradeService = new TradeService();
 
         HBox row = new HBox();
         row.setSpacing(15);
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         row.setStyle("-fx-padding: 12; " +
                 "-fx-background-color: #2b2b2b; " +
                 "-fx-background-radius: 8; " +
                 "-fx-border-color: #444444; " +
-                "-fx-border-width: 1; " +
-                "-fx-alignment: CENTER_LEFT;");
+                "-fx-border-width: 1;");
 
         VBox senderContainer = new VBox();
         senderContainer.setSpacing(4);
-
+        senderContainer.setMinWidth(120);
+        senderContainer.setPrefWidth(120);
 
         String senderName = offer.getSenderVillage().getUserName();
-        Label senderLabel = new Label("SENDER PLAYER [ " + senderName + " ]");
+        Label senderLabel = new Label(senderName + " ➔ YOU");
         senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
 
-        Label timeLabel = new Label("TRANSFER TIME: " + offer.getTradeTime() + " seconds");
-        timeLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
+        Label timeLabel = new Label("Time: " + offer.getTradeTime() + "s");
+        timeLabel.setStyle("-fx-text-fill: #f5e9e9; -fx-font-size: 11px;");
 
         senderContainer.getChildren().addAll(senderLabel, timeLabel);
 
+        VBox offeredResourcesContainer = new VBox();
+        offeredResourcesContainer.setSpacing(4);
+        offeredResourcesContainer.setMinWidth(140);
 
-        VBox resourcesContainer = new VBox();
-        resourcesContainer.setSpacing(4);
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #00ff0b; -fx-font-size: 11px; -fx-font-weight: bold;");
+                offeredResourcesContainer.getChildren().add(label);
+            }
+        }
 
+        VBox requestedResourcesContainer = new VBox();
+        requestedResourcesContainer.setSpacing(4);
+        requestedResourcesContainer.setMinWidth(100);
 
-        String offeredStr = String.valueOf(offer.getOfferedResources().get(ResourcesType.WOOD));
-        String requestedStr = String.valueOf(offer.getRequestedResources().get(ResourcesType.IRON));
-
-        Label receiveLabel = new Label("RECEIVE: " + offeredStr);
-        receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
-
-        Label payLabel = new Label("SEND: " + requestedStr);
-        payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
-
-        resourcesContainer.getChildren().addAll(receiveLabel, payLabel);
-
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #ff1000; -fx-font-size: 11px; -fx-font-weight: bold;");
+                requestedResourcesContainer.getChildren().add(label);
+            }
+        }
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-
         HBox actionButtons = new HBox(8);
         actionButtons.setStyle("-fx-alignment: CENTER_RIGHT;");
 
-
         Button acceptBtn = new Button("ACCEPT");
-        acceptBtn.setStyle("-fx-background-color: #4CAF50; " +
+        acceptBtn.setMinWidth(75);
+        acceptBtn.setPrefWidth(75);
+        acceptBtn.setStyle("-fx-background-color: #00ff0a; " +
                 "-fx-text-fill: white; " +
                 "-fx-font-weight: bold; " +
                 "-fx-background-radius: 5; " +
                 "-fx-cursor: hand;");
         acceptBtn.setOnAction(e -> {
-
             System.out.println("ACCEPTED");
             tradeService.acceptOffer(offer);
         });
 
-
         Button rejectBtn = new Button("REJECT");
-        rejectBtn.setStyle("-fx-background-color: #f44336; " +
+        rejectBtn.setMinWidth(75);
+        rejectBtn.setPrefWidth(75);
+        rejectBtn.setStyle("-fx-background-color: #ff1200; " +
                 "-fx-text-fill: white; " +
                 "-fx-font-weight: bold; " +
                 "-fx-background-radius: 5; " +
                 "-fx-cursor: hand;");
         rejectBtn.setOnAction(e -> {
-
             tradeService.rejectOffer(offer);
             System.out.println("REJECTED");
         });
 
         actionButtons.getChildren().addAll(acceptBtn, rejectBtn);
 
-
-        row.getChildren().addAll(senderContainer, resourcesContainer, spacer, actionButtons);
-
+        row.getChildren().addAll(senderContainer, offeredResourcesContainer, requestedResourcesContainer, spacer, actionButtons);
 
         row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
         row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
@@ -818,6 +924,11 @@ public class VillageController {
     }
 
     @FXML
+    private void onPendingOrdersClicked(){
+        this.showDecidePanel();
+    }
+
+    @FXML
     private void onBattleHistoryClicked(){
         showAttackHistoryPanel();
         this.showAttackHistory();
@@ -864,15 +975,73 @@ public class VillageController {
        Map<ResourcesType , Integer> offeredResources = new HashMap<>();
        Map<ResourcesType , Integer> requestedResources = new HashMap<>();
 
-       offeredResources.put(ResourcesType.WOOD, Integer.parseInt(this.sendWoodTextField.getText()));
-       requestedResources.put((ResourcesType.IRON), Integer.parseInt(this.receiveIronTextField.getText()));
-
+       this.makeDeals(offeredResources, requestedResources);
+       this.clearTradeTextFields();
 
         TradeService tradeService = new TradeService();
         tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
 
-
         this.hideMakeATradePanel();
+    }
+
+    private void makeDeals(Map<ResourcesType , Integer> offeredResources, Map<ResourcesType , Integer> requestedResources){
+
+        this.setEmptyTradeRequestField();
+
+        offeredResources.put(ResourcesType.WOOD, Integer.parseInt(this.receiveWoodTextField.getText()));
+        requestedResources.put((ResourcesType.WOOD), Integer.parseInt(this.sendWoodTextField.getText()));
+
+        offeredResources.put(ResourcesType.IRON, Integer.parseInt(this.receiveIronTextField.getText()));
+        requestedResources.put((ResourcesType.IRON), Integer.parseInt(this.sendIronTextField.getText()));
+
+        offeredResources.put(ResourcesType.GUN_POWDER, Integer.parseInt(this.receiveGunPowderTextField.getText()));
+        requestedResources.put((ResourcesType.GUN_POWDER), Integer.parseInt(this.sendGunPowderTextField.getText()));
+
+        offeredResources.put(ResourcesType.CLEAN_SOIL, Integer.parseInt(this.receiveSoilTextField.getText()));
+        requestedResources.put((ResourcesType.CLEAN_SOIL), Integer.parseInt(this.sendSoilTextField.getText()));
+
+        offeredResources.put(ResourcesType.STONE, Integer.parseInt(this.receiveStoneTextField.getText()));
+        requestedResources.put((ResourcesType.STONE), Integer.parseInt(this.sendStoneTextField.getText()));
+
+        offeredResources.put(ResourcesType.CLEAN_WATER, Integer.parseInt(this.receiveWaterTextField.getText()));
+        requestedResources.put((ResourcesType.CLEAN_WATER), Integer.parseInt(this.sendWaterTextField.getText()));
+
+        this.clearTradeTextFields();
+    }
+
+    private void setEmptyTradeRequestField(){
+        if(this.receiveWoodTextField.getText().isEmpty()) this.receiveWoodTextField.setText("0");
+        if(this.sendWoodTextField.getText().isEmpty()) this.sendWoodTextField.setText("0");
+
+        if(this.receiveIronTextField.getText().isEmpty()) this.receiveIronTextField.setText("0");
+        if(this.sendIronTextField.getText().isEmpty()) this.sendIronTextField.setText("0");
+
+        if(this.receiveStoneTextField.getText().isEmpty()) this.receiveStoneTextField.setText("0");
+        if(this.sendStoneTextField.getText().isEmpty()) this.sendStoneTextField.setText("0");
+
+        if(this.receiveGunPowderTextField.getText().isEmpty()) this.receiveGunPowderTextField.setText("0");
+        if(this.sendGunPowderTextField.getText().isEmpty()) this.sendGunPowderTextField.setText("0");
+
+        if(this.receiveSoilTextField.getText().isEmpty()) this.receiveSoilTextField.setText("0");
+        if(this.sendSoilTextField.getText().isEmpty()) this.sendSoilTextField.setText("0");
+
+        if(this.receiveWaterTextField.getText().isEmpty()) this.receiveWaterTextField.setText("0");
+        if(this.sendWaterTextField.getText().isEmpty()) this.sendWaterTextField.setText("0");
+    }
+
+    private void clearTradeTextFields(){
+        this.receiveWoodTextField.clear();
+        this.sendWoodTextField.clear();
+        this.receiveIronTextField.clear();
+        this.receiveGunPowderTextField.clear();
+        this.sendIronTextField.clear();
+        this.sendGunPowderTextField.clear();
+        this.receiveSoilTextField.clear();
+        this.sendSoilTextField.clear();
+        this.receiveStoneTextField.clear();
+        this.sendStoneTextField.clear();
+        this.receiveWaterTextField.clear();
+        this.sendWaterTextField.clear();
     }
 
     @FXML
@@ -970,12 +1139,6 @@ public class VillageController {
             controller.enterBuildMode(BuildingType.RESEARCH_CENTER);
         }
     }
-
-    @FXML
-    private void onLeaveTradeButtonClicked(){
-        this.hideTradePanel();
-    }
-
 
     private void showReceivedTradeRequestsPanel(){
         this.receivedTradeRequestsPanel.setVisible(true);
@@ -1108,25 +1271,231 @@ public class VillageController {
         this.battleHistoryPannel.setManaged(false);
     }
 
+    private void showDecidePanel(){
+        this.decidePanel.setVisible(true);
+        this.decidePanel.setVisible(true);
+    }
+
+    public void hideDecidePanel(){
+        this.decidePanel.setVisible(false);
+        this.decidePanel.setVisible(false);
+    }
+
     private void updateResourcesUI(){
         Resources resources = this.player.getVillage().getResources();
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
 
-        int maxWoodCapacity = resourcesManagement.getMaxCapacity(ResourcesType.WOOD);
-        int maxIronCapacity = resourcesManagement.getMaxCapacity(ResourcesType.IRON);
-        int maxStoneCapacity = resourcesManagement.getMaxCapacity(ResourcesType.STONE);
-        int maxCleanWaterCapacity = resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_WATER);
-        int maxCleanSoilCapacity = resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_SOIL);
-        int maxGunPowderCapacity = resourcesManagement.getMaxCapacity(ResourcesType.GUN_POWDER);
+        int maxWoodCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.WOOD);
+        int maxIronCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.IRON);
+        int maxStoneCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.STONE);
+        int maxCleanWaterCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_WATER);
+        int maxCleanSoilCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_SOIL);
+        int maxGunPowderCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.GUN_POWDER);
+
+        int currentWood = resources.getAmount(ResourcesType.WOOD);
+        int currentIron = resources.getAmount(ResourcesType.IRON);
+        int currentStone = resources.getAmount(ResourcesType.STONE);
+        int currentWater = resources.getAmount(ResourcesType.CLEAN_WATER);
+        int currentSoil = resources.getAmount(ResourcesType.CLEAN_SOIL);
+        int currentGunPowder = resources.getAmount(ResourcesType.GUN_POWDER);
+
+        this.woodLabel.setText("" + currentWood + " / " + maxWoodCapacity);
+        this.ironLabel.setText( "" + currentIron + " / " + maxIronCapacity);
+        this.stoneLabel.setText( "" + currentStone + " / " + maxStoneCapacity);
+        this.cleanWaterLabel.setText("" + currentWater + " / " + maxCleanWaterCapacity);
+        this.cleanSoilLabel.setText("" + currentSoil + " / " + maxCleanSoilCapacity);
+        this.gunPowderLabel.setText("" + currentGunPowder + " / " + maxGunPowderCapacity);
+
+        if (maxWoodCapacity > 0) woodProgressBar.setProgress((double) currentWood / maxWoodCapacity);
+        if (maxIronCapacity > 0) ironProgressBar.setProgress((double) currentIron / maxIronCapacity);
+        if (maxStoneCapacity > 0) stoneProgressBar.setProgress((double) currentStone / maxStoneCapacity);
+        if (maxCleanWaterCapacity > 0) cleanWaterProgressBar.setProgress((double) currentWater / maxCleanWaterCapacity);
+        if (maxCleanSoilCapacity > 0) cleanSoilProgressBar.setProgress((double) currentSoil / maxCleanSoilCapacity);
+        if (maxGunPowderCapacity > 0) gunPowderProgressBar.setProgress((double) currentGunPowder / maxGunPowderCapacity);
 
 
-        this.woodLabel.setText("WOOD: " + "" + resources.getAmount(ResourcesType.WOOD) + " / " + maxWoodCapacity);
-        this.ironLabel.setText("IRON: " + "" + resources.getAmount(ResourcesType.IRON) + " / " + maxIronCapacity);
-        this.stoneLabel.setText("STONE: " + "" + resources.getAmount(ResourcesType.STONE) + " / " + maxStoneCapacity);
-        this.cleanWaterLabel.setText("WATER: " + "" + resources.getAmount(ResourcesType.CLEAN_WATER) + " / " + maxCleanWaterCapacity);
-        this.cleanSoilLabel.setText("SOIL: " + "" + resources.getAmount(ResourcesType.CLEAN_SOIL) + " / " + maxCleanSoilCapacity);
-        this.gunPowderLabel.setText("GUN POWDER: " + "" + resources.getAmount(ResourcesType.GUN_POWDER) + " / " + maxGunPowderCapacity);
+        this.applyWoodStyle();
+
+        this.applyIronStyle();
+
+        this.applyStoneStyle();
+
+        this.applyCleanSoilStyle();
+
+        this.applyCleanWaterStyle();
+
+        this.applyGunPowderStyle();
+
     }
+
+    private void applyWoodStyle(){
+        woodProgressBar.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-border-color: #d2a048; " +
+                        "-fx-border-width: 1.5;"
+        );
+
+        var barLayer = woodProgressBar.lookup(".bar");
+        if (barLayer != null) {
+            barLayer.setStyle(
+
+                    "-fx-background-color: linear-gradient(to right, #8e6220, #dab11c); " +
+                            "-fx-background-radius: 15; " +
+
+                            "-fx-effect: dropshadow(gaussian, #ffc83b, 25, 0.6, 0, 0);"
+            );
+        }
+
+        var trackLayer = woodProgressBar.lookup(".track");
+        if (trackLayer != null) {
+            trackLayer.setStyle(
+                    "-fx-background-color: rgba(0, 0, 0, 0.65); " +
+                            "-fx-background-radius: 15;"
+            );
+        }
+    }
+
+    private void applyIronStyle(){
+        ironProgressBar.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-border-color: #a29e99; " +
+                        "-fx-border-width: 1.5;"
+        );
+
+        var barLayer = ironProgressBar.lookup(".bar");
+        if (barLayer != null) {
+            barLayer.setStyle(
+
+                    "-fx-background-color: linear-gradient(to right, #887f6c, #bdb8a6); " +
+                            "-fx-background-radius: 15; " +
+
+                            "-fx-effect: dropshadow(gaussian, #9a927c, 25, 0.6, 0, 0);"
+            );
+        }
+
+        var trackLayer = ironProgressBar.lookup(".track");
+        if (trackLayer != null) {
+            trackLayer.setStyle(
+                    "-fx-background-color: rgba(0, 0, 0, 0.65); " +
+                            "-fx-background-radius: 15;"
+            );
+        }
+    }
+
+    private void applyStoneStyle(){
+        stoneProgressBar.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-border-color: #ffe0ad; " +
+                        "-fx-border-width: 1.5;"
+        );
+
+        var barLayer = stoneProgressBar.lookup(".bar");
+        if (barLayer != null) {
+            barLayer.setStyle(
+
+                    "-fx-background-color: linear-gradient(to right, #f1cf9d, #ffeeba); " +
+                            "-fx-background-radius: 15; " +
+
+                            "-fx-effect: dropshadow(gaussian, #fdeab5, 25, 0.6, 0, 0);"
+            );
+        }
+
+        var trackLayer = stoneProgressBar.lookup(".track");
+        if (trackLayer != null) {
+            trackLayer.setStyle(
+                    "-fx-background-color: rgba(0, 0, 0, 0.65); " +
+                            "-fx-background-radius: 15;"
+            );
+        }
+    }
+
+    private void applyCleanSoilStyle(){
+        cleanSoilProgressBar.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-border-color: #4b3917; " +
+                        "-fx-border-width: 1.5;"
+        );
+
+        var barLayer = cleanSoilProgressBar.lookup(".bar");
+        if (barLayer != null) {
+            barLayer.setStyle(
+
+                    "-fx-background-color: linear-gradient(to right, #8e6220, #4f4111); " +
+                            "-fx-background-radius: 15; " +
+
+                            "-fx-effect: dropshadow(gaussian, #564312, 25, 0.6, 0, 0);"
+            );
+        }
+
+        var trackLayer = cleanSoilProgressBar.lookup(".track");
+        if (trackLayer != null) {
+            trackLayer.setStyle(
+                    "-fx-background-color: rgba(0, 0, 0, 0.65); " +
+                            "-fx-background-radius: 15;"
+            );
+        }
+    }
+
+    private void applyCleanWaterStyle(){
+        cleanWaterProgressBar.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-border-color: #0df7ff; " +
+                        "-fx-border-width: 1.5;"
+        );
+
+        var barLayer = cleanWaterProgressBar.lookup(".bar");
+        if (barLayer != null) {
+            barLayer.setStyle(
+
+                    "-fx-background-color: linear-gradient(to right, #208e81, #1cdad4); " +
+                            "-fx-background-radius: 15; " +
+
+                            "-fx-effect: dropshadow(gaussian, #3bffdb, 25, 0.6, 0, 0);"
+            );
+        }
+
+        var trackLayer = cleanWaterProgressBar.lookup(".track");
+        if (trackLayer != null) {
+            trackLayer.setStyle(
+                    "-fx-background-color: rgba(0, 0, 0, 0.65); " +
+                            "-fx-background-radius: 15;"
+            );
+        }
+    }
+
+    private void applyGunPowderStyle(){
+        gunPowderProgressBar.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-border-color: #56565d; " +
+                        "-fx-border-width: 1.5;"
+        );
+
+        var barLayer = gunPowderProgressBar.lookup(".bar");
+        if (barLayer != null) {
+            barLayer.setStyle(
+
+                    "-fx-background-color: linear-gradient(to right, #413939, #363434); " +
+                            "-fx-background-radius: 15; " +
+
+                            "-fx-effect: dropshadow(gaussian, #3f3838, 25, 0.6, 0, 0);"
+            );
+        }
+
+        var trackLayer = gunPowderProgressBar.lookup(".track");
+        if (trackLayer != null) {
+            trackLayer.setStyle(
+                    "-fx-background-color: rgba(0, 0, 0, 0.65); " +
+                            "-fx-background-radius: 15;"
+            );
+        }
+    }
+
 
     private void startGameLoop() {
         gameLoop = new AnimationTimer() {

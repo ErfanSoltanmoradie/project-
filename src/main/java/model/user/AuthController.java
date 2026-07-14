@@ -153,7 +153,6 @@ public class AuthController {
         Stage stage = new Stage();
 
         Scene scene = new Scene(root, 800, 600);
-
         stage.setScene(scene);
         stage.setResizable(true);
 

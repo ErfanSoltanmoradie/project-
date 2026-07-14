@@ -55,13 +55,8 @@ public class TradeService {
                     }
                 }
 
+                TradeOffer tradeOffer = new TradeOffer(senderVillage, receiverVillage, sender, receiver, offered, requested);// for making & showing an offer in receiverVillage
 
-                TradeOffer tradeOffer =null;
-                if(sender.getAlliance().getAllianceId().equals(receiver.getAlliance().getAllianceId())){
-                    tradeOffer = new TradeOffer(senderVillage, receiverVillage, sender, receiver, offered, requested);// for making & showing an offer in receiverVillage
-                } else{
-                    tradeOffer = new TradeOffer(senderVillage, receiverVillage, null, null, offered, requested);// for making & showing an offer in receiverVillage
-                }
                 sender.getVillage().getSentTradeRequests().add(tradeOffer);
                 receiver.getVillage().getReceivedTradeRequests().add(tradeOffer);
 

@@ -16,15 +16,15 @@ public class Resources implements Serializable {
     private int coin;
 
     public Resources() {
-        this.wood = 2000;
-        this.iron = 2000;
-        this.gunPowder = 2000;
-        this.stone = 2000;
-        this.dirtyWater = 2000;
-        this.dirtySoil = 2000;
-        this.cleanWater = 2000;
-        this.cleanSoil = 2000;
-        this.coin = 2000;
+        this.wood = 8000;
+        this.iron = 8000;
+        this.gunPowder = 8000;
+        this.stone = 8000;
+        this.dirtyWater = 8000;
+        this.dirtySoil = 8000;
+        this.cleanWater = 8000;
+        this.cleanSoil = 8000;
+        this.coin = 8000;
     }
 
 
