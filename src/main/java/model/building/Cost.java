@@ -35,9 +35,6 @@ public class Cost  implements Serializable {
 
     private static Cost safeCost(UpgradeBuildingInfo info) {
         if (info == null) {
-            // به بالاترین سطحِ تعریف‌شده در جدول ارتقا رسیده (مثلاً آزمایشگاه بعد
-            // از سطح ۵). به‌جای کرش با NullPointerException، یه هزینه‌ی
-            // هیچ‌وقت-قابل‌تأمین برمی‌گردونیم که عملاً یعنی «دیگه نمی‌شه ارتقا داد».
             return new Cost(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE,
                     Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Duration.ofDays(9999));
         }
@@ -65,9 +62,9 @@ public class Cost  implements Serializable {
             case CUSTOMHOUSE -> safeCost(Customhouse.upgradeBuildingInfo(building.getLevel()));
 
 
-            case BARRACKS           -> safeCost(Barrack.getBarrackUpgradeInfo(building.getLevel()));
+            case BARRACKS  -> safeCost(Barrack.getBarrackUpgradeInfo(building.getLevel()));
 
-            case ARMY_PRODUCER      -> safeCost(ArmyProducer.getArmyProducerUpgradeInfo(building.getLevel()));
+            case ARMY_PRODUCER -> safeCost(ArmyProducer.getArmyProducerUpgradeInfo(building.getLevel()));
 
 
             case MAJOR_BUILDING -> safeCost(MajorBuilding.upgradeBuildingInfo(building.getLevel()));

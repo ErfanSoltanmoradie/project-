@@ -34,7 +34,7 @@ public class BuildingsManagement{
                  WATER_STORAGE, SOIL_STORAGE -> 3;
             case BALLISTA_DEFENSIVE -> 8;
             case CATAPULT_DEFENSIVE , SENTINEL_DEFENSIVE -> 6;
-            case MAJOR_BUILDING, RESEARCH_CENTER, CUSTOMHOUSE -> 1;
+            case MAJOR_BUILDING, RESEARCH_CENTER, CUSTOMHOUSE , LABORATORY, BARRACKS, ARMY_PRODUCER-> 1;
             default -> Integer.MAX_VALUE;
         };
     }
