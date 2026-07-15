@@ -25,7 +25,6 @@ public class ArmyMnagmentTest {
 
         Village village = player.getVillage();
 
-        // ساختمان‌های لازم
         Barrack barrack = new Barrack(BuildingType.BARRACKS, new Coordinate(0,0));
         ArmyProducer producer = new ArmyProducer(BuildingType.ARMY_PRODUCER, new Coordinate(1,0));
 
@@ -34,9 +33,10 @@ public class ArmyMnagmentTest {
 
         ArmyManagement armyManagement = new ArmyManagement(player);
 
-        boolean result = armyManagement.trainArmy(ArmyType.RAGNAR,1);
+        TrainArmyResult result = armyManagement.trainArmy(ArmyType.RAGNAR,1);
 
-        assertTrue(result);
+        assertEquals(TrainArmyResult.SUCCESS,result);
+
         assertEquals(1,
                 village.getArmies().getArmyQueue().size());
 
@@ -71,7 +71,7 @@ public class ArmyMnagmentTest {
         System.out.println("Storage Ragnar = " + village.getArmies().getArmyStorage().getRagnarCount());
         System.out.println("Timed Tasks = " + village.getTimedOperation().size());
 
-        Thread.sleep(6000);
+        Thread.sleep(11000);
 
         processor.process();
 
@@ -103,10 +103,9 @@ public class ArmyMnagmentTest {
 
         ArmyManagement armyManagement = new ArmyManagement(player);
 
-        boolean result =
-                armyManagement.trainArmy(ArmyType.RAGNAR,3);
+        TrainArmyResult result = armyManagement.trainArmy(ArmyType.RAGNAR,3);
 
-        assertTrue(result);
+        assertEquals(TrainArmyResult.SUCCESS,result);
 
         System.out.println("Queue Size = "
                 + village.getArmies().getArmyQueue().size());
@@ -143,8 +142,8 @@ public class ArmyMnagmentTest {
 
         armyManagement.trainArmy(ArmyType.RAGNAR, 3);
 
-        // منتظر می‌مانیم تا اولین سرباز آماده شود.
-        Thread.sleep(5500);
+     
+        Thread.sleep(11000);
 
         TaskProcessor processor = new TaskProcessor(village);
         processor.process();
@@ -193,7 +192,7 @@ public class ArmyMnagmentTest {
         TaskProcessor processor = new TaskProcessor(village);
 
         for(int i=0;i<3;i++){
-            Thread.sleep(5500);
+            Thread.sleep(11000);
             processor.process();
         }
 
@@ -229,12 +228,13 @@ public class ArmyMnagmentTest {
         ArmyManagement armyManagement = new ArmyManagement(player);
 
 
-        boolean result = armyManagement.trainArmy(ArmyType.RAGNAR, 0);
+        TrainArmyResult result = armyManagement.trainArmy(ArmyType.RAGNAR,0);
 
         System.out.println("Result = " + result);
         System.out.println("Queue size = " + village.getArmies().getArmyQueue().size());
 
-        assertFalse(result);
+        assertEquals(TrainArmyResult.INVALID_COUNT, result);
+
         assertEquals(0, village.getArmies().getArmyQueue().size());
 
         System.out.println("Test Passed ✅");
@@ -258,19 +258,19 @@ public class ArmyMnagmentTest {
 
         ArmyManagement armyManagement = new ArmyManagement(player);
 
-        boolean result = armyManagement.trainArmy(ArmyType.RAGNAR, -5);
+        TrainArmyResult result = armyManagement.trainArmy(ArmyType.RAGNAR,-5);
 
         System.out.println("Result = " + result);
         System.out.println("Queue size = " + village.getArmies().getArmyQueue().size());
 
-        assertFalse(result);
+        assertEquals(TrainArmyResult.INVALID_COUNT, result);
+
         assertEquals(0, village.getArmies().getArmyQueue().size());
 
         System.out.println("Test Passed ✅");
     }
     @Test
     void trainArmy_withoutArmyProducer() {
-
 
         WorldMap map = new WorldMap();
         Player player = new PlayerFactory(map).createPlayer("fatemeh");
@@ -288,11 +288,11 @@ public class ArmyMnagmentTest {
         );
         village.getBuildings().put(barrack.getId(), barrack);
 
-        boolean result = armyManagement.trainArmy(ArmyType.RAGNAR, 1);
+        TrainArmyResult result = armyManagement.trainArmy(ArmyType.RAGNAR,1);
 
         System.out.println("Result = " + result);
 
-        assertFalse(result);
+        assertEquals(TrainArmyResult.NO_ARMY_PRODUCER, result);
 
         System.out.println("Test Passed ✅");
     }
@@ -315,17 +315,18 @@ public class ArmyMnagmentTest {
 
         ArmyManagement armyManagement = new ArmyManagement(player);
 
-        village.getResources().withdraw(ResourcesType.WOOD, 2000);
-        village.getResources().withdraw(ResourcesType.STONE, 1000);
-        village.getResources().withdraw(ResourcesType.IRON, 1000);
-        village.getResources().withdraw(ResourcesType.GUN_POWDER, 1000);
+        village.getResources().withdraw(ResourcesType.WOOD, 5000);
+        village.getResources().withdraw(ResourcesType.STONE, 5000);
+        village.getResources().withdraw(ResourcesType.IRON, 5000);
+        village.getResources().withdraw(ResourcesType.GUN_POWDER, 5000);
 
-        boolean result = armyManagement.trainArmy(ArmyType.RAGNAR, 1);
+        TrainArmyResult result = armyManagement.trainArmy(ArmyType.RAGNAR,1);
 
         System.out.println("Result = " + result);
         System.out.println("Queue = " + village.getArmies().getArmyQueue().size());
 
-        assertFalse(result);
+        assertEquals(TrainArmyResult.NOT_ENOUGH_RESOURCES, result);
+
         assertEquals(0, village.getArmies().getArmyQueue().size());
 
         System.out.println("Test Passed ✅");
@@ -350,16 +351,17 @@ public class ArmyMnagmentTest {
 
         ArmyManagement armyManagement = new ArmyManagement(player);
 
-        boolean first = armyManagement.trainArmy(ArmyType.RAGNAR, 10);
+        TrainArmyResult first = armyManagement.trainArmy(ArmyType.RAGNAR,10);
 
-        boolean second = armyManagement.trainArmy(ArmyType.RAGNAR, 1);
+        TrainArmyResult second = armyManagement.trainArmy(ArmyType.RAGNAR,1);
 
         System.out.println("First = " + first);
         System.out.println("Second = " + second);
         System.out.println("Queue = " + village.getArmies().getArmyQueue().size());
 
-        assertTrue(first);
-        assertFalse(second);
+        assertEquals(TrainArmyResult.SUCCESS, first);
+        assertEquals(TrainArmyResult.QUEUE_FULL, second);
+
         assertEquals(10, village.getArmies().getArmyQueue().size());
 
         System.out.println("Test Passed ✅");
@@ -385,11 +387,11 @@ public class ArmyMnagmentTest {
 
         village.getArmies().getArmyStorage().increaseArmy(ArmyType.RAGNAR, 30);
 
-        boolean result = armyManagement.trainArmy(ArmyType.RAGNAR, 1);
+        TrainArmyResult result = armyManagement.trainArmy(ArmyType.RAGNAR,1);
 
         System.out.println("Result = " + result);
 
-        assertFalse(result);
+        assertEquals(TrainArmyResult.BARRACK_FULL, result);
 
         System.out.println("Test Passed ✅");
     }

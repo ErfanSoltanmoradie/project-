@@ -17,7 +17,7 @@ public class ArmyStorage implements Serializable {
         return this.ragnarCount;
     }
 
-    public int getRosooCount() {
+    public int getRussoCount() {
         return this.rosooCount;
     }
 
@@ -65,5 +65,17 @@ public class ArmyStorage implements Serializable {
             }
         }
         return true;
+    }
+
+    public void setRagnarCount(int ragnarCount) {
+        this.ragnarCount = ragnarCount;
+    }
+
+    public void setRosooCount(int rosooCount) {
+        this.rosooCount = rosooCount;
+    }
+
+    public void setLagertaCount(int lagertaCount) {
+        this.lagertaCount = lagertaCount;
     }
 }

@@ -3,18 +3,28 @@ package service.map;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.army.LinkedList;
+import javafx.stage.StageStyle;
 import model.battle.BattleArmy;
 import model.battle.BattleHistory;
-import model.battle.BattleStatus;
-import model.battle.BattleWinner;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
 import model.building.*;
 import model.player.Player;
 import model.repository.PlayerRepository;
@@ -33,9 +43,8 @@ import service.trade.TradeOffer;
 import service.trade.TradeService;
 import service.trade.TradeStatus;
 
-import java.time.Duration;
+import java.awt.event.MouseEvent;
 import java.util.*;
-
 
 public class VillageController {
 
@@ -102,6 +111,7 @@ public class VillageController {
     @FXML private Button majorBuildingButton;
 
     @FXML private Button researchCenter;
+
 
     @FXML private AnchorPane tradePanel;
 
@@ -188,6 +198,18 @@ public class VillageController {
 
     @FXML TextField receiveWaterTextField;
 
+    @FXML private Button armyProducerBuildButton;
+
+    @FXML private Button barrackBuildButton;
+
+    @FXML AnchorPane decisionPanel;
+
+    @FXML AnchorPane barracksDecisionPanel;
+
+
+    //@FXML private ImageView borderImageView;
+
+
     private Player player;
     private TaskProcessor taskProcessor;
     private GameCanvasView gameCanvasView;
@@ -201,6 +223,8 @@ public class VillageController {
     private Map<UUID, Player> traders = new HashMap<>();
     private List<Player> allowedToAlliance = new ArrayList<>();
     private List<Player> enemies = new ArrayList<>();
+
+    private ArmyProducer SelectedArmyProducer;
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -923,67 +947,6 @@ public class VillageController {
         this.showMakeATradePanel();
     }
 
-    @FXML
-    private void onPendingOrdersClicked(){
-        this.showDecidePanel();
-    }
-
-    @FXML
-    private void onBattleHistoryClicked(){
-        showAttackHistoryPanel();
-        this.showAttackHistory();
-    }
-
-    @FXML
-    private void onBattleButtonClicked(){
-        this.showAttackPanel();
-        this.setEnemies();
-        this.showEnemies();
-    }
-
-    @FXML
-    private void onManagePendingAllianceRequestsClicked(){
-        this.hideAlliancePanel();
-        this.showAllianceRequestsPanel();
-        this.showAllianceRequests();
-    }
-
-    @FXML
-    private void onAllianceButtonClicked(){
-        this.showAlliancePanel();
-        this.findAllowedPlayerForAlliance();
-        showAllowedToAllianceOnPanel(this.allowedToAlliance);
-    }
-
-    @FXML
-    private void onTradeButtonClicked(){
-        this.showTradePanel();
-        this.validPlayersToTrade();
-        this.showTradersOnPanel(this.traders);
-    }
-
-    @FXML
-    private void onPendingSentRequestButtonClicked(){
-        this.hideTradePanel();
-        this.showSentTradeRequestsPanel();
-        this.showSentTradeRequestsOnPanel();
-    }
-
-    @FXML
-    private void onMakeADealClicked(){
-
-       Map<ResourcesType , Integer> offeredResources = new HashMap<>();
-       Map<ResourcesType , Integer> requestedResources = new HashMap<>();
-
-       this.makeDeals(offeredResources, requestedResources);
-       this.clearTradeTextFields();
-
-        TradeService tradeService = new TradeService();
-        tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
-
-        this.hideMakeATradePanel();
-    }
-
     private void makeDeals(Map<ResourcesType , Integer> offeredResources, Map<ResourcesType , Integer> requestedResources){
 
         this.setEmptyTradeRequestField();
@@ -1053,7 +1016,7 @@ public class VillageController {
 
 
     @FXML
-    private void onUpgradeClicked(ActionEvent event) {
+    private void onUpgradeClicked() {
         if (this.controller != null) {
             this.controller.handleUpgradeClicked();
             this.hideInfoPanel();
@@ -1160,6 +1123,172 @@ public class VillageController {
         this.tradePanel.setManaged(false);
     }
 
+    @FXML
+    private void onArmyProducerBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
+        }
+
+    }
+
+    @FXML
+    private void oneBarrackBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.BARRACKS);
+        }
+    }
+
+
+    @FXML
+    private void onUpgradeDecisionClicked(){
+        this.showBuildingInfo(this.SelectedArmyProducer);
+        this.hideDecisionPanel();
+    }
+
+    @FXML
+    private void onManageArmyDecisionClicked(){
+        this.openArmyProducer(this.SelectedArmyProducer);
+        this.hideDecisionPanel();
+    }
+
+    @FXML
+    private void onPendingOrdersClicked(){
+        this.showDecidePanel();
+    }
+
+    @FXML
+    private void onBattleHistoryClicked(){
+        showAttackHistoryPanel();
+        this.showAttackHistory();
+    }
+
+    @FXML
+    private void onBattleButtonClicked(){
+        this.showAttackPanel();
+        this.setEnemies();
+        this.showEnemies();
+    }
+
+    @FXML
+    private void onManagePendingAllianceRequestsClicked(){
+        this.hideAlliancePanel();
+        this.showAllianceRequestsPanel();
+        this.showAllianceRequests();
+    }
+
+    @FXML
+    private void onAllianceButtonClicked(){
+        this.showAlliancePanel();
+        this.findAllowedPlayerForAlliance();
+        showAllowedToAllianceOnPanel(this.allowedToAlliance);
+    }
+
+    @FXML
+    private void onTradeButtonClicked(){
+        this.showTradePanel();
+        this.validPlayersToTrade();
+        this.showTradersOnPanel(this.traders);
+    }
+
+    @FXML
+    private void onPendingSentRequestButtonClicked(){
+        this.hideTradePanel();
+        this.showSentTradeRequestsPanel();
+        this.showSentTradeRequestsOnPanel();
+    }
+
+    @FXML
+    private void onMakeADealClicked(){
+
+        Map<ResourcesType , Integer> offeredResources = new HashMap<>();
+        Map<ResourcesType , Integer> requestedResources = new HashMap<>();
+
+        this.makeDeals(offeredResources, requestedResources);
+        this.clearTradeTextFields();
+
+        TradeService tradeService = new TradeService();
+        tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
+
+        this.hideMakeATradePanel();
+    }
+
+    @FXML
+    private void onManageBarracksDecisionClicked(){
+        this.openBarrack(this.selectedBarrack);
+        this.hideDecisionBarrackPanel();
+    }
+
+    private Barrack selectedBarrack;
+
+    @FXML
+    private  void onUpgradeBarracksDecisionClicked(){
+        this.showBuildingInfo(this.selectedBarrack);
+        this.hideDecisionBarrackPanel();
+    }
+
+    public void openArmyProducer(ArmyProducer armyProducer) {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/project/armyProducer.fxml")
+            );
+
+            Parent root = loader.load();
+
+            ArmyProducerController armyProducerController = loader.getController();
+            armyProducerController.setPlayer(player,armyProducer/*, this.controller*/);
+            armyProducerController.hideQueuePanel();
+            armyProducerController.showArmyProducerPanel();
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            Stage stage = new Stage();
+            stage.setTitle("Army Producer");
+            stage.setScene(scene);
+
+            stage.initStyle(StageStyle.UNDECORATED);
+
+            stage.setResizable(false);
+
+            stage.show();
+            stage.setOnHidden(e -> armyProducerController.stopRefresh());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void openBarrack(Barrack barrack) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/project/barrack.fxml")
+            );
+
+            Parent root = loader.load();
+
+            BarrackController controller = loader.getController();
+            controller.setPlayer(player, barrack);
+
+            Stage stage = new Stage();
+            stage.setTitle("Barrack");
+            stage.setScene(new Scene(root));
+
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setResizable(false);
+
+            stage.show();
+            stage.setOnHidden(e -> controller.stopRefresh());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setTradeButtonEnable(){
         if(BuildingsManagement.checkResearchCenterBuildingForTrade(this.player) &&
                 BuildingsManagement.checkCustomHouseBuildingForTrade(this.player)&&
@@ -1197,6 +1326,7 @@ public class VillageController {
     }
 
     public void showBuildingInfo(Building building){
+        System.out.println(building.getBuildingStatus().toString());
         if(building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING){
             this.upgradeButton.setDisable(true);
         }else {
@@ -1279,6 +1409,28 @@ public class VillageController {
     public void hideDecidePanel(){
         this.decidePanel.setVisible(false);
         this.decidePanel.setVisible(false);
+    }
+
+    public void hideDecisionPanel(){
+        this.decisionPanel.setVisible(false);
+        this.decisionPanel.setManaged(false);
+    }
+
+    public void showDecisionPanel(Building building){
+        this.SelectedArmyProducer = (ArmyProducer) building;
+        this.decisionPanel.setManaged(true);
+        this.decisionPanel.setVisible(true);
+    }
+
+    public void hideDecisionBarrackPanel(){
+        this.barracksDecisionPanel.setVisible(false);
+        this.barracksDecisionPanel.setManaged(false);
+    }
+
+    public void showDecisionBarrackPanel(Building building){
+        this.selectedBarrack = (Barrack) building;
+        this.barracksDecisionPanel.setManaged(true);
+        this.barracksDecisionPanel.setVisible(true);
     }
 
     private void updateResourcesUI(){
@@ -1538,6 +1690,7 @@ public class VillageController {
     public AnimationTimer getGameLoop() {
         return gameLoop;
     }
+
 
     public Player getReceiverTradeRequest() {
         return receiverTradeRequest;

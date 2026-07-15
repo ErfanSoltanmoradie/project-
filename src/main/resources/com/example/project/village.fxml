@@ -20,7 +20,7 @@
    <children>
       <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
          <children>
-            <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="58.0" prefWidth="66.0" style="-fx-background-color: transparent;" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
+            <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="75.0" prefWidth="77.0" style="-fx-background-color: transparent;" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
                <font>
                   <Font name="System Bold Italic" size="16.0" />
                </font>
@@ -32,7 +32,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="tradeButton" disable="true" layoutX="397.0" layoutY="366.0" mnemonicParsing="false" onAction="#onTradeButtonClicked" prefHeight="82.0" prefWidth="91.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="19.0" AnchorPane.rightAnchor="162.0">
+            <Button fx:id="tradeButton" disable="true" layoutX="397.0" layoutY="366.0" mnemonicParsing="false" onAction="#onTradeButtonClicked" prefHeight="72.0" prefWidth="87.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="19.0" AnchorPane.rightAnchor="166.0">
                <font>
                   <Font name="Calibri Bold Italic" size="15.0" />
                </font>
@@ -44,7 +44,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="allianceButton" alignment="CENTER" contentDisplay="CENTER" disable="true" graphicTextGap="0.0" layoutX="284.0" layoutY="365.0" mnemonicParsing="false" onAction="#onAllianceButtonClicked" prefHeight="75.0" prefWidth="79.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="271.0">
+            <Button fx:id="allianceButton" alignment="CENTER" contentDisplay="CENTER" disable="true" graphicTextGap="0.0" layoutX="424.0" layoutY="507.0" mnemonicParsing="false" onAction="#onAllianceButtonClicked" prefHeight="66.0" prefWidth="48.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="23.0" AnchorPane.rightAnchor="279.0">
                <font>
                   <Font name="System Bold Italic" size="11.0" />
                </font>
@@ -56,7 +56,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="battleButton" layoutX="192.0" layoutY="366.0" mnemonicParsing="false" onAction="#onBattleButtonClicked" prefHeight="75.0" prefWidth="79.0" style="-fx-background-color: trasnparent;" AnchorPane.bottomAnchor="19.0" AnchorPane.rightAnchor="369.0">
+            <Button fx:id="battleButton" layoutX="331.0" layoutY="506.0" mnemonicParsing="false" onAction="#onBattleButtonClicked" prefHeight="41.0" prefWidth="82.0" style="-fx-background-color: trasnparent;" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="367.0">
                <font>
                   <Font name="System Bold Italic" size="13.0" />
                </font>
@@ -71,6 +71,20 @@
                   </ImageView>
                </graphic>
             </Button>
+            <AnchorPane fx:id="decisionPanel" layoutX="14.0" layoutY="513.0" prefHeight="57.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="555.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onManageArmyDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;         -fx-letter-spacing: 2px;          -fx-cursor: hand; " text="manage army">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="106.0" mnemonicParsing="false" onAction="#onUpgradeDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;      ;    -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="upgrade">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
             <AnchorPane layoutX="435.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="443.0" prefWidth="194.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
                <children>
@@ -200,6 +214,41 @@
                   </VBox>
                </children>
             </AnchorPane>
+            <AnchorPane fx:id="barracksDecisionPanel" layoutX="270.0" layoutY="462.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="216.0" visible="false" AnchorPane.bottomAnchor="93.0" AnchorPane.rightAnchor="294.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onManageBarracksDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;         -fx-letter-spacing: 2px;          -fx-cursor: hand; " text="manage ">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="111.0" mnemonicParsing="false" onAction="#onUpgradeBarracksDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;      ;    -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="upgrade">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="armyProducerPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="635.0" style="-fx-background-color: transparent;" visible="false">
+         <children>
+            <ScrollPane prefHeight="362.0" prefWidth="512.0" style="-fx-background: #000415;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <content>
+                  <VBox prefHeight="379.0" prefWidth="630.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <HBox prefHeight="94.0" prefWidth="620.0" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ImageView fitHeight="479.0" fitWidth="733.0" layoutX="-51.0" layoutY="-50.0">
+               <image>
+                  <Image url="@../../../gold-kadr%20(2).png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="shopPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="585.0" style="-fx-background-color: transparent;" visible="false">
@@ -323,6 +372,19 @@
                               <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
                               <Button fx:id="StoneMineBuildButton1" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children></VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label prefHeight="32.0" prefWidth="132.0" text="Army Producer" />
+                              <Button fx:id="armyProducerBuildButton" mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children></VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label prefHeight="32.0" prefWidth="132.0" text="Barrack" />
+                              <Button fx:id="barrackBuildButton" mnemonicParsing="false" onAction="#oneBarrackBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
+                           </children></VBox>
+
                      </children>
                   </HBox>
                </content>

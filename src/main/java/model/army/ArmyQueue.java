@@ -1,8 +1,9 @@
 package model.army;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
-public class ArmyQueue implements Serializable {
+public class ArmyQueue implements Serializable,Iterable<QueuedArmy> {
 
     private final LinkedList<QueuedArmy> queue;
     private boolean training;
@@ -43,5 +44,10 @@ public class ArmyQueue implements Serializable {
 
     public void setTraining(boolean training) {
         this.training = training;
+    }
+
+    @Override
+    public Iterator<QueuedArmy> iterator() {
+        return queue.iterator();
     }
 }

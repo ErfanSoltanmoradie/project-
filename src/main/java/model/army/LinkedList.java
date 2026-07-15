@@ -3,8 +3,9 @@ package model.army;
 import java.io.Serializable;
 import java.util.Iterator;
 
-public class LinkedList<T> implements Serializable, Iterable<T> {
+import java.util.NoSuchElementException;
 
+public class LinkedList<T> implements Serializable,Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {

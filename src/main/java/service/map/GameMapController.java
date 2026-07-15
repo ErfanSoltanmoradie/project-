@@ -1,5 +1,7 @@
 package service.map;
 
+import model.building.ArmyProducer;
+import model.building.Barrack;
 import model.building.Building;
 import model.building.BuildingType;
 import model.village.Village;
@@ -19,11 +21,17 @@ public class GameMapController {
     private Building selectedBuilding = null;
     private VillageController villageController;
 
+    //private ArmyProducerController armyProducerController;
+
     public GameMapController(Village village, GameCanvasView gameCanvasView) {
         this.village = village;
         this.gameMap = this.village.getGameMap();
         this.gameCanvasView = gameCanvasView;
         this.buildingsManagement = new BuildingsManagement(this.village);
+    }
+
+    public void setArmyProducerController(ArmyProducerController armyProducerController) {
+        this.villageController = villageController;
     }
 
     public void setVillageController(VillageController villageController) {
@@ -76,6 +84,20 @@ public class GameMapController {
             System.out.println("Selected: " + selectedBuilding.getType() + " level: " + selectedBuilding.getLevel()
              + " Status: " + selectedBuilding.getBuildingStatus());
 
+            System.out.println(clickedBuilding.getClass().getName());
+
+            if(selectedBuilding instanceof ArmyProducer && villageController != null) {
+                villageController.showDecisionPanel(selectedBuilding);
+                return;
+            }
+
+            if (selectedBuilding instanceof Barrack && villageController != null) {
+                villageController.showDecisionBarrackPanel(selectedBuilding);
+                return;
+            }
+
+            System.out.println("Selected: " + selectedBuilding.getType());
+
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);
             }
@@ -95,6 +117,13 @@ public class GameMapController {
                 villageController.hideAttackPanel();
                 villageController.hideAttackHistoryPanel();
                 villageController.hideDecidePanel();
+                villageController.hideDecisionPanel();
+                villageController.hideDecisionBarrackPanel();
+
+                /*if(armyProducerController != null){
+                    armyProducerController.hideArmyProducerPanel();
+                }*/
+
             }
         }
     }

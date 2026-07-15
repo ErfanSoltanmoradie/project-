@@ -26,46 +26,55 @@ public class ArmyManagement {
     }
 
     //for checking requirements
-    private boolean canTrainArmy(ArmyType type, int count) {
+    private TrainArmyResult canTrainArmy(ArmyType type, int count) {
+
         if (count <= 0)
-            return false;
+            return TrainArmyResult.INVALID_COUNT;
 
         //is there any ArmyProducer or not
         ArmyProducer producer = getArmyProducer();
+        if(producer == null)
+            return TrainArmyResult.NO_ARMY_PRODUCER;
 
         //is there any Barrack or not
         Barrack barrack = getBarrack();
-
-        if (producer == null || barrack == null)
-            return false;
+        if(barrack == null)
+            return TrainArmyResult.NO_BARRACK;
 
         //has the soldier been unlocked or not
-        if (!type.isUnlocked(producer.getLevel()))
-            return false;
-
+        if (!type.isUnlocked(producer.getLevel())) {
+            return TrainArmyResult.SOLDIER_LOCKED;
+        }
         //check queue capacity
-        if (armies.getArmyQueue().size() + count > producer.getMaxTrainingCount())
-            return false;
-
+        if (armies.getArmyQueue().size() + count > producer.getMaxTrainingCount()) {
+            return TrainArmyResult.QUEUE_FULL;
+        }
         //check Barrack capacity
         if (armies.getTotalArmyCount()
                 + armies.getArmyQueue().size()
-                + count > barrack.getCapacity())
-            return false;
-
+                + count > barrack.getCapacity()){
+            return TrainArmyResult.BARRACK_FULL;
+        }
         //check resource
-        return resourcesManagement.checkResourcesArmyCost(type.getTrainCost(), count);
+        if (!resourcesManagement.checkResourcesArmyCost(type.getTrainCost(), count)) {
+            return TrainArmyResult.NOT_ENOUGH_RESOURCES;
+        }
+
+        return TrainArmyResult.SUCCESS;
     }
 
     //add to queue
-    public boolean trainArmy(ArmyType type, int count) {
+    public TrainArmyResult trainArmy(ArmyType type, int count) {
 
         village.getLock().writeLock().lock();
 
         try {
 
-            if (!canTrainArmy(type, count))
-                return false;
+            TrainArmyResult result = canTrainArmy(type, count);
+
+            if (result != TrainArmyResult.SUCCESS) {
+                return result;
+            }
 
             resourcesManagement.withdrawResourcesArmyCost(type.getTrainCost(), count);
 
@@ -88,7 +97,7 @@ public class ArmyManagement {
 
                 armies.getArmyQueue().enqueue(queuedArmy);
 
-                statTime = finishTime; // زمان شروع برای دور بعدیِ حلقه باید زمان پایانِ قبلی باشد
+                statTime = finishTime;
             }
             if (isMachineIdle){
 
@@ -104,7 +113,7 @@ public class ArmyManagement {
 
                 village.getTimedOperation().put(newTask.getId(), newTask);
             }
-            return true;
+            return TrainArmyResult.SUCCESS;
 
         } finally {
             village.getLock().writeLock().unlock();
