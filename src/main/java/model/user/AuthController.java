@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -61,6 +62,15 @@ public class AuthController {
     private AnchorPane loginPanel;
 
     @FXML
+    private AnchorPane firstAuthPanel;
+
+    @FXML
+    AnchorPane warningPanel;
+
+    @FXML
+    private Label warningLabel;
+
+    @FXML
     public String getUsername1(){
         return this.usernameTextField1.getText();
     }
@@ -111,31 +121,81 @@ public class AuthController {
     @FXML
     public void onLoginClicked(){
         AuthResult authResult = this.authService.login(this.getUsername1(), this.getPassword1());
-        System.out.println(authResult.getAuthStatus().toString());
 
-        if(authResult.getAuthStatus() == AuthStatus.SUCCESS && authResult.getPlayer().isOnlineStatus() == false){
+        if(authResult.getAuthStatus() != AuthStatus.SUCCESS) {
+            this.warningLabel.setText(null);
+            this.warningLabel.setText(authResult.getAuthStatus().toString());
+            this.showWarningPanel();
+
+        }else if(authResult.getAuthStatus() == AuthStatus.SUCCESS && authResult.getPlayer().isOnlineStatus() == false){
             this.usernameTextField1.clear();
             this.passwordTextField1.clear();
             authResult.getPlayer().setOnlineStatus(true);
             this.addProducedResources(authResult.getPlayer());
             showVillage(authResult.getPlayer());
             hideLoginPanel();
+
         }
     }
 
     @FXML
     public void onSignupClicked(){
         AuthResult authResult = this.authService.register(this.getUsername(), this.getPassword());
-        System.out.println(authResult.getAuthStatus().toString());
 
-        if(authResult.getPlayer().getUsername().equalsIgnoreCase(this.getUsername())){
-            this.usernameTextField.clear();
-            this.passwordTextField.clear();
-            authResult.getPlayer().setOnlineStatus(true);
-            showVillage(authResult.getPlayer());
-            hideSignupPanel();
+        if(authResult.getAuthStatus() != AuthStatus.SUCCESS){
+            this.warningLabel.setText(null);
+            this.warningLabel.setText(authResult.getAuthStatus().toString());
+            this.showWarningPanel();
+        }else {
+            if(authResult.getPlayer().getUsername().equalsIgnoreCase(this.getUsername())) {
+                this.usernameTextField.clear();
+                this.passwordTextField.clear();
+                authResult.getPlayer().setOnlineStatus(true);
+                showVillage(authResult.getPlayer());
+                hideSignupPanel();
+            }
         }
     }
+
+    @FXML
+    private void onWarningLoginClicked(){
+        this.hideSignupPanel();
+        this.hideWarningPanel();
+        this.showLoginPanel();
+    }
+
+    @FXML
+    private void onWarningSignupClicked(){
+        this.hideWarningPanel();
+        this.hideWarningPanel();
+    }
+
+    @FXML
+    private void onHomeClicked(){
+        this.hideSignupPanel();
+        this.hideLoginPanel();
+    }
+
+    private void hideFirstAuthPanel(){
+        this.firstAuthPanel.setVisible(false);
+        this.firstAuthPanel.setManaged(false);
+    }
+
+    private void showFirstAuthPanel(){
+        this.firstAuthPanel.setVisible(true);
+        this.firstAuthPanel.setManaged(true);
+    }
+
+    private void hideWarningPanel(){
+        this.warningPanel.setVisible(false);
+        this.warningPanel.setManaged(false);
+    }
+
+    private void showWarningPanel(){
+        this.warningPanel.setVisible(true);
+        this.warningPanel.setManaged(true);
+    }
+
 
     public void showVillage(Player player)  {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/project/village.fxml"));

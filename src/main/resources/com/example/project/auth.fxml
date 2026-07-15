@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<StackPane fx:id="authPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="498.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.user.AuthController">
+<StackPane fx:id="authPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="498.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.user.AuthController">
    <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="firstAuthPanel" prefHeight="200.0" prefWidth="200.0">
          <children>
             <ImageView fitHeight="503.0" fitWidth="757.0" mouseTransparent="true">
                <image>
                   <Image url="@../../../login%20(2).png" />
                </image>
             </ImageView>
-            <Button layoutX="280.0" layoutY="335.0" mnemonicParsing="false" onAction="#onFirstSignupClicked" prefHeight="44.0" prefWidth="198.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="SIGNUP" textFill="WHITE" />
-            <Button layoutX="300.0" layoutY="390.0" mnemonicParsing="false" onAction="#onFirstLoginClicked" prefHeight="44.0" prefWidth="155.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="LOGIN" textFill="WHITE" />
-            <Button layoutX="329.0" layoutY="445.0" mnemonicParsing="false" onAction="#onExitClicked" prefHeight="44.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="EXIT" textFill="WHITE" />
+            <Button layoutX="280.0" layoutY="335.0" mnemonicParsing="false" onAction="#onFirstSignupClicked" prefHeight="44.0" prefWidth="198.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.6), 10, 0, 0, 0);" text="SIGNUP" textFill="WHITE" />
+            <Button layoutX="300.0" layoutY="390.0" mnemonicParsing="false" onAction="#onFirstLoginClicked" prefHeight="44.0" prefWidth="155.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.6), 10, 0, 0, 0);" text="LOGIN" textFill="WHITE" />
+            <Button layoutX="329.0" layoutY="445.0" mnemonicParsing="false" onAction="#onExitClicked" prefHeight="44.0" prefWidth="100.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.6), 10, 0, 0, 0);" text="EXIT" textFill="WHITE" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="signupPanel" prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -26,9 +33,14 @@
                   <Image url="@../../../signup.png" />
                </image>
             </ImageView>
-            <TextField fx:id="usernameTextField" alignment="CENTER" layoutX="224.0" layoutY="320.0" onAction="#getUsername" prefHeight="35.0" prefWidth="293.0" promptText="Enter your username . . ." style="-fx-background-color: rgba(15, 25, 15, 0.6);     -fx-border-color: #39ff14;      -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #fffcfc;    -fx-prompt-text-fill: #557a55;      -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
-            <TextField fx:id="passwordTextField" alignment="CENTER" layoutX="244.0" layoutY="371.0" onAction="#getPassword" prefHeight="35.0" prefWidth="257.0" promptText="Enter password must be 6 letters at least" style="-fx-background-color: rgba(15, 25, 15, 0.6);      -fx-border-color: #39ff14;     -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #ecf0f1;      -fx-prompt-text-fill: #557a55;        -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
-            <Button fx:id="signupButton" alignment="CENTER" layoutX="310.0" layoutY="420.0" mnemonicParsing="false" onAction="#onSignupClicked" prefHeight="4.0" prefWidth="124.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="SIGNUP" textFill="WHITE">
+            <TextField fx:id="usernameTextField" alignment="CENTER" layoutX="210.0" layoutY="281.0" onAction="#getUsername" prefHeight="35.0" prefWidth="309.0" promptText="Enter your username . . ." style="-fx-background-color: rgba(15, 25, 15, 0.6);     -fx-border-color: #39ff14;      -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #fffcfc;    -fx-prompt-text-fill: #557a55;      -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
+            <TextField fx:id="passwordTextField" alignment="CENTER" layoutX="232.0" layoutY="327.0" onAction="#getPassword" prefHeight="35.0" prefWidth="269.0" promptText="Enter password must be 6 letters at least" style="-fx-background-color: rgba(15, 25, 15, 0.6);      -fx-border-color: #39ff14;     -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #ecf0f1;      -fx-prompt-text-fill: #557a55;        -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
+            <Button fx:id="signupButton" alignment="CENTER" layoutX="287.0" layoutY="372.0" mnemonicParsing="false" onAction="#onSignupClicked" prefHeight="44.0" prefWidth="163.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="SIGNUP" textFill="WHITE">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
+            <Button alignment="CENTER" layoutX="313.0" layoutY="422.0" mnemonicParsing="false" onAction="#onHomeClicked" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="HOME" textFill="WHITE">
                <font>
                   <Font size="11.0" />
                </font>
@@ -42,12 +54,17 @@
                   <Image url="@../../../signup.png" />
                </image>
             </ImageView>
-            <TextField fx:id="usernameTextField1" alignment="CENTER" layoutX="232.0" layoutY="320.0" onAction="#getUsername" prefHeight="35.0" prefWidth="293.0" promptText="Enter your username . . ." style="-fx-background-color: rgba(15, 25, 15, 0.6); /* پس‌زمینه زیتونی تیره و نیمه‌شفاف */     -fx-border-color: #39ff14; /* حاشیه سبز فسفری/رادیواکتیو */     -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #fffcfc; /* رنگ متن داخل فیلد (سفید مایل به خاکستری) */     -fx-prompt-text-fill: #557a55; /* رنگ متن راهنما (Enter your...) تیره تر */      -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
-            <TextField fx:id="passwordTextField1" alignment="CENTER" layoutX="250.0" layoutY="369.0" onAction="#getPassword" prefHeight="35.0" prefWidth="257.0" promptText="Enter password must be 6 letters at least" style="-fx-background-color: rgba(15, 25, 15, 0.6); /* پس‌زمینه زیتونی تیره و نیمه‌شفاف */     -fx-border-color: #39ff14; /* حاشیه سبز فسفری/رادیواکتیو */     -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #ecf0f1; /* رنگ متن داخل فیلد (سفید مایل به خاکستری) */     -fx-prompt-text-fill: #557a55; /* رنگ متن راهنما (Enter your...) تیره تر */          -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
-            <Button fx:id="loginButton" layoutX="323.0" layoutY="419.0" mnemonicParsing="false" onAction="#onLoginClicked" prefHeight="33.0" prefWidth="111.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="LOGIN" textFill="BLUE">
+            <TextField fx:id="usernameTextField1" alignment="CENTER" layoutX="216.0" layoutY="291.0" onAction="#getUsername" prefHeight="35.0" prefWidth="322.0" promptText="Enter your username . . ." style="-fx-background-color: rgba(15, 25, 15, 0.6);    -fx-border-color: #39ff14;     -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #fffcfc;     -fx-prompt-text-fill: #557a55;      -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
+            <TextField fx:id="passwordTextField1" alignment="CENTER" layoutX="238.0" layoutY="338.0" onAction="#getPassword" prefHeight="35.0" prefWidth="284.0" promptText="Enter password must be 6 letters at least" style="-fx-background-color: rgba(15, 25, 15, 0.6);     -fx-border-color: #39ff14;     -fx-border-width: 1;     -fx-border-radius: 3;     -fx-background-radius: 3;     -fx-text-fill: #ecf0f1;     -fx-prompt-text-fill: #557a55;         -fx-font-weight: bold;     -fx-padding: 8 12 8 12;" />
+            <Button fx:id="loginButton" layoutX="304.0" layoutY="383.0" mnemonicParsing="false" onAction="#onLoginClicked" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="LOGIN" textFill="BLUE">
                <font>
                   <Font size="21.0" />
                </font></Button>
+            <Button alignment="CENTER" layoutX="325.0" layoutY="440.0" mnemonicParsing="false" onAction="#onHomeClicked" prefHeight="35.0" prefWidth="111.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="HOME" textFill="WHITE">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" visible="false">
@@ -67,6 +84,45 @@
                   <Font size="25.0" />
                </font>
             </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="warningPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="224.0" prefWidth="388.0" style="-fx-background-color: transparent;" visible="false">
+         <children>
+            <VBox layoutX="16.0" layoutY="15.0" prefHeight="194.0" prefWidth="360.0" style="-fx-background-color: #0b140b;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="15.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="84.0" prefWidth="360.0">
+                     <children>
+                        <Label fx:id="warningLabel" alignment="CENTER" prefHeight="72.0" prefWidth="352.0" style="-fx-text-fill: #00f3ff;  -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="USERNAME-ALREADY-EXIST">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="78.0" prefWidth="360.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#onWarningLoginClicked" prefHeight="44.0" prefWidth="152.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.6), 10, 0, 0, 0);" text="LOGIN" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets left="30.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#onWarningSignupClicked" prefHeight="44.0" prefWidth="162.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #1a331a, #0b140b);    -fx-border-color: #39ff14;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;       -fx-font-size: 14px;     -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.6), 10, 0, 0, 0);" text="SIGNUP" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <ImageView fitHeight="224.0" fitWidth="388.0">
+               <image>
+                  <Image url="@../../../green-kadr.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
    </children>
