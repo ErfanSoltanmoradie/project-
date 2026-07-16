@@ -31,7 +31,7 @@ public class MinerBuilding extends Building implements Production , Serializable
     }
 
     public MinerBuilding( BuildingType type, Coordinate position, int production) {
-        super(type, position, 5, 5);
+        super(type, position, 7, 7);
         this.production = production;
     }
 

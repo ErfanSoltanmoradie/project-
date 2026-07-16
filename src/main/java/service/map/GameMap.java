@@ -32,7 +32,7 @@ public class GameMap implements Serializable {
 
                     tiles[i][j].setType(Tile.Type.BORDER);
 
-                    if (Math.random() < 0.3) {
+                    if (Math.random() < 0.20) {
                         double rand = Math.random();
 
                         if (rand < 0.3) {

@@ -10,7 +10,7 @@ import java.util.Map;
 public class MajorBuilding extends Building  implements Serializable {
 
     public MajorBuilding(BuildingType type, Coordinate position) {
-        super(type, position, 4, 4);
+        super(type, position, 10, 10);
     }
 
     private static final Map<Integer, UpgradeBuildingInfo> upgradeMajorBuildingBuildingsCost;

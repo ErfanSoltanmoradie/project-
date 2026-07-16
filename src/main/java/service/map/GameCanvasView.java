@@ -66,22 +66,16 @@ public class GameCanvasView extends Canvas {
         /*buildingGraphics.put(BuildingType.WOOD_MINE, new BuildingGraphicProperties(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/wood_mine.png"))),
                 1.4, 0.75
-        ));
-
-        buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/iron_mine.png"))),
-
         ));*/
 
+        buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/iron_mine.png"))), 1, 1, 1));
+
         buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major.png"))),
-                1,1, 1//0.72
-        ));
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major.png"))), 1,1, 1));
 
         buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png"))),
-                /*1.2, 1.2*/1, 1, 1//0.72
-        ));
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png"))), 1, 1, 1));
         } catch(NullPointerException e) {
             System.err.println("Error loading building graphics: " + e.getMessage());
         }
@@ -169,7 +163,7 @@ public class GameCanvasView extends Canvas {
 
                     Tile tile = gameMap.getTile(r, c);
 
-                    // --- ۱. رسم درخت‌ها (DecorateType) ---
+
                     Tile.DecorateType deco = tile.getDecorateType();
                     if (deco != Tile.DecorateType.NONE) {
                         Image currentImg = null;
@@ -179,8 +173,8 @@ public class GameCanvasView extends Canvas {
                         switch (deco) {
                             case BROWN_TREE:
                                 currentImg = brownTree;
-                                wFactor = 2.0;
-                                hFactor = 4.0;
+                                wFactor = 4;
+                                hFactor = 8;
                                 break;
                             case WHITE_TREE:
                                 currentImg = whiteTree;

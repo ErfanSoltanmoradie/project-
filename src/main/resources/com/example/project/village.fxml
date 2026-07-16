@@ -307,6 +307,21 @@
                                  </graphic></Button>
                            </children>
                         </VBox>
+                        <VBox alignment="TOP_CENTER" centerShape="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="249.0" scaleShape="false" style="-fx-background-color: #000415;">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <children>
+                              <Button fx:id="ironMineBuildButton" mnemonicParsing="false" onAction="#onIronMineBuildClicked" prefHeight="318.0" prefWidth="220.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../iron_mine.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                           </children>
+                        </VBox>
                         <VBox fx:id="addBuildingVBox" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="242.0" prefWidth="120.0">
                            <children>
                               <ImageView fx:id="woodMineImage" fitHeight="131.0" fitWidth="117.0" pickOnBounds="true">
@@ -324,16 +339,6 @@
                                     <Font size="24.0" />
                                  </font>
                               </Button>
-                           </children>
-                        </VBox>
-                        <VBox alignment="TOP_CENTER" centerShape="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="242.0" prefWidth="120.0" scaleShape="false">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="ironMineBuildButton" mnemonicParsing="false" onAction="#onIronMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children>
                         </VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="230.0" prefWidth="120.0">

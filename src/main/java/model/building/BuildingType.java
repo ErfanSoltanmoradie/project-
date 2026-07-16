@@ -5,7 +5,7 @@ import java.time.Duration;
 public enum BuildingType {
 
     WOOD_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
-    IRON_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
+    IRON_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),7, 7),
     STONE_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
     DIRTY_WATER_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
     DIRTY_SOIL_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
@@ -31,7 +31,7 @@ public enum BuildingType {
     LABORATORY(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
     RESEARCH_CENTER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),7, 7),
     ARMY_PRODUCER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
-    MAJOR_BUILDING(new Cost(3000, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),4, 4),
+    MAJOR_BUILDING(new Cost(3000, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),10, 10),
     PURIFICATION(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
 
     CUSTOMHOUSE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)), 1, 1);
