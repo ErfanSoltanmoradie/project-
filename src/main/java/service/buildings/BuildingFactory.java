@@ -37,7 +37,7 @@ public class BuildingFactory{
 
             case RESEARCH_CENTER -> new ResearchCenter(BuildingType.RESEARCH_CENTER, buildTask.getCoordinate());
 
-            case LABORATORY -> new Laboratory(BuildingType.LABORATORY, buildTask.getCoordinate());
+            case LABORATORY ->  new Laboratory(BuildingType.LABORATORY, buildTask.getCoordinate());
 
 
             // more building need to be added

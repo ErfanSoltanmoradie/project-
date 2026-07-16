@@ -23,4 +23,9 @@ public class WorldMap {
         usedCoordinates.add(coordinate);
         return coordinate;
     }
+    public void releaseCoordinate(Coordinate coordinate) {
+        if (coordinate != null) {
+            usedCoordinates.remove(coordinate);
+        }
+    }
 }

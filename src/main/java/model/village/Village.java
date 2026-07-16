@@ -10,6 +10,7 @@ import model.battle.BattleHistory;
 import model.building.Building;
 import model.building.Plant;
 import model.building.*;
+import model.finalPart.GlobalTower;
 import model.resources.Resources;
 import model.time.RandomEventTask;
 import model.time.TimedOperation;
@@ -56,6 +57,7 @@ public class Village implements Serializable {
 
     private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
     private AllianceRequest allianceRequest;
+    private GlobalTower  globalTower=null;
 
     public GameMap getGameMap() {
         return gameMap;
@@ -215,6 +217,14 @@ public class Village implements Serializable {
 
     public Map<UUID, TradeOffer> getTradeOffers() {
         return tradeOffers;
+    }
+
+    public GlobalTower getGlobalTower() {
+        return globalTower;
+    }
+
+    public void setGlobalTower(GlobalTower globalTower) {
+        this.globalTower = globalTower;
     }
 
     /*public Map<UUID, BattleHistory> getBattleHistory() {

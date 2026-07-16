@@ -18,9 +18,27 @@
 
 <StackPane fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="596.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.map.VillageController">
    <children>
+      <Label fx:id="towerAnnouncementLabel"
+             alignment="CENTER"
+             visible="false"
+             managed="false"
+             maxWidth="1.7976931348623157E308"
+             style="-fx-background-color: rgba(11, 7, 16, 0.9); -fx-text-fill: #4dd0e1; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 8; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.5), 8, 0, 0, 0);"
+             StackPane.alignment="TOP_CENTER">
+         <StackPane.margin>
+            <Insets top="10.0" />
+         </StackPane.margin>
+      </Label>
       <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
          <children>
             <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="75.0" prefWidth="77.0" style="-fx-background-color: transparent;" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
+            <Button fx:id="towerButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onTowerButtonClicked" style="-fx-background-color: #0b0710; -fx-background-radius: 6; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-text-fill: white; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.4), 5, 0, 0, 0);" text="🗼 Tower" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+
+            <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="58.0" prefWidth="66.0" style="-fx-background-color: transparent;" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
                <font>
                   <Font name="System Bold Italic" size="16.0" />
                </font>
@@ -408,18 +426,51 @@
                            </children></VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="232.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="gunPowderMineBuildButton" mnemonicParsing="false" onAction="#onGunPowderMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="232.0" prefWidth="120.0">
+                              <ImageView fx:id="nrcImage" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../NRC.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="nrcLabel" alignment="CENTER" prefHeight="35.0" prefWidth="120.0" style="-fx-text-fill: white;" text="NRC Plant">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="nrcBuildButton" mnemonicParsing="false" onAction="#onNRCBuildClicked" prefHeight="30.0" prefWidth="115.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px; -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 85, 0.6), 8, 0.3, 0, 0);" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" minWidth="-Infinity" prefHeight="225.0" prefWidth="130.0" style="-fx-background-color: #121420; -fx-background-radius: 8; -fx-border-color: #ff0055; -fx-border-width: 1.2; -fx-padding: 8;">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button fx:id="StoneMineBuildButton" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
+                              <ImageView fx:id="snrcImage" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../SNRC.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="snrcLabel" alignment="CENTER" prefHeight="35.0" prefWidth="120.0" style="-fx-text-fill: white;" text="SNRC Plant">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="snrcBuildButton" mnemonicParsing="false" onAction="#onSNRCBuildClicked" prefHeight="30.0" prefWidth="115.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px; -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 85, 0.6), 8, 0.3, 0, 0);" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" minWidth="-Infinity" prefHeight="225.0" prefWidth="130.0" style="-fx-background-color: #121420; -fx-background-radius: 8; -fx-border-color: #ff0055; -fx-border-width: 1.2; -fx-padding: 8;">
                            <children>
+                              <ImageView fx:id="psnrcImage" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../PSNRC.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="psnrcLabel" alignment="CENTER" prefHeight="35.0" prefWidth="120.0" style="-fx-text-fill: white;" text="PSNRC Plant">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="psnrcBuildButton" mnemonicParsing="false" onAction="#onPSNRCBuildClicked" prefHeight="30.0" prefWidth="115.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px; -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 85, 0.6), 8, 0.3, 0, 0);" text="BUILD" />
+                           </children>
+                        </VBox>
+                        <!-- Laboratory -->
+                        <VBox alignment="TOP_CENTER" minWidth="-Infinity" prefHeight="225.0" prefWidth="130.0" style="-fx-background-color: #121420; -fx-background-radius: 8; -fx-border-color: #ff0055; -fx-border-width: 1.2; -fx-padding: 8;">
                               <ImageView fitHeight="137.0" fitWidth="121.0" preserveRatio="true" />
                               <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
                               <Button fx:id="StoneMineBuildButton1" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
@@ -431,6 +482,19 @@
                               <Button fx:id="armyProducerBuildButton" mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children></VBox>
 
+                              <ImageView fx:id="LaboratoryImage" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../Laboratory.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="laboratoryLabel" alignment="CENTER" prefHeight="35.0" prefWidth="120.0" style="-fx-text-fill: white;" text="Laboratory">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="laboratoryBuildButton" mnemonicParsing="false" onAction="#onLaboratoryBuildClicked" prefHeight="30.0" prefWidth="115.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 13px; -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 85, 0.6), 8, 0.3, 0, 0);" text="BUILD" />
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
                </content>
@@ -442,11 +506,19 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="infoPanel" depthTest="ENABLE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #2b1d0e;                                                                               -fx-background-radius: 10; -fx-border-color: #bfa15f;                                                                                -fx-border-width: 3; -fx-border-radius: 8; -fx-padding: 10; " visible="false" StackPane.alignment="CENTER">
+      <AnchorPane fx:id="infoPanel" depthTest="ENABLE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #2b1d0e; -fx-background-radius: 10; -fx-border-color: #bfa15f; -fx-border-width: 3; -fx-border-radius: 8; -fx-padding: 10;" visible="false" StackPane.alignment="CENTER">
          <StackPane.margin>
             <Insets />
          </StackPane.margin>
          <children>
+            <Label fx:id="infoPanelTitleLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="24.0" prefWidth="280.0" textFill="#ffcc00" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="buildingLevelLabel" alignment="CENTER" layoutX="10.0" layoutY="40.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+            <Label fx:id="plantsCountLabel" alignment="CENTER" layoutX="10.0" layoutY="65.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="65.0" />
+            <Label fx:id="neutralizationPowerLabel" alignment="CENTER" layoutX="10.0" layoutY="90.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
             <Button fx:id="upgradeButton" alignment="BOTTOM_CENTER" layoutX="76.0" layoutY="132.0" mnemonicParsing="false" onAction="#onUpgradeClicked" prefHeight="58.0" prefWidth="174.0" text="UPGRADE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="63.0" AnchorPane.rightAnchor="63.0" AnchorPane.topAnchor="135.0" />
          </children>
       </AnchorPane>
@@ -675,5 +747,36 @@
             </ImageView>
          </children>
       </AnchorPane>
+<AnchorPane fx:id="globalTowerPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="480.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10; -fx-border-color: #4dd0e1; -fx-border-width: 2; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
+<children>
+    <Label alignment="CENTER" layoutX="0.0" layoutY="14.0" prefWidth="480.0" text="برج خنثی‌کننده جهانی" textFill="#4dd0e1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+        <font>
+            <Font name="System Bold" size="18.0" />
+        </font>
+    </Label>
+
+    <Label fx:id="towerStatusLabel" alignment="CENTER" layoutY="50.0" prefWidth="480.0" text="وضعیت: ساخته نشده" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+        <font>
+            <Font name="System Bold" size="14.0" />
+        </font>
+    </Label>
+
+    <Label fx:id="towerHpLabel" alignment="CENTER" layoutY="80.0" prefWidth="480.0" text="سلامت: -- / 1200" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
+
+    <ProgressBar fx:id="towerHpBar" layoutX="40.0" layoutY="105.0" prefHeight="18.0" prefWidth="400.0" progress="0.0" style="-fx-accent: #4dd0e1;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="105.0" />
+
+    <Label fx:id="towerProtectionLabel" alignment="CENTER" layoutY="135.0" prefWidth="480.0" text="" textFill="#ffcc00" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="135.0" />
+
+    <Label alignment="CENTER" layoutY="170.0" prefWidth="480.0" text="شرایط ساخت: ساختمان مرکزی سطح 5 و پژوهشکده سطح 5" textFill="#bfa15f" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="170.0" />
+
+    <Label alignment="CENTER" layoutY="205.0" prefWidth="480.0" text="هزینه: 25000 چوب | 18000 سنگ | 12000 آهن | 8000 باروت | 5000 آب سالم | 5000 خاک سالم" textFill="#bfa15f" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="205.0" />
+
+    <Label fx:id="towerRequirementWarningLabel" alignment="CENTER" layoutY="260.0" prefWidth="480.0" text="" textFill="#ff5555" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="260.0" />
+
+    <Button fx:id="buildTowerButton" alignment="CENTER" layoutX="140.0" layoutY="320.0" mnemonicParsing="false" onAction="#onBuildGlobalTowerClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: white; -fx-font-weight: bold;" text="ساخت برج" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="140.0" />
+
+    <Button fx:id="leaveTowerPanelButton" alignment="CENTER" layoutX="200.0" layoutY="365.0" mnemonicParsing="false" onAction="#onLeaveTowerPanelClicked" prefHeight="26.0" prefWidth="80.0" text="بستن" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
+</children>
+</AnchorPane>
    </children>
 </StackPane>
