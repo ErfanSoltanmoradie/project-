@@ -58,22 +58,29 @@ public class GameMap implements Serializable {
         return false;
     }
 
-    public boolean isAreaFree(int row, int column, int width, int height){
+    public boolean isAreaFree(int row, int column, int width, int height) {
 
-        if(!this.isInside(row, column))
+        if (!this.isInside(row, column))
             return false;
 
         if (!isInside(row + height - 1, column + width - 1))
             return false;
 
-        for (int i = row; i < row + height; i++) {
-            for (int j = column; j < column + width; j++) {
-                if(tiles[i][j].getBuilding() != null)
-                    return false;
+        int buffer = 1;
+
+        for (int i = row - buffer; i < row + height + buffer; i++) {
+            for (int j = column - buffer; j < column + width + buffer; j++) {
+
+                if (isInside(i, j)) {
+                    if (tiles[i][j].getBuilding() != null) {
+                        return false;
+                    }
+                }
             }
         }
         return true;
     }
+
 
     public boolean placeBuilding(Building building, int row, int column){
         if(!this.isInside(row, column))

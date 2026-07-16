@@ -20,13 +20,13 @@ public class GameCanvasView extends Canvas {
     private final Village village;
     private final GameMap gameMap;
 
-    private double tileWidth = 50;
-    private double tileHeight = 25;
+    private double tileWidth = 120;
+    private double tileHeight = 60;
     private double cameraX;
     private double cameraY;
 
-    private final double MIN_TILE_WIDTH = 15;
-    private final double MAX_TILE_WIDTH = 50;
+    private final double MIN_TILE_WIDTH = 10;
+    private final double MAX_TILE_WIDTH = 250;
 
     private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/grass.png")));
     private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree3.png")));
@@ -75,12 +75,12 @@ public class GameCanvasView extends Canvas {
 
         buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major.png"))),
-                0.8,1.1, 0.72
+                1,1, 1//0.72
         ));
 
         buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png"))),
-                1.2, 1.2, 0.72
+                /*1.2, 1.2*/1, 1, 1//0.72
         ));
         } catch(NullPointerException e) {
             System.err.println("Error loading building graphics: " + e.getMessage());
@@ -135,8 +135,8 @@ public class GameCanvasView extends Canvas {
                         double renderX = Math.floor(isoX);
                         double renderY = Math.floor(isoY);
 
-                        double renderWidth = tileWidth +12;
-                        double renderHeight = tileHeight + 12;
+                        double renderWidth = tileWidth +6;
+                        double renderHeight = tileHeight + 6;
 
                         gc.drawImage(grassTile, renderX, renderY, renderWidth, renderHeight);
                     }
@@ -152,72 +152,85 @@ public class GameCanvasView extends Canvas {
             }
         }
 
-        for (int r = 0; r < rows; r++) {
-            for (int c = cols - 1; c >= 0; c--) {
+        int maxDepth = (rows - 1) + (cols - 1);
 
-                double isoX = originX + (c - r) * (tileWidth / 2);
-                double isoY = originY + (c + r) * (tileHeight / 2);
+        for (int depth = 0; depth <= maxDepth; depth++) {
+            for (int r = 0; r <= depth; r++) {
+                int c = depth - r;
 
-                Tile tile = gameMap.getTile(r, c);
-                Tile.DecorateType deco = tile.getDecorateType();
 
-                if (deco != Tile.DecorateType.NONE) {
-                    Image currentImg = null;
-                    double wFactor = 1.0;
-                    double hFactor = 1.0;
+                if (r >= 0 && r < rows && c >= 0 && c < cols) {
 
-                    switch (deco) {
-                        case BROWN_TREE:
-                            currentImg = brownTree;
-                            wFactor = 2.0;
-                            hFactor = 4.0;
-                            break;
-                        case WHITE_TREE:
-                            currentImg = whiteTree;
-                            wFactor = 1.8;
-                            hFactor = 3.5;
-                            break;
+                    double currentTileWidth = tileWidth;
+                    double currentTileHeight = tileHeight;
+
+                    double isoX = originX + (c - r) * (currentTileWidth / 2.0);
+                    double isoY = originY + (c + r) * (currentTileHeight / 2.0);
+
+                    Tile tile = gameMap.getTile(r, c);
+
+                    // --- ۱. رسم درخت‌ها (DecorateType) ---
+                    Tile.DecorateType deco = tile.getDecorateType();
+                    if (deco != Tile.DecorateType.NONE) {
+                        Image currentImg = null;
+                        double wFactor = 1.0;
+                        double hFactor = 1.0;
+
+                        switch (deco) {
+                            case BROWN_TREE:
+                                currentImg = brownTree;
+                                wFactor = 2.0;
+                                hFactor = 4.0;
+                                break;
+                            case WHITE_TREE:
+                                currentImg = whiteTree;
+                                wFactor = 1.8;
+                                hFactor = 3.5;
+                                break;
+                        }
+
+                        if (currentImg != null) {
+                            double customWidth = currentTileWidth * wFactor;
+                            double customHeight = currentTileHeight * hFactor;
+
+                            double offsetX = isoX - (customWidth - currentTileWidth) / 2;
+                            double offsetY = isoY - (customHeight - currentTileHeight);
+
+                            gc.drawImage(currentImg, Math.round(offsetX), Math.round(offsetY), Math.round(customWidth), Math.round(customHeight));
+                        }
                     }
 
-                    if (currentImg != null) {
-                        double customWidth = tileWidth * wFactor;
-                        double customHeight = tileHeight * hFactor;
 
-                        double offsetX = isoX - (customWidth - tileWidth) / 2;
-                        double offsetY = isoY - (customHeight - tileHeight);
+                    if (tile.getBuilding() != null) {
+                        Building b = tile.getBuilding();
+                        Coordinate pos = b.getPosition();
 
-                        gc.drawImage(currentImg, offsetX, offsetY, customWidth, customHeight);
-                    }
-                }
+                        int bW = b.getWidth();
+                        int bH = b.getHeight();
 
+                        int bottomRow = pos.getX() + bH - 1;
+                        int bottomCol = pos.getY() + bW - 1;
 
-                if (tile.getBuilding() != null) {
-                    Building b = tile.getBuilding();
-                    Coordinate pos = b.getPosition();
+                        if (r == bottomRow && c == bottomCol) {
+                            BuildingGraphicProperties props = buildingGraphics.get(b.getType());
 
-                    if (pos.getX() == r && pos.getY() == c) {
-                        BuildingGraphicProperties props = buildingGraphics.get(b.getType());
+                            if (props != null && props.image != null) {
 
-                        if (props != null && props.image != null && !props.image.isError()) {
-                            int bW = b.getWidth();
-                            int bH = b.getHeight();
+                                double tileX = originX + (pos.getY() - pos.getX()) * (currentTileWidth / 2.0);
+                                double tileY = originY + (pos.getY() + pos.getX()) * (currentTileHeight / 2.0);
 
-                            int bottomRow = r + bH - 1;
-                            int bottomCol = c + bW - 1;
+                                double bottomX = tileX + ((bW - bH) * (currentTileWidth / 2.0));
+                                double bottomY = tileY + ((bW + bH) * (currentTileHeight / 2.0));
 
-                            double baseBottomX = originX + (bottomCol - bottomRow) * (tileWidth / 2);
-                            double baseBottomY = originY + (bottomCol + bottomRow) * (tileHeight / 2) + tileHeight;
+                                double zoomFactor = currentTileWidth / 120.0;
+                                double imgWidth = props.image.getWidth() * zoomFactor * props.widthScale;
+                                double imgHeight = props.image.getHeight() * zoomFactor * props.heightScale;
 
-                            double customWidth = tileWidth * Math.max(bW, bH) * 1.0 * props.widthScale;
+                                double offsetX = bottomX - (imgWidth / 2.0);
+                                double offsetY = bottomY - imgHeight;
 
-                            double imageRatio = props.image.getHeight() / props.image.getWidth();
-                            double customHeight = customWidth * imageRatio * props.heightScale;
-
-                            double offsetX = baseBottomX - (customWidth / 2);
-
-                            double offsetY = baseBottomY - (customHeight * props.yOffsetScale);
-
-                            gc.drawImage(props.image, offsetX, offsetY, customWidth, customHeight);
+                                gc.drawImage(props.image, Math.round(offsetX), Math.round(offsetY), Math.round(imgWidth), Math.round(imgHeight));
+                            }
                         }
                     }
                 }
