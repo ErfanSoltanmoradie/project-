@@ -16,7 +16,7 @@ public class Laboratory extends Building implements Serializable {
     private static final Map<Integer, UpgradeBuildingInfo> upgradeLaboratoryBuildingsCost;
 
     public Laboratory(BuildingType type, Coordinate position) {
-        super(type, position, 2, 2);
+        super(type, position, 7, 7);
 
     }
 

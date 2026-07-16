@@ -76,6 +76,19 @@ public class GameCanvasView extends Canvas {
 
         buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png"))), 1, 1, 1));
+
+        buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/lab.png"))), 1, 1, 1));
+
+        buildingGraphics.put(BuildingType.WATER_PURIFIER, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/water-purifier.png"))), 1, 1, 1));
+
+            buildingGraphics.put(BuildingType.SOIL_PURIFIER, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/soil-purifier.png"))), 1, 1, 1));
+
+            buildingGraphics.put(BuildingType.BARRACKS, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/barrack.png"))), 1, 1, 1));
+
         } catch(NullPointerException e) {
             System.err.println("Error loading building graphics: " + e.getMessage());
         }
@@ -96,7 +109,7 @@ public class GameCanvasView extends Canvas {
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, width, height);
 
-        gc.setFill(Color.web("#4c7828"));
+        gc.setFill(Color.web("#000415"));
         gc.fillRect(0, 0, width, height);
 
         gc.setImageSmoothing(false);
@@ -112,7 +125,7 @@ public class GameCanvasView extends Canvas {
         for (int r = -padding; r < rows + padding; r++) {
             for (int c = -padding; c < cols + padding; c++) {
 
-                double isoX = originX + (c - r) * (tileWidth / 2);
+                double isoX = originX + (c - r) * (tileWidth / 2);  // that is how we turn 2D into 2.5 D
                 double isoY = originY + (c + r) * (tileHeight / 2);
 
                 if (isoX < -tileWidth || isoX > width || isoY < -tileHeight || isoY > height) {

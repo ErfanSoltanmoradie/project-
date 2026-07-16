@@ -283,6 +283,59 @@
                <content>
                   <HBox fx:id="addBuildingHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="318.0" prefWidth="1426.0" spacing="10.0">
                      <children>
+                        <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="250.0">
+                           <children>
+                              <Button fx:id="barrackBuildButton" mnemonicParsing="false" onAction="#oneBarrackBuildClicked" prefHeight="325.0" prefWidth="270.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="175.0" fitWidth="212.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../barrack.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                           </children>
+                        </VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="250.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onSoilPurifierBuildClicked" prefHeight="327.0" prefWidth="0.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="181.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../soil-purifier.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="250.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onLabBuildClicked" prefHeight="327.0" prefWidth="0.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="181.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../lab.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin></VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="250.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onWaterPurifierBuildClicked" prefHeight="325.0" prefWidth="270.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="201.0" fitWidth="206.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../water-purifier.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                           </children></VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="280.0">
                            <children>
                               <Button fx:id="researchCenter" mnemonicParsing="false" onAction="#onResearchCenterBuildClicked" prefHeight="318.0" prefWidth="275.0" style="-fx-background-color: transparent;">
@@ -367,12 +420,6 @@
                            </children></VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
                            <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
-                              <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
-                           <children>
                               <ImageView fitHeight="137.0" fitWidth="121.0" preserveRatio="true" />
                               <Label prefHeight="32.0" prefWidth="132.0" text="Label" />
                               <Button fx:id="StoneMineBuildButton1" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
@@ -382,12 +429,6 @@
                               <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
                               <Label prefHeight="32.0" prefWidth="132.0" text="Army Producer" />
                               <Button fx:id="armyProducerBuildButton" mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="228.0" prefWidth="120.0">
-                           <children>
-                              <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label prefHeight="32.0" prefWidth="132.0" text="Barrack" />
-                              <Button fx:id="barrackBuildButton" mnemonicParsing="false" onAction="#oneBarrackBuildClicked" prefHeight="39.0" prefWidth="120.0" text="BUILD" />
                            </children></VBox>
 
                      </children>

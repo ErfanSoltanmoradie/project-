@@ -1096,6 +1096,30 @@ public class VillageController {
     }
 
     @FXML
+    private  void onLabBuildClicked(){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.LABORATORY);
+        }
+    }
+
+    @FXML
+    private void onWaterPurifierBuildClicked(){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.WATER_PURIFIER);
+        }
+    }
+
+    @FXML
+    private void onSoilPurifierBuildClicked(){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.SOIL_PURIFIER);
+        }
+    }
+
+    @FXML
     private void onResearchCenterBuildClicked(){
         if(controller != null){
             this.hideAddBuildingPanel();

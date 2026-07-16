@@ -1,5 +1,6 @@
 package service.map;
 
+import javafx.scene.Node;
 import model.building.Building;
 import model.building.Plant;
 import model.world.Coordinate;
@@ -10,13 +11,11 @@ public class GameMap implements Serializable {
 
     private final int rows;
     private final int columns;
-    private final int tileSize;
     private final Tile[][] tiles;
 
-    public GameMap(int rows, int columns, int tileSize) {
+    public GameMap(int rows, int columns) {
         this.columns = columns;
         this.rows = rows;
-        this.tileSize = tileSize;
         tiles = new Tile[rows][columns];
         this.createTiles();
     }
@@ -26,6 +25,7 @@ public class GameMap implements Serializable {
 
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
+
                 tiles[i][j] = new Tile(i, j);
 
                 if (i < borderSize || i >= this.rows - borderSize|| j < borderSize || j >= this.columns - borderSize) {
@@ -47,6 +47,8 @@ public class GameMap implements Serializable {
                             tiles[i][j].setDecorateType(Tile.DecorateType.BROWN_TREE);
                         }
                     }
+                }else{
+                    tiles[i][j].setType(Tile.Type.PLAYABLE);
                 }
             }
         }
@@ -63,13 +65,13 @@ public class GameMap implements Serializable {
         if (!this.isInside(row, column))
             return false;
 
-        if (!isInside(row + height - 1, column + width - 1))
+        if (!isInside(row + height - 1, column + width - 1))  // -1 is because that row and col starts in 0
             return false;
 
-        int buffer = 1;
+        int protection = 2;
 
-        for (int i = row - buffer; i < row + height + buffer; i++) {
-            for (int j = column - buffer; j < column + width + buffer; j++) {
+        for (int i = row - protection; i < row + height + protection; i++) {
+            for (int j = column - protection; j < column + width + protection; j++) {
 
                 if (isInside(i, j)) {
                     if (tiles[i][j].getBuilding() != null) {
@@ -144,10 +146,6 @@ public class GameMap implements Serializable {
 
     public int getColumns() {
         return columns;
-    }
-
-    public int getTileSize() {
-        return tileSize;
     }
 
     public Tile getTile(int row , int column) {

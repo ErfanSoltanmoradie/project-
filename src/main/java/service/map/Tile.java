@@ -30,6 +30,7 @@ public class Tile implements Serializable {
         this.row = row;
         this.building = null;  // ----> it means that area is free
         this.plant = null;
+
     }
 
     public DecorateType getDecorateType() {

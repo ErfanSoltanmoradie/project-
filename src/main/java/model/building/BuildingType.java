@@ -10,8 +10,8 @@ public enum BuildingType {
     DIRTY_WATER_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
     DIRTY_SOIL_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
 
-    WATER_PURIFIER(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
-    SOIL_PURIFIER(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
+    WATER_PURIFIER(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),8, 8),
+    SOIL_PURIFIER(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),8, 8),
 
     GUNPOWDER_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
     REFINERY(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
@@ -26,9 +26,9 @@ public enum BuildingType {
     BALLISTA_DEFENSIVE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
     CATAPULT_DEFENSIVE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
     SENTINEL_DEFENSIVE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
-    BARRACKS(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
+    BARRACKS(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),9, 9),
 
-    LABORATORY(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
+    LABORATORY(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),7, 7),
     RESEARCH_CENTER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),7, 7),
     ARMY_PRODUCER(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
     MAJOR_BUILDING(new Cost(3000, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),10, 10),
