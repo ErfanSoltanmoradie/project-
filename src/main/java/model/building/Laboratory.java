@@ -20,17 +20,17 @@ public class Laboratory extends Building implements Serializable {
     static {
         upgradeLaboratoryBuildingsCost = new HashMap<>();
 
-        upgradeLaboratoryBuildingsCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
+        upgradeLaboratoryBuildingsCost.put(1, new UpgradeBuildingInfo(
+                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
-        upgradeLaboratoryBuildingsCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
+        upgradeLaboratoryBuildingsCost.put(2, new UpgradeBuildingInfo(
+                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
 
-        upgradeLaboratoryBuildingsCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
+        upgradeLaboratoryBuildingsCost.put(3, new UpgradeBuildingInfo(
+                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
 
-        upgradeLaboratoryBuildingsCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
+        upgradeLaboratoryBuildingsCost.put(4, new UpgradeBuildingInfo(
+                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
     }
 
     public static UpgradeBuildingInfo upgradeBuildingInfo(int level){

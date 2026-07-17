@@ -13,6 +13,9 @@ public class Cost  implements Serializable {
     private final int coin;
     private final Duration neededTime;
 
+    private int requiredScienceLevel = 1;
+    private int requiredMajorBuildingLevel = 1;
+
     public Cost(int wood, int stone, int iron, int gunPowder,
                 int cleanWater, int cleanSoil, int coin, Duration neededTime) {
 
@@ -24,6 +27,21 @@ public class Cost  implements Serializable {
         this.coin = coin;
         this.stone = stone;
         this.neededTime = neededTime;
+    }
+
+    public Cost(int requiredMajorBuildingLevel, int requiredScienceLevel, int wood, int stone, int iron, int gunPowder,
+                int cleanWater, int cleanSoil, int coin, Duration neededTime) {
+
+        this.wood = wood;
+        this.iron = iron;
+        this.gunPowder = gunPowder;
+        this.cleanWater = cleanWater;
+        this.cleanSoil = cleanSoil;
+        this.coin = coin;
+        this.stone = stone;
+        this.neededTime = neededTime;
+        this.requiredMajorBuildingLevel = requiredMajorBuildingLevel;
+        this.requiredScienceLevel = requiredScienceLevel;
     }
 
 
@@ -100,5 +118,21 @@ public class Cost  implements Serializable {
 
     public Duration getNeededTime() {
         return neededTime;
+    }
+
+    public int getRequiredMajorBuildingLevel() {
+        return requiredMajorBuildingLevel;
+    }
+
+    public void setRequiredMajorBuildingLevel(int requiredMajorBuildingLevel) {
+        this.requiredMajorBuildingLevel = requiredMajorBuildingLevel;
+    }
+
+    public int getRequiredScienceLevel() {
+        return requiredScienceLevel;
+    }
+
+    public void setRequiredScienceLevel(int requiredScienceLevel) {
+        this.requiredScienceLevel = requiredScienceLevel;
     }
 }

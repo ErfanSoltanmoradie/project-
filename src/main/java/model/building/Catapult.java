@@ -16,17 +16,17 @@ public class Catapult extends  DefensiveBuilding implements Serializable {
     static {
         upgradeCatapultCost = new HashMap<>();
 
-        upgradeCatapultCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
+        upgradeCatapultCost.put(1, new UpgradeBuildingInfo(
+                new Cost(1 ,1,10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
 
-        upgradeCatapultCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeCatapultCost.put(2, new UpgradeBuildingInfo(
+                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
 
-        upgradeCatapultCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeCatapultCost.put(3, new UpgradeBuildingInfo(
+                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
 
-        upgradeCatapultCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeCatapultCost.put(4, new UpgradeBuildingInfo(
+                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
     }
     public static UpgradeBuildingInfo getCatapultUpgradeInfo(int currentLevel){
         return Catapult.upgradeCatapultCost.get(currentLevel);
