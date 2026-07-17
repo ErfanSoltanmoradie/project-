@@ -57,6 +57,7 @@ public class Start {
         this.gameState.setPhaseTwoEnforced(loaded.isPhaseTwoEnforced());
         this.gameState.setGameWinner(loaded.getGameWinner());
         if (this.gameState.getGameStartTime() == null) {
+
             this.gameState.setGameStartTime(Instant.now());
         }
 
