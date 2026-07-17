@@ -32,6 +32,7 @@ import service.alliance.AllianceService;
 import service.battle.BattleManagement;
 import service.battle.BattleTravelTime;
 import service.buildings.BuildingsManagement;
+import service.filehandeling.GameState;
 import service.resource.ResourcesManagement;
 import service.trade.TradeOffer;
 import service.trade.TradeService;
@@ -39,6 +40,8 @@ import service.trade.TradeStatus;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -46,6 +49,7 @@ public class VillageController {
 
     private PlayerRepository playerRepository;
     private int lastSeenAnnouncementCount = 0;
+    private GameState gameState;
 
     public PlayerRepository getPlayerRepository() {
         return playerRepository;
@@ -221,15 +225,15 @@ public class VillageController {
 
     @FXML private Button makeADealButton;
 
-    @FXML AnchorPane makeATradePanel;
+    @FXML private AnchorPane makeATradePanel;
 
-    @FXML TextField receiveIronTextField;
+    @FXML private TextField receiveIronTextField;
 
-    @FXML TextField sendWoodTextField;
+    @FXML private TextField sendWoodTextField;
 
-    @FXML Button MakeADealButton;
+    @FXML private Button MakeADealButton;
 
-    @FXML Button receivedtraderequests;
+    @FXML private Button receivedtraderequests;
 
     @FXML AnchorPane receivedTradeRequestsPanel;
 
@@ -263,15 +267,17 @@ public class VillageController {
 
     @FXML AnchorPane battleHistoryPannel;
 
-    @FXML Button towerButton;
     @FXML AnchorPane globalTowerPanel;
+    @FXML Button towerButton;
     @FXML Label towerStatusLabel;
     @FXML Label towerHpLabel;
     @FXML ProgressBar towerHpBar;
-    @FXML Label towerProtectionLabel;
     @FXML Label towerRequirementWarningLabel;
     @FXML Button buildTowerButton;
     @FXML Button leaveTowerPanelButton;
+    @FXML Button confirmTowerBuildButton;
+    @FXML private WinnerController winnerViewController;
+    @FXML private EliminatedController eliminatedViewController;
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -286,6 +292,8 @@ public class VillageController {
     private Map<UUID, Player> traders = new HashMap<>();
     private List<Player> allowedToAlliance = new ArrayList<>();
     private List<Player> enemies = new ArrayList<>();
+    private boolean winnerWindowShown = false;
+    private boolean eliminatedWindowShown = false;
 
     public void setPlayer(Player player) {
         if (player == null) {
@@ -1294,11 +1302,10 @@ public class VillageController {
             neutralizationPowerLabel.setVisible(false);
         }
 
-        //  مدیریت دکمه آپگرید (متن و وضعیت فعال/غیرفعال بودن)
         boolean isMaxLevel = Cost.upgradeCost(building).isMaxLevelReached();
 
         if (isMaxLevel) {
-            this.upgradeButton.setText("حداکثر سطح");
+            this.upgradeButton.setText("Maximum level");
             this.upgradeButton.setDisable(true);
         } else {
             this.upgradeButton.setText("Upgrade " + building.getType().toString() + " (Lvl " + building.getLevel() + ")");
@@ -1409,7 +1416,12 @@ public class VillageController {
     }
 
     @FXML
-    private void onBuildGlobalTowerClicked(){
+    private void onBuildGlobalTowerClicked() {
+        if (gameState == null || gameState.getPhaseTwoStartTime() == null) {
+            refreshGlobalTowerPanel();
+            return;
+        }
+
         BuildingsManagement buildingsManagement = this.controller.getBuildingsManagement();
 
         if (!buildingsManagement.canBuildGlobalTower()) {
@@ -1421,14 +1433,14 @@ public class VillageController {
         this.controller.enterGlobalTowerBuildMode();
     }
 
-    private void showGlobalTowerPanel(){
-        this.globalTowerPanel.setVisible(true);
-        this.globalTowerPanel.setManaged(true);
+    private void showGlobalTowerPanel() {
+        globalTowerPanel.setVisible(true);
+        globalTowerPanel.setManaged(true);
     }
 
-    public void hideGlobalTowerPanel(){
-        this.globalTowerPanel.setVisible(false);
-        this.globalTowerPanel.setManaged(false);
+    private void hideGlobalTowerPanel() {
+        globalTowerPanel.setVisible(false);
+        globalTowerPanel.setManaged(false);
     }
 
     private void refreshGlobalTowerPanel(){
@@ -1437,39 +1449,43 @@ public class VillageController {
 
         if (tower == null || !tower.isActive()) {
 
-            this.towerStatusLabel.setText(tower != null ? "Status: destroyed" : "Status: not built ");
-            this.towerHpLabel.setText("health: -- / " + (tower != null ? tower.getMaxHp() : 1200));
+            this.towerStatusLabel.setText(tower != null ? "Status: destroyed" : "Status: not built");
+            this.towerHpLabel.setText("Health: -- / " + (tower != null ? tower.getMaxHp() : 1200));
             this.towerHpBar.setProgress(0);
-            this.towerProtectionLabel.setText("");
+
+            if (gameState.getPhaseTwoStartTime() == null) {
+                this.buildTowerButton.setDisable(true);
+                this.towerRequirementWarningLabel.setText("Global Tower is unlocked after Phase 2 begins.");
+                return;
+            }
 
             boolean canBuild = buildingsManagement.canBuildGlobalTower();
             this.buildTowerButton.setDisable(!canBuild);
-            this.buildTowerButton.setVisible(true);
             this.towerRequirementWarningLabel.setText(canBuild
                     ? ""
-                    : "(The construction requirements are not fully met (the main building and the research center must be at level 5, and you need sufficient resources).");
+                    : "Requirements not met yet (Major Building & Research Center must be level 5, and you need enough resources).");
 
         } else {
 
-            this.towerStatusLabel.setText("Status: active");
+            if (tower.isUnderProtection()) {
+                long secondsLeft = tower.getRemainingProtection().getSeconds();
+                this.towerStatusLabel.setText("Status: active — PROTECTED (" + secondsLeft + "s left, elimination risk if destroyed now)");
+                this.towerStatusLabel.setTextFill(javafx.scene.paint.Color.web("#4dd0e1"));
+            } else {
+                this.towerStatusLabel.setText("Status: active — unprotected (destruction just costs the tower, rebuildable)");
+                this.towerStatusLabel.setTextFill(javafx.scene.paint.Color.WHITE);
+            }
+
             this.towerHpLabel.setText("Health: " + tower.getHp() + " / " + tower.getMaxHp());
             this.towerHpBar.setProgress((double) tower.getHp() / tower.getMaxHp());
 
-            java.time.LocalDateTime completeTime = tower.getConstructionCompleteTime();
-            if (completeTime != null) {
-                java.time.LocalDateTime protectionEnds = completeTime.plusHours(24);
-                if (java.time.LocalDateTime.now().isBefore(protectionEnds)) {
-                    long minutesLeft = java.time.Duration.between(java.time.LocalDateTime.now(), protectionEnds).toMinutes();
-                    this.towerProtectionLabel.setText("in protecting: " + minutesLeft + "remained ");
-                } else {
-                    this.towerProtectionLabel.setText("");
-                }
-            }
-
             this.buildTowerButton.setDisable(true);
-            this.buildTowerButton.setVisible(false);
             this.towerRequirementWarningLabel.setText("");
         }
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     private void updateResourcesUI(){
@@ -1502,6 +1518,27 @@ public class VillageController {
 
                 taskProcessor.process();
 
+                if (!eliminatedWindowShown
+                        && playerRepository != null
+                        && player != null
+                        && !playerRepository.isPlayerExists(player.getPlayerId())) {
+
+                    eliminatedWindowShown = true;
+                    stopGameLoop(gameLoop);
+                    eliminatedViewController.show(player.getEliminationReason());
+                    return;
+                }
+
+                if (!winnerWindowShown
+                        && gameState != null
+                        && gameState.isPhaseTwoEnforced()) {
+
+                    winnerWindowShown = true;
+                    stopGameLoop(gameLoop);
+                    winnerViewController.show(gameState.getGameWinner());
+                    return;
+                }
+
                 updateShopButtonsAvailability();
                 checkBuildingButtonsLimit();
 
@@ -1525,9 +1562,13 @@ public class VillageController {
                     gameCanvasView.draw();
                 }
 
+                if (globalTowerPanel.isVisible()) {
+                    refreshGlobalTowerPanel();
+                }
+
                 int currentAnnouncementCount = model.finalPart.GlobalTowerAnnouncer.getAnnouncementCount();
                 if (currentAnnouncementCount > lastSeenAnnouncementCount) {
-                    java.util.List<String> announcements = model.finalPart.GlobalTowerAnnouncer.getAnnouncements();
+                    List<String> announcements = model.finalPart.GlobalTowerAnnouncer.getAnnouncements();
                     String latest = announcements.get(announcements.size() - 1);
                     towerAnnouncementLabel.setText(latest);
                     towerAnnouncementLabel.setVisible(true);

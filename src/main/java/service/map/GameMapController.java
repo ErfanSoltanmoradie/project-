@@ -183,7 +183,6 @@ public class GameMapController {
                 villageController.hideAllianceRequestsPanel();
                 villageController.hideAttackPanel();
                 villageController.hideAttackHistoryPanel();
-                villageController.hideGlobalTowerPanel();
             }
         }
     }

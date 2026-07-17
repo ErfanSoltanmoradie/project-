@@ -112,8 +112,10 @@ public class AuthController {
         }
 
         VillageController villageController = loader.getController();
-        villageController.setPlayer(player);
+
+        villageController.setGameState(start.getGameState());
         villageController.setPlayerRepository(this.playerRepository);
+        villageController.setPlayer(player);
 
         Stage stage = new Stage();
         Scene scene = new Scene(root, 800, 600);

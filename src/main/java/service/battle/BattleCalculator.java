@@ -5,6 +5,7 @@ import model.battle.Battle;
 import model.battle.BattleArmy;
 import model.battle.BattleWinner;
 import model.building.*;
+import model.finalPart.GlobalTower;
 import model.resources.Resources;
 import model.resources.ResourcesType;
 import model.time.TaskResult;
@@ -158,10 +159,27 @@ public class BattleCalculator {
 
         Village defenderVillage = battle.getDefenderVillage();
 
-        taskResult.getVillageHealthChange().put(defenderVillage.getVillageId(), 250);
+        defenderVillage.getLock().writeLock().lock();
+        try {
+            taskResult.getVillageHealthChange().put(defenderVillage.getVillageId(), 250);
 
-        if (defenderVillage.getGlobalTower() != null && defenderVillage.getGlobalTower().isActive()) {
-            defenderVillage.getGlobalTower().damageTower(400);
+            GlobalTower tower = defenderVillage.getGlobalTower();
+            if (tower != null && tower.isActive()) {
+                boolean wasUnderProtection = tower.isUnderProtection();
+                boolean destroyed = tower.damageTower(400);
+                if (destroyed) {
+                    defenderVillage.getGameMap().removeGlobalTower(tower);
+                    tower.setPosition(null);
+
+                    // اگر برج در طول ۲۴ ساعت اول پس از تکمیل ساخت نابود شود،
+                    // دهکده باید از بازی حذف شود (نه صرفاً امکان بازسازی برج)
+                    if (wasUnderProtection) {
+                        defenderVillage.setPendingTowerElimination(true);
+                    }
+                }
+            }
+        } finally {
+            defenderVillage.getLock().writeLock().unlock();
         }
     }
 

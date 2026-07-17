@@ -201,6 +201,7 @@ public class BuildingsManagement{
         if (village.getGlobalTower() != null && village.getGlobalTower().isActive()) {
             return false;
         }
+        if (village.isPendingTowerElimination()) return false;
 
         for (TimedOperation operation : village.getTimedOperation().values()) {
             if (operation instanceof BuildGlobalTowerTask) {
@@ -222,7 +223,7 @@ public class BuildingsManagement{
     }
 
     private Cost getGlobalTowerCost(){
-        return new Cost(25000, 18000, 12000, 8000, 5000, 5000, 0, Duration.ofHours(18));
+        return new Cost(25000, 18000, 12000, 8000, 5000, 5000, 0, Duration.ofSeconds(10));
     }
 
     public void buildGlobalTower(Coordinate coordinate){
@@ -231,7 +232,7 @@ public class BuildingsManagement{
             if(!canBuildGlobalTower()) throw new IllegalStateException("Cannot build global tower");
             Cost towerCost = getGlobalTowerCost();
             resources.withdrawResourcesCost(towerCost);
-            BuildGlobalTowerTask towerTask = new BuildGlobalTowerTask(Instant.now(), Duration.ofHours(18), village, coordinate);
+            BuildGlobalTowerTask towerTask = new BuildGlobalTowerTask(Instant.now(), Duration.ofSeconds(10), village, coordinate);
             village.getTimedOperation().put(towerTask.getId(), towerTask);
         } finally {
             village.getLock().writeLock().unlock();

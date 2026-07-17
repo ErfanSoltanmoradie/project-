@@ -1,44 +1,18 @@
 package model.user;
 
-
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.MinerBuilding;
 import model.player.Player;
 import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
 import model.repository.UserRepository;
-import model.resources.ResourcesType;
 import model.world.WorldMap;
 import service.filehandeling.GameInitializer;
 import service.filehandeling.GameState;
 import service.filehandeling.LoadService;
 import service.filehandeling.SaveService;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.MinerBuilding;
-import model.player.Player;
-import model.player.PlayerFactory;
-import model.repository.PlayerRepository;
-import model.repository.UserRepository;
-import model.resources.ResourcesType;
-import model.world.WorldMap;
-import service.filehandeling.GameInitializer;
-import service.filehandeling.GameState;
-import service.filehandeling.LoadService;
-import service.filehandeling.SaveService;
 import service.gameManager.GameManager;
 
 import java.io.File;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -79,8 +53,10 @@ public class Start {
         this.gameState.setPlayer(loaded.getPlayers());
         this.gameState.setGameStartTime(loaded.getGameStartTime());
         this.gameState.setPhaseOneEnforced(loaded.isPhaseOneEnforced());
-
-          if (this.gameState.getGameStartTime() == null) {
+        this.gameState.setPhaseTwoStartTime(loaded.getPhaseTwoStartTime());
+        this.gameState.setPhaseTwoEnforced(loaded.isPhaseTwoEnforced());
+        this.gameState.setGameWinner(loaded.getGameWinner());
+        if (this.gameState.getGameStartTime() == null) {
             this.gameState.setGameStartTime(Instant.now());
         }
 
@@ -94,6 +70,7 @@ public class Start {
     }
 
     private void startPhaseOneWatcher() {
+
         this.phaseOneScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "phase-one-watcher");
             t.setDaemon(true);
@@ -102,28 +79,52 @@ public class Start {
 
         this.phaseOneScheduler.scheduleAtFixedRate(() -> {
             try {
+
+                // پایان فاز اول
                 List<String> eliminated = GameManager.checkAndEnforcePhaseOneEnd(
-                        this.gameState, this.playerRepository, this.userRepository, this.worldMap);
+                        this.gameState,
+                        this.playerRepository,
+                        this.userRepository,
+                        this.worldMap);
 
                 if (!eliminated.isEmpty()) {
                     System.out.println("Phase 1 ended. Eliminated players: " + eliminated);
                     this.saveAllData();
                 }
 
-                boolean phaseTwoWasEnforced = this.gameState.isPhaseTwoEnforced();
+                // حذف بازیکنانی که برجشان در بازه‌ی حفاظت ۲۴ ساعته نابود شده
+                List<String> towerEliminated = GameManager.checkAndEnforceTowerEliminations(
+                        this.playerRepository,
+                        this.userRepository,
+                        this.worldMap);
 
-                String winner = GameManager.checkAndEnforcePhaseTwoEnd(
-                        this.gameState, this.playerRepository, this.userRepository, this.worldMap);
-
-                if (!phaseTwoWasEnforced && this.gameState.isPhaseTwoEnforced()) {
-                    System.out.println("Phase 2 ended. Winner: " + (winner != null ? winner : "NONE"));
+                if (!towerEliminated.isEmpty()) {
+                    System.out.println("Eliminated due to tower destroyed during protection window: " + towerEliminated);
                     this.saveAllData();
+                }
+
+                // فقط اگر فاز دوم شروع شده باشد، پایان بازی را بررسی کن
+                if (GameManager.isPhaseTwoStarted(this.gameState)) {
+
+                    boolean phaseTwoWasEnforced = this.gameState.isPhaseTwoEnforced();
+
+                    String winner = GameManager.checkAndEnforcePhaseTwoEnd(
+                            this.gameState,
+                            this.playerRepository,
+                            this.userRepository,
+                            this.worldMap);
+
+                    if (!phaseTwoWasEnforced && this.gameState.isPhaseTwoEnforced()) {
+                        System.out.println("Phase 2 ended. Winner: "
+                                + (winner != null ? winner : "NONE"));
+                        this.saveAllData();
+                    }
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 1, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     public void stopPhaseOneWatcher() {
@@ -212,4 +213,9 @@ public class Start {
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
 }
