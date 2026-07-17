@@ -24,7 +24,7 @@ public class Barrack extends Building implements Serializable {
         upgradeBarrackCost.put(2, new UpgradeBuildingInfo(1 ,1,
                 new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
 
-        upgradeBarrackCost.put(3, new UpgradeBuildingInfo(1 ,1,
+        upgradeBarrackCost.put(3, new UpgradeBuildingInfo(4 ,4,
                 new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
 
         upgradeBarrackCost.put(4, new UpgradeBuildingInfo(1 ,1,

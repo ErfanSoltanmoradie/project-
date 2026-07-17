@@ -85,16 +85,16 @@ public class Village implements Serializable {
         this.getArmies().getArmyStorage().increaseArmy(ArmyType.ROSOO, 5);
 
         Customhouse customhouse = new Customhouse(BuildingType.CUSTOMHOUSE, new Coordinate(20,  10));
-        MajorBuilding majorBuilding = new MajorBuilding(BuildingType.MAJOR_BUILDING, new Coordinate(12, 15));
-        ResearchCenter researchCenter = new ResearchCenter(BuildingType.RESEARCH_CENTER, new Coordinate(5, 9));
-        ArmyProducer armyProducer = new ArmyProducer(BuildingType.ARMY_PRODUCER, new Coordinate(1, 5));
-        Barrack barrack = new Barrack(BuildingType.BARRACKS, new Coordinate(6, 19));
-        majorBuilding.setLevel(5);
-        researchCenter.setLevel(5);
-        this.getBuildings().put(barrack.getId(), barrack);
-        this.getBuildings().put(armyProducer.getId(), armyProducer);
-        this.getBuildings().put(majorBuilding.getId(), majorBuilding);
-        this.getBuildings().put(researchCenter.getId(), researchCenter);
+        //MajorBuilding majorBuilding = new MajorBuilding(BuildingType.MAJOR_BUILDING, new Coordinate(12, 15));
+        //ResearchCenter researchCenter = new ResearchCenter(BuildingType.RESEARCH_CENTER, new Coordinate(5, 9));
+       // ArmyProducer armyProducer = new ArmyProducer(BuildingType.ARMY_PRODUCER, new Coordinate(1, 5));
+        //Barrack barrack = new Barrack(BuildingType.BARRACKS, new Coordinate(6, 19));
+        //majorBuilding.setLevel(5);
+        //researchCenter.setLevel(5);
+        //this.getBuildings().put(barrack.getId(), barrack);
+        //this.getBuildings().put(armyProducer.getId(), armyProducer);
+        //this.getBuildings().put(majorBuilding.getId(), majorBuilding);
+        //this.getBuildings().put(researchCenter.getId(), researchCenter);
         this.getBuildings().put(customhouse.getId(), customhouse);
     }
 

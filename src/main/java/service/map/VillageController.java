@@ -50,7 +50,7 @@ import service.trade.TradeOffer;
 import service.trade.TradeService;
 import service.trade.TradeStatus;
 
-import java.awt.event.MouseEvent;
+
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
@@ -320,9 +320,13 @@ public class VillageController {
 
     @FXML AnchorPane barracksDecisionPanel;
 
-
+    @FXML AnchorPane addPlantPanel;
     //@FXML private ImageView borderImageView;
 
+    @FXML Label healthAmountLabel;
+
+    @FXML Label usernameLabel2;
+    @FXML ProgressBar healthProgressBar;
 
     @FXML Button towerButton;
     @FXML AnchorPane globalTowerPanel;
@@ -361,8 +365,30 @@ public class VillageController {
         this.updateResourcesUI();
         this.taskProcessor = new TaskProcessor(player.getVillage());
 
+        this.usernameLabel2.setText(null);
+        this.usernameLabel2.setText(this.player.getUsername());
+
         initMap();
         startGameLoop();
+    }
+
+    private void healthProgressBar(){
+        this.healthAmountLabel.setText(null);
+        this.healthAmountLabel.setText(String.valueOf(this.checkHealth()));
+
+        this.healthProgressBar.setMaxWidth(Double.MAX_VALUE);
+        this.healthProgressBar.setProgress(this.checkHealth());
+        this.healthProgressBar.getStyleClass().add("neon-progress-bar");
+        this.healthProgressBar.setStyle("-fx-accent: #ff0202;");
+    }
+
+    private int checkHealth(){
+        this.player.getVillage().getLock().readLock().lock();
+        try {
+            return this.player.getVillage().getHealth();
+        }finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
     }
 
     private void initMap() {
@@ -577,78 +603,88 @@ public class VillageController {
     }
 
     private HBox createTradeRequestsRowElement(TradeOffer offer) {
-
         TradeService tradeService = new TradeService();
 
         HBox row = new HBox();
         row.setSpacing(15);
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         row.setStyle("-fx-padding: 12; " +
                 "-fx-background-color: #2b2b2b; " +
                 "-fx-background-radius: 8; " +
                 "-fx-border-color: #444444; " +
-                "-fx-border-width: 1; " +
-                "-fx-alignment: CENTER_LEFT;");
+                "-fx-border-width: 1;");
 
         VBox senderContainer = new VBox();
         senderContainer.setSpacing(4);
-
+        senderContainer.setMinWidth(120);
+        senderContainer.setPrefWidth(120);
 
         String senderName = offer.getSenderVillage().getUserName();
-        Label senderLabel = new Label("SENDER PLAYER [ " + senderName + " ]");
+        Label senderLabel = new Label(senderName + " ➔ YOU");
         senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
 
-        Label timeLabel = new Label("TRANSFER TIME: " + offer.getTradeTime() + " seconds");
-        timeLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
+        Label timeLabel = new Label("Time: " + offer.getTradeTime() + "s");
+        timeLabel.setStyle("-fx-text-fill: #f5e9e9; -fx-font-size: 11px;");
 
         senderContainer.getChildren().addAll(senderLabel, timeLabel);
 
+        VBox offeredResourcesContainer = new VBox();
+        offeredResourcesContainer.setSpacing(4);
+        offeredResourcesContainer.setMinWidth(140);
 
-        VBox resourcesContainer = new VBox();
-        resourcesContainer.setSpacing(4);
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #00ff0b; -fx-font-size: 11px; -fx-font-weight: bold;");
+                offeredResourcesContainer.getChildren().add(label);
+            }
+        }
 
+        VBox requestedResourcesContainer = new VBox();
+        requestedResourcesContainer.setSpacing(4);
+        requestedResourcesContainer.setMinWidth(100);
 
-        String offeredStr = String.valueOf(offer.getOfferedResources().get(ResourcesType.WOOD));
-        String requestedStr = String.valueOf(offer.getRequestedResources().get(ResourcesType.IRON));
-
-        Label receiveLabel = new Label("RECEIVE: " + offeredStr);
-        receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
-
-        Label payLabel = new Label("SEND: " + requestedStr);
-        payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
-
-        resourcesContainer.getChildren().addAll(receiveLabel, payLabel);
-
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #ff1000; -fx-font-size: 11px; -fx-font-weight: bold;");
+                requestedResourcesContainer.getChildren().add(label);
+            }
+        }
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-
         HBox actionButtons = new HBox(8);
         actionButtons.setStyle("-fx-alignment: CENTER_RIGHT;");
 
-
         Button acceptBtn = new Button("ACCEPT");
-        acceptBtn.setStyle("-fx-background-color: #4CAF50; " +
+        acceptBtn.setMinWidth(75);
+        acceptBtn.setPrefWidth(75);
+        acceptBtn.setStyle("-fx-background-color: #00ff0a; " +
                 "-fx-text-fill: white; " +
                 "-fx-font-weight: bold; " +
                 "-fx-background-radius: 5; " +
                 "-fx-cursor: hand;");
         acceptBtn.setOnAction(e -> {
-
             System.out.println("ACCEPTED");
             tradeService.acceptOffer(offer);
         });
 
-
         Button rejectBtn = new Button("REJECT");
-        rejectBtn.setStyle("-fx-background-color: #f44336; " +
+        rejectBtn.setMinWidth(75);
+        rejectBtn.setPrefWidth(75);
+        rejectBtn.setStyle("-fx-background-color: #ff1200; " +
                 "-fx-text-fill: white; " +
                 "-fx-font-weight: bold; " +
                 "-fx-background-radius: 5; " +
                 "-fx-cursor: hand;");
         rejectBtn.setOnAction(e -> {
-
             tradeService.rejectOffer(offer);
             System.out.println("REJECTED");
         });
@@ -1062,6 +1098,14 @@ public class VillageController {
         this.sendWaterTextField.clear();
     }
 
+
+    @FXML
+    private void onBuildPlantClicked(){
+        this.showAddPlantPanel();
+        this.hideShopPanel();
+    }
+
+
     @FXML
     private void onReceivedTradeRequests(){
         this.hideTradePanel();
@@ -1076,14 +1120,11 @@ public class VillageController {
             return;
         }
 
-        // اگر گیاهی انتخاب شده باشد، آن را حذف یا مدیریت می‌کند
         if (this.controller.getSelectedPlant() != null) {
             var selectedPlant = this.controller.getSelectedPlant();
 
-            //حذف گیاه از لیست دهکده بازیکن
             this.player.getVillage().getPlants().remove(selectedPlant.getId());
 
-            // آزاد کردن تایل نقشه از گیاه قبلی
             this.player.getVillage().getGameMap().getTile(
                     selectedPlant.getPosition().getX(),
                     selectedPlant.getPosition().getY()
@@ -1253,6 +1294,7 @@ public class VillageController {
             if(showConstructionConfirmation("NRC Plant")) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.NRC);
+                this.hideAddPlantPanel();
             }
         }
     }
@@ -1264,6 +1306,7 @@ public class VillageController {
             if(showConstructionConfirmation("SNRC Plant")) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.SNRC);
+                this.hideAddPlantPanel();
             }
         }
     }
@@ -1275,6 +1318,7 @@ public class VillageController {
             if(showConstructionConfirmation("PSNRC Plant")) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.PSNRC);
+                this.hideAddPlantPanel();
             }
         }
     }
@@ -1522,7 +1566,6 @@ public class VillageController {
         buildingLevelLabel.setVisible(true);
         buildingLevelLabel.setText("Level: " + building.getLevel());
 
-        //  منطق اختصاصی مربوط به آزمایشگاه
         if (building.getType() == BuildingType.LABORATORY) {
             plantsCountLabel.setVisible(true);
             neutralizationPowerLabel.setVisible(true);
@@ -1536,12 +1579,10 @@ public class VillageController {
             }
             neutralizationPowerLabel.setText("Neutralization Power: " + totalPower);
         } else {
-            // پنهان کردن لایبل‌های گیاه برای سایر ساختمان‌ها
             plantsCountLabel.setVisible(false);
             neutralizationPowerLabel.setVisible(false);
         }
 
-        //  مدیریت دکمه آپگرید (متن و وضعیت فعال/غیرفعال بودن)
         boolean isMaxLevel = Cost.upgradeCost(building).isMaxLevelReached();
 
         if (isMaxLevel) {
@@ -1557,7 +1598,6 @@ public class VillageController {
             }
         }
 
-        //  پنل اطلاعات
         this.infoPanel.setVisible(true);
         this.infoPanel.setManaged(true);
 
@@ -1674,6 +1714,16 @@ public class VillageController {
         this.selectedBarrack = (Barrack) building;
         this.barracksDecisionPanel.setManaged(true);
         this.barracksDecisionPanel.setVisible(true);
+    }
+
+    private void showAddPlantPanel(){
+        this.addPlantPanel.setVisible(true);
+        this.addPlantPanel.setManaged(true);
+    }
+
+    public void hideAddPlantPanel(){
+        this.addPlantPanel.setVisible(false);
+        this.addPlantPanel.setManaged(false);
     }
 
     @FXML
@@ -2000,6 +2050,8 @@ public class VillageController {
                     gameCanvasView.draw();
                 }
 
+                healthProgressBar();
+
                 int currentAnnouncementCount = model.finalPart.GlobalTowerAnnouncer.getAnnouncementCount();
                 if (currentAnnouncementCount > lastSeenAnnouncementCount) {
                     java.util.List<String> announcements = model.finalPart.GlobalTowerAnnouncer.getAnnouncements();
@@ -2034,10 +2086,9 @@ public class VillageController {
                 break;
             }
         }
-        // ۲. بررسی پیش‌نیاز گیاه NRC (نیاز به آزمایشگاه لول ۱)
         if (labLevel < 1) {
             nrcBuildButton.setDisable(true);
-            nrcLabel.setText("NRC (Lab Lvl 1 Required) -> Current: " + labLevel); // در FXML شما اسمش snrcLabel است
+            nrcLabel.setText("NRC (Lab Lvl 1 Required) -> Current: " + labLevel);
             nrcLabel.setTextFill(Color.RED);
         } else {
             nrcBuildButton.setDisable(false);
@@ -2045,7 +2096,7 @@ public class VillageController {
             nrcLabel.setTextFill(Color.GREEN);
         }
 
-        // ۳. بررسی پیش‌نیاز گیاه SNRC (نیاز به آزمایشگاه لول ۲)
+
         if (labLevel < 2) {
             snrcBuildButton.setDisable(true);
             snrcLabel.setText("SNRC (Lab Lvl 2 Required) -> Current: "+ labLevel);
@@ -2056,7 +2107,6 @@ public class VillageController {
             snrcLabel.setTextFill(Color.GREEN);
         }
 
-        // ۴. بررسی پیش‌نیاز گیاه PSNRC (نیاز به آزمایشگاه لول ۳)
         if (labLevel < 3) {
             psnrcBuildButton.setDisable(true);
             psnrcLabel.setText("PSNRC (Lab Lvl 3 Required) -> Current: "+ labLevel);
@@ -2071,7 +2121,7 @@ public class VillageController {
         Cost cost = plant.getBasePlantCost();
         if (cost == null) return true;
 
-        // بررسی اینکه آیا منابع بازیکن در انبار (resourcesManagement) کافی است یا خیر
+
         boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
         if (!hasResources) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -2087,7 +2137,6 @@ public class VillageController {
         model.building.Cost cost = model.building.Cost.buildCost(type);
         if (cost == null) return true;
 
-        // بررسی اینکه آیا منابع بازیکن در انبار (resourcesManagement) کافی است یا خیر
         boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
         if (!hasResources) {
             javafx.scene.control.Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR);

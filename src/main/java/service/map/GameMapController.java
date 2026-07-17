@@ -209,9 +209,8 @@ public class GameMapController {
                 villageController.hideDecidePanel();
                 villageController.hideDecisionPanel();
                 villageController.hideDecisionBarrackPanel();
-
-
                 villageController.hideGlobalTowerPanel();
+                villageController.hideAddPlantPanel();
             }
         }
     }

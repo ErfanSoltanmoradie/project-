@@ -36,12 +36,12 @@ public class GameCanvasView extends Canvas {
     private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree3.png")));
     private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree2.png")));
     private final Image woodMineImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/WoodMine.png")));
-    private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.png")));
+    private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/researchCenter.png")));
     //private final Image customhouseImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Customhouse.png")));
     private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/NRC.png")));
     private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SNRC.png")));
     private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/PSNRC.png")));
-    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.png")));
+    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/researchCenter.png")));
 
     private final Map<BuildingType, BuildingGraphicProperties> buildingGraphics = new HashMap<>();
     private final Map<PlantType, PlantGraphicProperties> plantGraphics = new HashMap<>();
@@ -77,59 +77,47 @@ public class GameCanvasView extends Canvas {
         try {
             buildingGraphics.put(BuildingType.WOOD_MINE, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/WoodMine.png"))),
-                    1.4, 0.6, 0.75
-            ));
+                    1,1,1));
 
             buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/IronMine.png"))),
-                    1.4, 0.6, 0.75
+                    1,1,1));
 
-            ));
-
-            buildingGraphics.put(BuildingType.STONE_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/StonMine.png"))),
-                    1.4, 0.6, 0.75
-
-            ));
+            buildingGraphics.put(BuildingType.SOIL_PURIFIER, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/soilPurifier.png"))),
+                    1,1,1));
 
             buildingGraphics.put(BuildingType.GUNPOWDER_MINE, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/GunpowderMine.png"))),
-                    1.4, 0.6, 0.75
+                    1,1,1));
 
-            ));
-
-            buildingGraphics.put(BuildingType.DIRTY_WATER_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/WaterMine.png"))),
-                    1.4, 0.6, 0.75
-
-            ));
+            buildingGraphics.put(BuildingType.WATER_PURIFIER, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/waterPurifier.png"))),
+                    1,1,1));
 
             buildingGraphics.put(BuildingType.DIRTY_SOIL_MINE, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SoilMine.png"))),
-                    1.4, 0.6, 0.75
-
-            ));
+                    1,1,1));
 
             buildingGraphics.put(BuildingType.IRON_STORAGE, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/ironStorage.png"))),
-                    1.4, 0.6, 0.75
+                    1,1,1));
 
-            ));
-
-        buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major_building.png"))),
-                1.2,0.6, 0.72
-        ));
+            buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major.png"))),
+                1,1,1));
 
             buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/researchCenter.png"))),
-                    1.2, 1.2, 0.72
-            ));
+                    1,1,1));
 
             buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.png"))),
-                    1.2, 1.2, 0.72
-            ));
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/lab.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.BARRACKS, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/barrack2.png"))),
+                    1,1,1));
 
        /* buildingGraphics.put(BuildingType.CUSTOMHOUSE, new BuildingGraphicProperties(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream()))
@@ -306,34 +294,34 @@ public class GameCanvasView extends Canvas {
                                 gc.drawImage(props.image, Math.round(offsetX), Math.round(offsetY), Math.round(imgWidth), Math.round(imgHeight));
                             }
                         }
-                    }
-                } if (tile.getPlant() != null) {
-                    Plant p = tile.getPlant();
-                    Coordinate pos = p.getPosition();
+                    }if (tile.getPlant() != null) {
+                        Plant p = tile.getPlant();
+                        Coordinate pos = p.getPosition();
 
-                    if (pos.getX() == r && pos.getY() == c) {
-                        PlantGraphicProperties props = plantGraphics.get(p.getType());
+                        if (pos.getX() == r && pos.getY() == c) {
+                            PlantGraphicProperties props = plantGraphics.get(p.getType());
 
-                        if (props != null && props.image != null && !props.image.isError()) {
-                            int bW = p.getWidth();
-                            int bH = p.getHeight();
+                            if (props != null && props.image != null && !props.image.isError()) {
+                                int bW = p.getWidth();
+                                int bH = p.getHeight();
 
-                            int bottomRow = r + bH - 1;
-                            int bottomCol = c + bW - 1;
+                                int bottomRow = r + bH - 1;
+                                int bottomCol = c + bW - 1;
 
-                            double baseBottomX = originX + (bottomCol - bottomRow) * (tileWidth / 2);
-                            double baseBottomY = originY + (bottomCol + bottomRow) * (tileHeight / 2) + tileHeight;
+                                double baseBottomX = originX + (bottomCol - bottomRow) * (tileWidth / 2);
+                                double baseBottomY = originY + (bottomCol + bottomRow) * (tileHeight / 2) + tileHeight;
 
-                            double customWidth = tileWidth * Math.max(bW, bH) * 1.0 * props.widthScale;
+                                double customWidth = tileWidth * Math.max(bW, bH) * 1.0 * props.widthScale;
 
-                            double imageRatio = props.image.getHeight() / props.image.getWidth();
-                            double customHeight = customWidth * imageRatio * props.heightScale;
+                                double imageRatio = props.image.getHeight() / props.image.getWidth();
+                                double customHeight = customWidth * imageRatio * props.heightScale;
 
-                            double offsetX = baseBottomX - (customWidth / 2);
+                                double offsetX = baseBottomX - (customWidth / 2);
 
-                            double offsetY = baseBottomY - (customHeight * props.yOffsetScale);
+                                double offsetY = baseBottomY - (customHeight * props.yOffsetScale);
 
-                            gc.drawImage(props.image, offsetX, offsetY, customWidth, customHeight);
+                                gc.drawImage(props.image, offsetX, offsetY, customWidth, customHeight);
+                            }
                         }
                     }
                 }
@@ -341,7 +329,7 @@ public class GameCanvasView extends Canvas {
         }
 
         gc.setImageSmoothing(true);
-        // ۳. رسم نوار پیشرفت پروژه‌های در حال ساخت/آپگرید
+
         for (TimedOperation operation : village.getTimedOperation().values()) {
             Coordinate taskCoord = null;
 
@@ -365,16 +353,16 @@ public class GameCanvasView extends Canvas {
                 double progress = 1.0;
                 if (total > 0) progress = Math.min(1.0, (double) elapsed / total);
 
-                // رسم بک‌گراند قرمز نوار پیشرفت
+
                 gc.setFill(Color.RED);
                 gc.fillRect(isoX + tileWidth * 0.1, isoY - 15, tileWidth * 0.8, 6);
-                // رسم مقدار پر شده با رنگ سبز چرتوز
+
                 gc.setFill(Color.CHARTREUSE);
                 gc.fillRect(isoX + tileWidth * 0.1, isoY - 15, (tileWidth * 0.8) * progress, 6);
             }
         }
 
-// افکت فیلتر رادیشن روی کل صفحه
+
         double radiationFactor = 0.4;
         gc.setFill(Color.web("#3e2723", radiationFactor * 0.2));
         gc.fillRect(0, 0, width, height);

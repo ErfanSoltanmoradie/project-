@@ -25,7 +25,7 @@ public class BuildingsManagement{
 
     }
 
-    private int getMaxAllowedCount(BuildingType type) {
+    /*private int getMaxAllowedCount(BuildingType type) {
         return switch (type){
             case WOOD_MINE, STONE_MINE, IRON_MINE -> 5;
             case GUNPOWDER_MINE, DIRTY_WATER_MINE, DIRTY_SOIL_MINE,
@@ -37,7 +37,7 @@ public class BuildingsManagement{
             case MAJOR_BUILDING, RESEARCH_CENTER, CUSTOMHOUSE , LABORATORY, BARRACKS, ARMY_PRODUCER-> 1;
             default -> Integer.MAX_VALUE;
         };
-    }
+    }*/
 
     private int getCurrentBuildingCount(BuildingType type) {
         int count = 0;
@@ -59,11 +59,11 @@ public class BuildingsManagement{
         village.getLock().writeLock().lock();
         try {
             int currentCount = getCurrentBuildingCount(buildingType);
-            int maxAllowed = getMaxAllowedCount(buildingType);
+            /*int maxAllowed = getMaxAllowedCount(buildingType);
 
             if(currentCount >= maxAllowed){
                 throw new BuildingLimitExceededException(buildingType, maxAllowed);
-            }
+            }*/
 
             Cost cost = Cost.buildCost(buildingType);
 
