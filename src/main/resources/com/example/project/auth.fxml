@@ -120,7 +120,7 @@
             </VBox>
             <ImageView fitHeight="224.0" fitWidth="388.0">
                <image>
-                  <Image url="@../../../green-kadr.png" />
+                  <Image url="@../../../images/designs/green-kadr.png" />
                </image>
             </ImageView>
          </children>

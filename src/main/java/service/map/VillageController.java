@@ -321,7 +321,6 @@ public class VillageController {
     @FXML AnchorPane barracksDecisionPanel;
 
     @FXML AnchorPane addPlantPanel;
-    //@FXML private ImageView borderImageView;
 
     @FXML Label healthAmountLabel;
 
@@ -337,6 +336,9 @@ public class VillageController {
     @FXML Label towerRequirementWarningLabel;
     @FXML Button buildTowerButton;
     @FXML Button leaveTowerPanelButton;
+
+    @FXML Label radiationLabel;
+    @FXML ProgressBar radiationProgressBar;
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -377,9 +379,32 @@ public class VillageController {
         this.healthAmountLabel.setText(String.valueOf(this.checkHealth()));
 
         this.healthProgressBar.setMaxWidth(Double.MAX_VALUE);
-        this.healthProgressBar.setProgress(this.checkHealth());
+        this.healthProgressBar.setProgress( ((double) this.checkHealth() / 2000));
         this.healthProgressBar.getStyleClass().add("neon-progress-bar");
         this.healthProgressBar.setStyle("-fx-accent: #ff0202;");
+    }
+
+    private void radiationProgressBar(){
+        this.radiationLabel.setText(null);
+
+        this.radiationProgressBar.setMaxWidth(Double.MAX_VALUE);
+        this.radiationProgressBar.setProgress(checkRadiation());
+
+        this.radiationProgressBar.getStyleClass().add("neon-progress-bar");
+        this.radiationProgressBar.setStyle("-fx-accent: #38ff00;");
+    }
+
+
+
+    private double checkRadiation(){
+        this.player.getVillage().getLock().readLock().lock();
+        try {
+            this.radiationLabel.setText(String.valueOf(player.getVillage().getCloud().getRadiation()));
+
+            return  ((double) player.getVillage().getCloud().getRadiation() / 2000);
+        }finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
     }
 
     private int checkHealth(){
@@ -1098,7 +1123,6 @@ public class VillageController {
         this.sendWaterTextField.clear();
     }
 
-
     @FXML
     private void onBuildPlantClicked(){
         this.showAddPlantPanel();
@@ -1165,6 +1189,53 @@ public class VillageController {
     }
 
     @FXML
+    private void onBuildCustomHouseClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
+            if(showConstructionConfirmation("CUSTOMHOUSE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
+            }
+        }
+    }
+
+    @FXML
+    private void onBallistaBuildClicked(){
+
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.BALLISTA_DEFENSIVE)) return;
+            if(showConstructionConfirmation("BALLISTA_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.BALLISTA_DEFENSIVE);
+            }
+        }
+    }
+
+    @FXML
+    private void onSentinelBuildClicked(){
+
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.SENTINEL_DEFENSIVE)) return;
+            if(showConstructionConfirmation("SENTINEL_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.SENTINEL_DEFENSIVE);
+            }
+        }
+
+    }
+
+    @FXML
+    private void onCatapultBuildClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.CATAPULT_DEFENSIVE)) return;
+            if(showConstructionConfirmation("CATAPULT_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.CATAPULT_DEFENSIVE);
+            }
+        }
+    }
+
+    @FXML
     private void onIronMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.IRON_MINE)) return;
@@ -1219,16 +1290,6 @@ public class VillageController {
         }
     }
 
-    @FXML
-    private void onLaboratoryBuildClicked(ActionEvent actionEvent){
-        if (controller != null) {
-            if(!checkResourcesAndAlert(BuildingType.LABORATORY)) return;
-            if(showConstructionConfirmation("Laboratory")) {
-                this.hideAddBuildingPanel();
-                controller.enterBuildMode(BuildingType.LABORATORY);
-            }
-        }
-    }
 
     @FXML
     private void onCustomhouseBuildClicked(ActionEvent actionEvent) {
@@ -1254,9 +1315,12 @@ public class VillageController {
 
     @FXML
     private  void onLabBuildClicked(){
-        if(controller != null){
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.LABORATORY);
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.LABORATORY)) return;
+            if(showConstructionConfirmation("Laboratory")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.LABORATORY);
+            }
         }
     }
 
@@ -2051,6 +2115,7 @@ public class VillageController {
                 }
 
                 healthProgressBar();
+                radiationProgressBar();
 
                 int currentAnnouncementCount = model.finalPart.GlobalTowerAnnouncer.getAnnouncementCount();
                 if (currentAnnouncementCount > lastSeenAnnouncementCount) {

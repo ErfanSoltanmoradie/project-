@@ -39,6 +39,7 @@ public class BuildingFactory{
 
             case LABORATORY ->  new Laboratory(BuildingType.LABORATORY, buildTask.getCoordinate());
 
+            case CUSTOMHOUSE -> new Customhouse(BuildingType.CUSTOMHOUSE, buildTask.getCoordinate());
 
             // more building need to be added
             default -> null;

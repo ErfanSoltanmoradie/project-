@@ -32,15 +32,15 @@ public class GameCanvasView extends Canvas {
     private final double MIN_TILE_WIDTH = 10;
     private final double MAX_TILE_WIDTH = 250;
 
-    private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/grass.png")));
-    private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree3.png")));
-    private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree2.png")));
-    private final Image woodMineImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/WoodMine.png")));
-    private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/researchCenter.png")));
+    private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/grass.png")));
+    private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/tree3.png")));
+    private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/tree2.png")));
+    private final Image woodMineImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine.png")));
+    private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png")));
     //private final Image customhouseImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Customhouse.png")));
-    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/NRC.png")));
-    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SNRC.png")));
-    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/PSNRC.png")));
+    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/NRC.png")));
+    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/SNRC.png")));
+    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/PSNRC.png")));
     //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/researchCenter.png")));
 
     private final Map<BuildingType, BuildingGraphicProperties> buildingGraphics = new HashMap<>();
@@ -76,52 +76,79 @@ public class GameCanvasView extends Canvas {
     private void loadBuildingGraphic() {
         try {
             buildingGraphics.put(BuildingType.WOOD_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/WoodMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/IronMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/IronMine.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.SOIL_PURIFIER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/soilPurifier.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/soilPurifier.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.GUNPOWDER_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/GunpowderMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/GunpowderMine.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.WATER_PURIFIER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/waterPurifier.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/waterPurifier.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.DIRTY_SOIL_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SoilMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.IRON_STORAGE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/ironStorage.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/ironStorage.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major.png"))),
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/major2.png"))),
                 1,1,1));
 
             buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/researchCenter.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/lab.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/lab.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.BARRACKS, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/barrack2.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/barrack.png"))),
                     1,1,1));
 
-       /* buildingGraphics.put(BuildingType.CUSTOMHOUSE, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream()))
-        )) */
+            buildingGraphics.put(BuildingType.ARMY_PRODUCER, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/armyProducer.png"))),
+                    1,1,1));
+
+
+            buildingGraphics.put(BuildingType.CATAPULT_DEFENSIVE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/catapult.png"))),
+                    1,1,1));
+
+
+            buildingGraphics.put(BuildingType.DIRTY_WATER_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WaterMine.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.CUSTOMHOUSE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/customs.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.SENTINEL_DEFENSIVE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/sentinel.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.BALLISTA_DEFENSIVE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/ballista.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.STONE_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/StonMine.png"))),
+                    1,1,1));
+
         } catch(NullPointerException e) {
             System.err.println("Error loading building graphics: " + e.getMessage());
         }
@@ -131,17 +158,17 @@ public class GameCanvasView extends Canvas {
     public void loadPlantGraphic(){
         try {
             plantGraphics.put(PlantType.NRC, new PlantGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/NRC.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/NRC.png"))),
                     1.2,1.2,0.72
             ));
 
             plantGraphics.put(PlantType.SNRC, new PlantGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SNRC.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/SNRC.png"))),
                     1.2,1.2,0.72
             ));
 
             plantGraphics.put(PlantType.PSNRC, new PlantGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/PSNRC.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/PSNRC.png"))),
                     1.2,1.2,0.72
             ));
         }catch(NullPointerException e) {

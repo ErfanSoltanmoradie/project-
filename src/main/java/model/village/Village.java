@@ -76,26 +76,8 @@ public class Village implements Serializable {
 
         this.activeBattles = new HashMap<>();
         this.battleHistory = new LinkedList<>();
-        //this.battleHistory = new HashMap<>();
 
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
-
-        this.getArmies().getArmyStorage().increaseArmy(ArmyType.RAGNAR, 4);
-        this.getArmies().getArmyStorage().increaseArmy(ArmyType.LAGERTA, 4);
-        this.getArmies().getArmyStorage().increaseArmy(ArmyType.ROSOO, 5);
-
-        Customhouse customhouse = new Customhouse(BuildingType.CUSTOMHOUSE, new Coordinate(20,  10));
-        //MajorBuilding majorBuilding = new MajorBuilding(BuildingType.MAJOR_BUILDING, new Coordinate(12, 15));
-        //ResearchCenter researchCenter = new ResearchCenter(BuildingType.RESEARCH_CENTER, new Coordinate(5, 9));
-       // ArmyProducer armyProducer = new ArmyProducer(BuildingType.ARMY_PRODUCER, new Coordinate(1, 5));
-        //Barrack barrack = new Barrack(BuildingType.BARRACKS, new Coordinate(6, 19));
-        //majorBuilding.setLevel(5);
-        //researchCenter.setLevel(5);
-        //this.getBuildings().put(barrack.getId(), barrack);
-        //this.getBuildings().put(armyProducer.getId(), armyProducer);
-        //this.getBuildings().put(majorBuilding.getId(), majorBuilding);
-        //this.getBuildings().put(researchCenter.getId(), researchCenter);
-        this.getBuildings().put(customhouse.getId(), customhouse);
     }
 
     public void runTimeServices(){  // we want the logic after loading the game

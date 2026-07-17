@@ -11,7 +11,7 @@ public class Customhouse extends Building {
     private static final Map<Integer, UpgradeBuildingInfo> upgradeCustomhouseBuildingsCost;
 
     public Customhouse(BuildingType type, Coordinate position) {
-        super(type, position, 1, 1);
+        super(type, position, 9, 9);
 
     }
     static {
