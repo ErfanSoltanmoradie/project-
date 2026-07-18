@@ -366,8 +366,6 @@ public class TaskProcessor {
                                 battle.getDefenderUsername(),
                                 battle.getAttackerUsername());
 
-                        /*battle.getAttackerVillage().getBattleHistory().put(history.getBattleId(), history);
-                        battle.getDefenderVillage().getBattleHistory().put(history.getBattleId(), history);*/
                         battle.getAttackerVillage().getBattleHistory().add(history);
                         battle.getDefenderVillage().getBattleHistory().add(history);
 

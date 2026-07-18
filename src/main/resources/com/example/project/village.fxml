@@ -83,20 +83,6 @@
                   </ImageView>
                </graphic>
             </Button>
-            <AnchorPane fx:id="decisionPanel" layoutX="14.0" layoutY="513.0" prefHeight="57.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="555.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#onManageArmyDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;         -fx-letter-spacing: 2px;          -fx-cursor: hand; " text="manage army">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                  </Button>
-                  <Button layoutX="106.0" mnemonicParsing="false" onAction="#onUpgradeDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;      ;    -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="upgrade">
-                     <font>
-                        <Font size="11.0" />
-                     </font>
-                  </Button>
-               </children>
-            </AnchorPane>
             <AnchorPane layoutX="435.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="443.0" prefWidth="194.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
                <children>
@@ -222,25 +208,31 @@
                               </ImageView>
                            </children>
                         </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="195.0">
+                           <children>
+                              <StackPane prefHeight="77.0" prefWidth="161.0">
+                                 <children>
+                                    <ProgressBar fx:id="coinProgressBar" prefHeight="25.0" prefWidth="180.0" progress="0.0">
+                                       <styleClass>
+                                          <String fx:value="resource-progress" />
+                                          <String fx:value="wood-progress" />
+                                       </styleClass>
+                                    </ProgressBar>
+                                    <Label fx:id="coinLabel" alignment="CENTER" style="-fx-text-fill: white;     -fx-font-size: 14px;     -fx-font-weight: bold;     -fx-effect: dropshadow( three-pass-box, black, 2, 0.5, 0, 1 ); " styleClass="resource-label" />
+                                 </children>
+                              </StackPane>
+                              <ImageView fitHeight="34.0" fitWidth="32.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-18_03-28-57.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="barracksDecisionPanel" layoutX="270.0" layoutY="462.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="216.0" visible="false" AnchorPane.bottomAnchor="93.0" AnchorPane.rightAnchor="294.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#onManageBarracksDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;         -fx-letter-spacing: 2px;          -fx-cursor: hand; " text="manage ">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                  </Button>
-                  <Button layoutX="111.0" mnemonicParsing="false" onAction="#onUpgradeBarracksDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;      ;    -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="upgrade">
-                     <font>
-                        <Font size="11.0" />
-                     </font>
-                  </Button>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="usernameLabel" layoutX="-2.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="107.0" prefWidth="235.0">
+            <AnchorPane fx:id="usernameLabel" layoutX="-2.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="107.0" prefWidth="235.0" AnchorPane.leftAnchor="-2.0" AnchorPane.topAnchor="14.0">
                <children>
                   <Label fx:id="usernameLabel2" alignment="CENTER" prefHeight="26.0" prefWidth="235.0" style="                       -fx-font-size: 12px;                       -fx-font-weight: bold;                       -fx-text-fill: #f8cf00;                       -fx-effect: dropshadow(three-pass-box, rgb(181 0 255 / 0.78), 3, 0, 0, 0);" text="Label" />
                   <ProgressBar fx:id="healthProgressBar" layoutX="36.0" layoutY="29.0" prefHeight="20.0" prefWidth="193.0" progress="0.0" />
@@ -906,5 +898,213 @@
             <Button fx:id="leaveTowerPanelButton" alignment="CENTER" layoutX="200.0" layoutY="365.0" mnemonicParsing="false" onAction="#onLeaveTowerPanelClicked" prefHeight="26.0" prefWidth="80.0" text="بستن" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
          </children>
       </AnchorPane>
+      <AnchorPane fx:id="sellResourcesPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="651.0" style="-fx-background-color: transparent;" visible="false">
+         <children>
+            <ScrollPane layoutX="29.0" layoutY="33.0" prefHeight="362.0" prefWidth="587.0" style="-fx-background: #000415;">
+               <content>
+                  <VBox prefHeight="414.0" prefWidth="563.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="543.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="89.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/wood.png" />
+                                 </image>
+                              </ImageView>
+                              <TextField fx:id="sellWoodTextField" alignment="CENTER" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #181826;                -fx-text-fill: #39ff14;                               -fx-border-color: #ba55d3;                                                 -fx-effect: dropshadow(three-pass-box, #8a2be2, 8, 0.5, 0, 0);" />
+                              <ImageView fitHeight="55.0" fitWidth="69.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-18_03-28-57.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="115.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="receivedCoinFromSellingWood" alignment="CENTER" prefHeight="52.0" prefWidth="143.0" style="                       -fx-font-size: 12px;                       -fx-font-weight: bold;                       -fx-text-fill: #f8cf00;                       -fx-effect: dropshadow(three-pass-box, rgb(181 0 255 / 0.78), 3, 0, 0, 0);" text="Received Coin" />
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="538.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="89.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-13_16-20-04.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </ImageView>
+                              <TextField fx:id="sellIronTextField" alignment="CENTER" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #181826;                -fx-text-fill: #39ff14;                               -fx-border-color: #ba55d3;                                                 -fx-effect: dropshadow(three-pass-box, #8a2be2, 8, 0.5, 0, 0);" />
+                              <ImageView fitHeight="55.0" fitWidth="69.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-18_03-28-57.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="115.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="receivedCoinFromSellingIron" alignment="CENTER" prefHeight="52.0" prefWidth="143.0" style="                       -fx-font-size: 12px;                       -fx-font-weight: bold;                       -fx-text-fill: #f8cf00;                       -fx-effect: dropshadow(three-pass-box, rgb(181 0 255 / 0.78), 3, 0, 0, 0);" text="Received Coin" />
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="543.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="89.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-13_16-20-17.png" />
+                                 </image>
+                              </ImageView>
+                              <TextField fx:id="sellStoneTextField" alignment="CENTER" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #181826;                -fx-text-fill: #39ff14;                               -fx-border-color: #ba55d3;                                                 -fx-effect: dropshadow(three-pass-box, #8a2be2, 8, 0.5, 0, 0);" />
+                              <ImageView fitHeight="55.0" fitWidth="69.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-18_03-28-57.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="115.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="receivedCoinFromSellingStone" alignment="CENTER" prefHeight="52.0" prefWidth="143.0" style="                       -fx-font-size: 12px;                       -fx-font-weight: bold;                       -fx-text-fill: #f8cf00;                       -fx-effect: dropshadow(three-pass-box, rgb(181 0 255 / 0.78), 3, 0, 0, 0);" text="Received Coin" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="543.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="89.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-13_16-20-11.png" />
+                                 </image>
+                              </ImageView>
+                              <TextField fx:id="sellGunPowderTextField" alignment="CENTER" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #181826;                -fx-text-fill: #39ff14;                               -fx-border-color: #ba55d3;                                                 -fx-effect: dropshadow(three-pass-box, #8a2be2, 8, 0.5, 0, 0);" />
+                              <ImageView fitHeight="55.0" fitWidth="69.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-18_03-28-57.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="115.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="receivedCoinFromSellingGunPowder" alignment="CENTER" prefHeight="52.0" prefWidth="143.0" style="                       -fx-font-size: 12px;                       -fx-font-weight: bold;                       -fx-text-fill: #f8cf00;                       -fx-effect: dropshadow(three-pass-box, rgb(181 0 255 / 0.78), 3, 0, 0, 0);" text="Received Coin" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="543.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="93.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-13_16-20-20.png" />
+                                 </image>
+                              </ImageView>
+                              <TextField fx:id="sellWaterTextField" alignment="CENTER" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #181826;                -fx-text-fill: #39ff14;                               -fx-border-color: #ba55d3;                                                 -fx-effect: dropshadow(three-pass-box, #8a2be2, 8, 0.5, 0, 0);" />
+                              <ImageView fitHeight="55.0" fitWidth="69.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-18_03-28-57.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="115.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="receivedCoinFromSellingWater" alignment="CENTER" prefHeight="52.0" prefWidth="143.0" style="                       -fx-font-size: 12px;                       -fx-font-weight: bold;                       -fx-text-fill: #f8cf00;                       -fx-effect: dropshadow(three-pass-box, rgb(181 0 255 / 0.78), 3, 0, 0, 0);" text="Received Coin" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="108.0" prefWidth="543.0">
+                           <children>
+                              <ImageView fitHeight="70.0" fitWidth="89.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-13_16-20-14.png" />
+                                 </image>
+                              </ImageView>
+                              <TextField fx:id="sellSoilTextField" alignment="CENTER" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #181826;                -fx-text-fill: #39ff14;                               -fx-border-color: #ba55d3;                                                 -fx-effect: dropshadow(three-pass-box, #8a2be2, 8, 0.5, 0, 0);" />
+                              <ImageView fitHeight="55.0" fitWidth="69.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../../../images/icons/photo_2026-07-18_03-28-57.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="115.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label fx:id="receivedCoinFromSellingSoil" alignment="CENTER" prefHeight="52.0" prefWidth="143.0" style="                       -fx-font-size: 12px;                       -fx-font-weight: bold;                       -fx-text-fill: #f8cf00;                       -fx-effect: dropshadow(three-pass-box, rgb(181 0 255 / 0.78), 3, 0, 0, 0);" text="Received Coin" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="30.0" top="20.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ImageView fitHeight="424.0" fitWidth="644.0">
+               <image>
+                  <Image url="@../../../images/designs/special-kadr.png" />
+               </image>
+            </ImageView>
+            <Button alignment="TOP_CENTER" layoutX="270.0" layoutY="379.0" mnemonicParsing="false" onAction="#onMakeASellDealClicked" prefHeight="32.0" prefWidth="105.0" style="-fx-background-color: #120024; -fx-text-fill: #e0aaff; -fx-border-color: #bd00ff; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-radius: 5px;  -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.6), 10, 0, 0, 0);" text="TRADE">
+               <font>
+                  <Font size="4.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <HBox fx:id="decisionCustomhousePanel" alignment="BOTTOM_CENTER" pickOnBounds="false" prefHeight="66.0" prefWidth="765.0" visible="false">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onManageCostumeHouseDecisionClicked" prefHeight="41.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;         -fx-letter-spacing: 2px;          -fx-cursor: hand; " text="Sell Resources">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#onUpgradeCustomhouseDecisionClicked" prefHeight="41.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;      ;    -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="upgrade">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
+         </children>
+         <StackPane.margin>
+            <Insets bottom="100.0" />
+         </StackPane.margin>
+      </HBox>
+      <HBox fx:id="barracksDecisionPanel" alignment="BOTTOM_CENTER" pickOnBounds="false" prefHeight="100.0" prefWidth="200.0" visible="false">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onManageBarracksDecisionClicked" prefHeight="41.0" prefWidth="112.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;         -fx-letter-spacing: 2px;          -fx-cursor: hand; " text="manage ">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#onUpgradeBarracksDecisionClicked" prefHeight="41.0" prefWidth="114.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;      ;    -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="upgrade">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
+         </children>
+         <StackPane.margin>
+            <Insets bottom="100.0" />
+         </StackPane.margin>
+      </HBox>
+      <HBox fx:id="decisionPanel" alignment="BOTTOM_CENTER" pickOnBounds="false" prefHeight="100.0" prefWidth="200.0" visible="false">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onManageArmyDecisionClicked" prefHeight="41.0" prefWidth="105.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;         -fx-letter-spacing: 2px;          -fx-cursor: hand; " text="manage army">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#onUpgradeDecisionClicked" prefHeight="41.0" prefWidth="114.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #331a1a, #0b140b);    -fx-border-color: #ff0000;     -fx-border-width: 1.5;     -fx-border-radius: 5;     -fx-background-radius: 5;     -fx-text-fill: #39ff14;      ;    -fx-letter-spacing: 2px;     -fx-padding: 10 30 10 30;     -fx-cursor: hand; " text="upgrade">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Button>
+         </children>
+         <StackPane.margin>
+            <Insets bottom="120.0" />
+         </StackPane.margin>
+      </HBox>
    </children>
 </StackPane>

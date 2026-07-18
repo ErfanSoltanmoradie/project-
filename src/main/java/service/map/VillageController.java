@@ -4,15 +4,11 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -20,9 +16,6 @@ import javafx.stage.StageStyle;
 import model.battle.BattleArmy;
 import model.battle.BattleHistory;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -51,8 +44,6 @@ import service.trade.TradeService;
 import service.trade.TradeStatus;
 
 
-import java.io.IOException;
-import java.time.Duration;
 import java.util.*;
 
 public class VillageController {
@@ -316,9 +307,9 @@ public class VillageController {
 
     @FXML private Button barrackBuildButton;
 
-    @FXML AnchorPane decisionPanel;
+    @FXML HBox decisionPanel;
 
-    @FXML AnchorPane barracksDecisionPanel;
+    @FXML HBox barracksDecisionPanel;
 
     @FXML AnchorPane addPlantPanel;
 
@@ -338,7 +329,32 @@ public class VillageController {
     @FXML Button leaveTowerPanelButton;
 
     @FXML Label radiationLabel;
+
     @FXML ProgressBar radiationProgressBar;
+
+    @FXML HBox decisionCustomhousePanel;
+
+
+    @FXML Label receivedCoinFromSellingStone;
+    @FXML Label receivedCoinFromSellingGunPowder;
+    @FXML Label receivedCoinFromSellingIron;
+    @FXML Label receivedCoinFromSellingWood;
+    @FXML Label receivedCoinFromSellingWater;
+    @FXML Label receivedCoinFromSellingSoil;
+
+    @FXML TextField sellWoodTextField;
+    @FXML TextField sellIronTextField;
+    @FXML TextField sellStoneTextField;
+    @FXML TextField sellGunPowderTextField;
+    @FXML TextField sellWaterTextField;
+    @FXML TextField sellSoilTextField;
+
+    @FXML AnchorPane sellResourcesPanel;
+
+    @FXML ProgressBar coinProgressBar;
+
+    @FXML Label coinLabel;
+
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -355,6 +371,8 @@ public class VillageController {
     private List<Player> enemies = new ArrayList<>();
 
     private ArmyProducer SelectedArmyProducer;
+
+    private Customhouse selectedCustomhouse;
 
     public void setPlayer(Player player) {
         if (player == null) {
@@ -1063,6 +1081,39 @@ public class VillageController {
         this.showMakeATradePanel();
     }
 
+    private int callCoin(int amount, ResourcesType resourcesType){
+        int coin=switch (resourcesType){
+            case WOOD -> amount/20;
+            case IRON -> amount/8;
+            case STONE -> amount/15;
+            case GUN_POWDER ->  amount/10;
+            case CLEAN_SOIL -> amount/10;
+            case CLEAN_WATER -> amount/10;
+            default  -> 0;
+        };
+        return coin;
+    }
+
+    private void setEmptySellRequestsField(){
+        if(this.receivedCoinFromSellingWood.getText().isEmpty()) this.receivedCoinFromSellingWood.setText("0");
+        if(this.receivedCoinFromSellingIron.getText().isEmpty()) this.receivedCoinFromSellingIron.setText("0");
+
+        if(this.receivedCoinFromSellingGunPowder.getText().isEmpty()) this.receivedCoinFromSellingGunPowder.setText("0");
+        if(this.receivedCoinFromSellingWater.getText().isEmpty()) this.receivedCoinFromSellingWater.setText("0");
+
+        if(this.receivedCoinFromSellingSoil.getText().isEmpty()) this.receivedCoinFromSellingSoil.setText("0");
+        if(this.receivedCoinFromSellingStone.getText().isEmpty()) this.receivedCoinFromSellingStone.setText("0");
+    }
+
+    private void clearSellResourcesTextFields(){
+        this.sellWoodTextField.clear();
+        this.sellWoodTextField.clear();
+        this.sellIronTextField.clear();
+        this.sellSoilTextField.clear();
+        this.sellWaterTextField.clear();
+        this.sellStoneTextField.clear();
+    }
+
     private void makeDeals(Map<ResourcesType , Integer> offeredResources, Map<ResourcesType , Integer> requestedResources){
 
         this.setEmptyTradeRequestField();
@@ -1123,6 +1174,115 @@ public class VillageController {
         this.sendWaterTextField.clear();
     }
 
+    private void setupResourceSalesListeners() {
+        sellWoodTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingWood.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingWood.setText(String.valueOf(callCoin(amount, ResourcesType.WOOD)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellIronTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingIron.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingIron.setText(String.valueOf(callCoin(amount, ResourcesType.IRON)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellStoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingStone.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingStone.setText(String.valueOf(callCoin(amount, ResourcesType.STONE)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellSoilTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingSoil.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingSoil.setText(String.valueOf(callCoin(amount, ResourcesType.CLEAN_SOIL)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellWaterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingWater.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingWater.setText(String.valueOf(callCoin(amount, ResourcesType.CLEAN_WATER)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }});
+
+        sellGunPowderTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingGunPowder.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingGunPowder.setText(String.valueOf(callCoin(amount, ResourcesType.GUN_POWDER)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }});
+    }
+
+    @FXML
+    private void onMakeASellDealClicked(){
+        this.player.getVillage().getLock().writeLock().lock();
+        try {
+            ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
+            resourcesManagement.sellResource(Integer.parseInt(sellWoodTextField.getText()), ResourcesType.WOOD);
+            resourcesManagement.sellResource(Integer.parseInt(sellIronTextField.getText()), ResourcesType.IRON);
+            resourcesManagement.sellResource(Integer.parseInt(sellGunPowderTextField.getText()), ResourcesType.GUN_POWDER);
+            resourcesManagement.sellResource(Integer.parseInt(sellWaterTextField.getText()), ResourcesType.CLEAN_WATER);
+            resourcesManagement.sellResource(Integer.parseInt(sellSoilTextField.getText()), ResourcesType.CLEAN_SOIL);
+
+            this.hideSellResourcesPanel();
+            this.hideDecisionCustomhousePanel();
+        }finally {
+            this.player.getVillage().getLock().writeLock().unlock();
+        }
+
+    }
+
+    @FXML
+    private void onUpgradeCustomhouseDecisionClicked(){
+        this.showBuildingInfo(this.selectedCustomhouse);
+        this.hideDecisionPanel();
+    }
+
+    @FXML
+    private void onManageCostumeHouseDecisionClicked(){
+        this.showSellResourcesPanel();
+
+    }
+
     @FXML
     private void onBuildPlantClicked(){
         this.showAddPlantPanel();
@@ -1155,9 +1315,11 @@ public class VillageController {
             ).setPlant(null);
 
             this.hideInfoPanel();
+            this.hideDecisionCustomhousePanel();
         } else {
             this.controller.handleUpgradeClicked();
             this.hideInfoPanel();
+            this.hideDecisionCustomhousePanel();
         }
     }
 
@@ -1427,7 +1589,6 @@ public class VillageController {
             this.hideAddBuildingPanel();
             controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
         }
-
     }
 
     @FXML
@@ -1524,6 +1685,30 @@ public class VillageController {
     private  void onUpgradeBarracksDecisionClicked(){
         this.showBuildingInfo(this.selectedBarrack);
         this.hideDecisionBarrackPanel();
+    }
+
+    @FXML
+    private void onTowerButtonClicked(){
+        this.refreshGlobalTowerPanel();
+        this.showGlobalTowerPanel();
+    }
+
+    @FXML
+    private void onLeaveTowerPanelClicked(){
+        this.hideGlobalTowerPanel();
+    }
+
+    @FXML
+    private void onBuildGlobalTowerClicked(){
+        BuildingsManagement buildingsManagement = this.controller.getBuildingsManagement();
+
+        if (!buildingsManagement.canBuildGlobalTower()) {
+            this.refreshGlobalTowerPanel();
+            return;
+        }
+
+        this.hideGlobalTowerPanel();
+        this.controller.enterGlobalTowerBuildMode();
     }
 
     public void openArmyProducer(ArmyProducer armyProducer) {
@@ -1790,29 +1975,7 @@ public class VillageController {
         this.addPlantPanel.setManaged(false);
     }
 
-    @FXML
-    private void onTowerButtonClicked(){
-        this.refreshGlobalTowerPanel();
-        this.showGlobalTowerPanel();
-    }
 
-    @FXML
-    private void onLeaveTowerPanelClicked(){
-        this.hideGlobalTowerPanel();
-    }
-
-    @FXML
-    private void onBuildGlobalTowerClicked(){
-        BuildingsManagement buildingsManagement = this.controller.getBuildingsManagement();
-
-        if (!buildingsManagement.canBuildGlobalTower()) {
-            this.refreshGlobalTowerPanel();
-            return;
-        }
-
-        this.hideGlobalTowerPanel();
-        this.controller.enterGlobalTowerBuildMode();
-    }
 
     private void showGlobalTowerPanel(){
         this.globalTowerPanel.setVisible(true);
@@ -1822,6 +1985,33 @@ public class VillageController {
     public void hideGlobalTowerPanel(){
         this.globalTowerPanel.setVisible(false);
         this.globalTowerPanel.setManaged(false);
+    }
+
+    public void showDecisionCustomhousePanel(Customhouse customhouse){
+        this.selectedCustomhouse = customhouse;
+        this.decisionCustomhousePanel.setVisible(true);
+        this.decisionCustomhousePanel.setManaged(true);
+    }
+
+    public void hideDecisionCustomhousePanel(){
+        this.decisionCustomhousePanel.setVisible(false);
+        this.decisionCustomhousePanel.setManaged(false);
+    }
+
+
+
+    public void showSellResourcesPanel(){
+        this.sellResourcesPanel.setVisible(true);
+        this.sellResourcesPanel.setManaged(true);
+
+        setEmptySellRequestsField();
+        this.setupResourceSalesListeners();
+        this.clearSellResourcesTextFields();
+    }
+
+    public void hideSellResourcesPanel(){
+        this.sellResourcesPanel.setVisible(false);
+        this.sellResourcesPanel.setManaged(false);
     }
 
     private void refreshGlobalTowerPanel(){
@@ -1867,6 +2057,7 @@ public class VillageController {
 
     private void updateResourcesUI(){
         Resources resources = this.player.getVillage().getResources();
+
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
 
         int maxWoodCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.WOOD);
@@ -1882,6 +2073,7 @@ public class VillageController {
         int currentWater = resources.getAmount(ResourcesType.CLEAN_WATER);
         int currentSoil = resources.getAmount(ResourcesType.CLEAN_SOIL);
         int currentGunPowder = resources.getAmount(ResourcesType.GUN_POWDER);
+        int currentCoin = resources.getAmount(ResourcesType.COIN);
 
         this.woodLabel.setText("" + currentWood + " / " + maxWoodCapacity);
         this.ironLabel.setText( "" + currentIron + " / " + maxIronCapacity);
@@ -1889,6 +2081,7 @@ public class VillageController {
         this.cleanWaterLabel.setText("" + currentWater + " / " + maxCleanWaterCapacity);
         this.cleanSoilLabel.setText("" + currentSoil + " / " + maxCleanSoilCapacity);
         this.gunPowderLabel.setText("" + currentGunPowder + " / " + maxGunPowderCapacity);
+        this.coinLabel.setText("" + currentCoin + " / " + 5000);
 
         if (maxWoodCapacity > 0) woodProgressBar.setProgress((double) currentWood / maxWoodCapacity);
         if (maxIronCapacity > 0) ironProgressBar.setProgress((double) currentIron / maxIronCapacity);
@@ -1896,6 +2089,8 @@ public class VillageController {
         if (maxCleanWaterCapacity > 0) cleanWaterProgressBar.setProgress((double) currentWater / maxCleanWaterCapacity);
         if (maxCleanSoilCapacity > 0) cleanSoilProgressBar.setProgress((double) currentSoil / maxCleanSoilCapacity);
         if (maxGunPowderCapacity > 0) gunPowderProgressBar.setProgress((double) currentGunPowder / maxGunPowderCapacity);
+
+        coinProgressBar.setProgress((double) currentCoin / 5000);
 
 
         this.applyWoodStyle();
@@ -1910,6 +2105,34 @@ public class VillageController {
 
         this.applyGunPowderStyle();
 
+        this.applyCoinStyle();
+
+    }
+
+    private void applyCoinStyle(){
+        coinProgressBar.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-border-color: #d2c748; " +
+                        "-fx-border-width: 1.5;"
+        );
+
+        var barLayer = coinProgressBar.lookup(".bar");
+        if (barLayer != null) {
+            barLayer.setStyle(
+
+                    "-fx-background-color: linear-gradient(to right, #e6ff04, #dab11c); " +
+                            "-fx-background-radius: 15; " +
+
+                            "-fx-effect: dropshadow(gaussian, #ffc408, 25, 0.6, 0, 0);");
+        }
+
+        var trackLayer = coinProgressBar.lookup(".track");
+        if (trackLayer != null) {
+            trackLayer.setStyle(
+                    "-fx-background-color: rgba(0, 0, 0, 0.65); " +
+                            "-fx-background-radius: 15;");
+        }
     }
 
     private void applyWoodStyle(){
@@ -1917,8 +2140,7 @@ public class VillageController {
                 "-fx-background-color: transparent; " +
                         "-fx-border-radius: 15; " +
                         "-fx-border-color: #d2a048; " +
-                        "-fx-border-width: 1.5;"
-        );
+                        "-fx-border-width: 1.5;");
 
         var barLayer = woodProgressBar.lookup(".bar");
         if (barLayer != null) {
@@ -1927,16 +2149,14 @@ public class VillageController {
                     "-fx-background-color: linear-gradient(to right, #8e6220, #dab11c); " +
                             "-fx-background-radius: 15; " +
 
-                            "-fx-effect: dropshadow(gaussian, #ffc83b, 25, 0.6, 0, 0);"
-            );
+                            "-fx-effect: dropshadow(gaussian, #ffc83b, 25, 0.6, 0, 0);");
         }
 
         var trackLayer = woodProgressBar.lookup(".track");
         if (trackLayer != null) {
             trackLayer.setStyle(
                     "-fx-background-color: rgba(0, 0, 0, 0.65); " +
-                            "-fx-background-radius: 15;"
-            );
+                            "-fx-background-radius: 15;");
         }
     }
 
@@ -1945,8 +2165,7 @@ public class VillageController {
                 "-fx-background-color: transparent; " +
                         "-fx-border-radius: 15; " +
                         "-fx-border-color: #a29e99; " +
-                        "-fx-border-width: 1.5;"
-        );
+                        "-fx-border-width: 1.5;");
 
         var barLayer = ironProgressBar.lookup(".bar");
         if (barLayer != null) {
@@ -1955,16 +2174,14 @@ public class VillageController {
                     "-fx-background-color: linear-gradient(to right, #887f6c, #bdb8a6); " +
                             "-fx-background-radius: 15; " +
 
-                            "-fx-effect: dropshadow(gaussian, #9a927c, 25, 0.6, 0, 0);"
-            );
+                            "-fx-effect: dropshadow(gaussian, #9a927c, 25, 0.6, 0, 0);");
         }
 
         var trackLayer = ironProgressBar.lookup(".track");
         if (trackLayer != null) {
             trackLayer.setStyle(
                     "-fx-background-color: rgba(0, 0, 0, 0.65); " +
-                            "-fx-background-radius: 15;"
-            );
+                            "-fx-background-radius: 15;");
         }
     }
 
@@ -1973,8 +2190,7 @@ public class VillageController {
                 "-fx-background-color: transparent; " +
                         "-fx-border-radius: 15; " +
                         "-fx-border-color: #ffe0ad; " +
-                        "-fx-border-width: 1.5;"
-        );
+                        "-fx-border-width: 1.5;");
 
         var barLayer = stoneProgressBar.lookup(".bar");
         if (barLayer != null) {
@@ -1983,16 +2199,14 @@ public class VillageController {
                     "-fx-background-color: linear-gradient(to right, #f1cf9d, #ffeeba); " +
                             "-fx-background-radius: 15; " +
 
-                            "-fx-effect: dropshadow(gaussian, #fdeab5, 25, 0.6, 0, 0);"
-            );
+                            "-fx-effect: dropshadow(gaussian, #fdeab5, 25, 0.6, 0, 0);");
         }
 
         var trackLayer = stoneProgressBar.lookup(".track");
         if (trackLayer != null) {
             trackLayer.setStyle(
                     "-fx-background-color: rgba(0, 0, 0, 0.65); " +
-                            "-fx-background-radius: 15;"
-            );
+                            "-fx-background-radius: 15;");
         }
     }
 
@@ -2001,8 +2215,7 @@ public class VillageController {
                 "-fx-background-color: transparent; " +
                         "-fx-border-radius: 15; " +
                         "-fx-border-color: #4b3917; " +
-                        "-fx-border-width: 1.5;"
-        );
+                        "-fx-border-width: 1.5;");
 
         var barLayer = cleanSoilProgressBar.lookup(".bar");
         if (barLayer != null) {
@@ -2011,16 +2224,14 @@ public class VillageController {
                     "-fx-background-color: linear-gradient(to right, #8e6220, #4f4111); " +
                             "-fx-background-radius: 15; " +
 
-                            "-fx-effect: dropshadow(gaussian, #564312, 25, 0.6, 0, 0);"
-            );
+                            "-fx-effect: dropshadow(gaussian, #564312, 25, 0.6, 0, 0);");
         }
 
         var trackLayer = cleanSoilProgressBar.lookup(".track");
         if (trackLayer != null) {
             trackLayer.setStyle(
                     "-fx-background-color: rgba(0, 0, 0, 0.65); " +
-                            "-fx-background-radius: 15;"
-            );
+                            "-fx-background-radius: 15;");
         }
     }
 
@@ -2029,8 +2240,7 @@ public class VillageController {
                 "-fx-background-color: transparent; " +
                         "-fx-border-radius: 15; " +
                         "-fx-border-color: #0df7ff; " +
-                        "-fx-border-width: 1.5;"
-        );
+                        "-fx-border-width: 1.5;");
 
         var barLayer = cleanWaterProgressBar.lookup(".bar");
         if (barLayer != null) {
@@ -2039,16 +2249,14 @@ public class VillageController {
                     "-fx-background-color: linear-gradient(to right, #208e81, #1cdad4); " +
                             "-fx-background-radius: 15; " +
 
-                            "-fx-effect: dropshadow(gaussian, #3bffdb, 25, 0.6, 0, 0);"
-            );
+                            "-fx-effect: dropshadow(gaussian, #3bffdb, 25, 0.6, 0, 0);");
         }
 
         var trackLayer = cleanWaterProgressBar.lookup(".track");
         if (trackLayer != null) {
             trackLayer.setStyle(
                     "-fx-background-color: rgba(0, 0, 0, 0.65); " +
-                            "-fx-background-radius: 15;"
-            );
+                            "-fx-background-radius: 15;");
         }
     }
 
@@ -2057,8 +2265,7 @@ public class VillageController {
                 "-fx-background-color: transparent; " +
                         "-fx-border-radius: 15; " +
                         "-fx-border-color: #56565d; " +
-                        "-fx-border-width: 1.5;"
-        );
+                        "-fx-border-width: 1.5;");
 
         var barLayer = gunPowderProgressBar.lookup(".bar");
         if (barLayer != null) {
@@ -2067,16 +2274,14 @@ public class VillageController {
                     "-fx-background-color: linear-gradient(to right, #413939, #363434); " +
                             "-fx-background-radius: 15; " +
 
-                            "-fx-effect: dropshadow(gaussian, #3f3838, 25, 0.6, 0, 0);"
-            );
+                            "-fx-effect: dropshadow(gaussian, #3f3838, 25, 0.6, 0, 0);");
         }
 
         var trackLayer = gunPowderProgressBar.lookup(".track");
         if (trackLayer != null) {
             trackLayer.setStyle(
                     "-fx-background-color: rgba(0, 0, 0, 0.65); " +
-                            "-fx-background-radius: 15;"
-            );
+                            "-fx-background-radius: 15;");
         }
     }
 
@@ -2085,6 +2290,12 @@ public class VillageController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
                 setTradeButtonEnable();
                 setAllianceButtonEnable();

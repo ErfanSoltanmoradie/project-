@@ -1,13 +1,8 @@
 package service.map;
 
-import model.building.ArmyProducer;
-import model.building.Barrack;
+import model.building.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.Plant;
-import model.building.PlantType;
 import model.finalPart.GlobalTower;
 import model.village.Village;
 import model.world.Coordinate;
@@ -178,6 +173,11 @@ public class GameMapController {
                 return;
             }
 
+            if (selectedBuilding instanceof Customhouse && villageController != null) {
+                villageController.showDecisionCustomhousePanel((Customhouse) selectedBuilding);
+                return;
+            }
+
             System.out.println("Selected: " + selectedBuilding.getType());
 
             if (villageController != null) {
@@ -211,6 +211,8 @@ public class GameMapController {
                 villageController.hideDecisionBarrackPanel();
                 villageController.hideGlobalTowerPanel();
                 villageController.hideAddPlantPanel();
+                villageController.hideDecisionCustomhousePanel();
+                villageController.hideSellResourcesPanel();
             }
         }
     }
