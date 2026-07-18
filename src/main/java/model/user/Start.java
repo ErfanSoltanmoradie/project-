@@ -81,7 +81,6 @@ public class Start {
         this.phaseOneScheduler.scheduleAtFixedRate(() -> {
             try {
 
-                // پایان فاز اول
                 List<String> eliminated = GameManager.checkAndEnforcePhaseOneEnd(
                         this.gameState,
                         this.playerRepository,
@@ -93,7 +92,6 @@ public class Start {
                     this.saveAllData();
                 }
 
-                // حذف بازیکنانی که برجشان در بازه‌ی حفاظت ۲۴ ساعته نابود شده
                 List<String> towerEliminated = GameManager.checkAndEnforceTowerEliminations(
                         this.playerRepository,
                         this.userRepository,
@@ -104,7 +102,6 @@ public class Start {
                     this.saveAllData();
                 }
 
-                // فقط اگر فاز دوم شروع شده باشد، پایان بازی را بررسی کن
                 if (GameManager.isPhaseTwoStarted(this.gameState)) {
 
                     boolean phaseTwoWasEnforced = this.gameState.isPhaseTwoEnforced();

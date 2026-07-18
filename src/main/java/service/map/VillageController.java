@@ -1775,7 +1775,7 @@ public class VillageController {
     private void setTradeButtonEnable(){
         if(BuildingsManagement.checkResearchCenterBuildingForTrade(this.player) &&
                 BuildingsManagement.checkCustomHouseBuildingForTrade(this.player)&&
-                BuildingsManagement.checkCustomHouseBuildingForTrade(this.player))
+                BuildingsManagement.checkResearchCenterBuildingForTrade(this.player))
 
             this.tradeButton.setDisable(false);
     }
@@ -2325,11 +2325,6 @@ public class VillageController {
             @Override
             public void handle(long now) {
 
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
 
                 setTradeButtonEnable();
                 setAllianceButtonEnable();

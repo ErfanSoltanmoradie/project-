@@ -178,7 +178,6 @@ public class GameManager {
 
         long elapsed = Duration.between(phaseTwoStart, Instant.now()).getSeconds();
 
-        // هنوز زمان فاز دوم تمام نشده
         if (Duration.between(phaseTwoStart, Instant.now())
                 .compareTo(PHASE_TWO_DURATION) < 0) {
             return null;

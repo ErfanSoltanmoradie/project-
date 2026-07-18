@@ -81,7 +81,7 @@ public class GameCanvasView extends Canvas {
     private void loadBuildingGraphic() {
         try {
             buildingGraphics.put(BuildingType.WOOD_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
@@ -89,7 +89,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.SOIL_PURIFIER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/soilPurifier.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/soilPurifier-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.GUNPOWDER_MINE, new BuildingGraphicProperties(
@@ -117,7 +117,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/lab.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/good-lab.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.BARRACKS, new BuildingGraphicProperties(
