@@ -7,4 +7,6 @@ public enum AuthStatus {
     WRONG_PASSWORD,
     INVALID_PASSWORD,
     INVALID_USERNAME,
+    ELIMINATED,
+    SIGNUP_CLOSED;
 }
