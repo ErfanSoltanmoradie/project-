@@ -8,15 +8,18 @@ import model.building.Building;
 import model.building.BuildingType;
 import model.building.Plant;
 import model.building.PlantType;
+import model.finalPart.GlobalTower;
+import model.time.BuildGlobalTowerTask;
 import model.time.BuildTask;
 import model.time.TimedOperation;
+import model.time.UpgradeTask;
 import model.village.Village;
 import model.world.Coordinate;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
+import java.util.UUID;
 
 
 public class GameCanvasView extends Canvas {
@@ -38,10 +41,11 @@ public class GameCanvasView extends Canvas {
     private final Image woodMineImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine.png")));
     private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png")));
     //private final Image customhouseImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Customhouse.png")));
-    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/NRC.png")));
-    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/SNRC.png")));
-    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/PSNRC.png")));
-    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/researchCenter.png")));
+    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/NRC.png")));
+    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SNRC.png")));
+    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/PSNRC.png")));
+    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.png")));
+    private Image globalTowerImage;
 
     private final Map<BuildingType, BuildingGraphicProperties> buildingGraphics = new HashMap<>();
     private final Map<PlantType, PlantGraphicProperties> plantGraphics = new HashMap<>();
@@ -68,6 +72,7 @@ public class GameCanvasView extends Canvas {
 
         loadBuildingGraphic();
         loadPlantGraphic();
+        loadGlobalTowerGraphic();
 
         widthProperty().addListener((obs, oldVal, newVal) -> draw());
         heightProperty().addListener((obs, oldVal, newVal) -> draw());
@@ -173,6 +178,15 @@ public class GameCanvasView extends Canvas {
             ));
         }catch(NullPointerException e) {
             System.err.println("Error loading plant graphics: " + e.getMessage());
+        }
+    }
+
+    private void loadGlobalTowerGraphic() {
+        try {
+            this.globalTowerImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/GlobalTower.png")));
+        } catch (NullPointerException e) {
+            System.err.println("Error loading global tower graphic (image not added yet): " + e.getMessage());
+            this.globalTowerImage = null;
         }
     }
 
@@ -356,16 +370,17 @@ public class GameCanvasView extends Canvas {
         }
 
         gc.setImageSmoothing(true);
-
         for (TimedOperation operation : village.getTimedOperation().values()) {
             Coordinate taskCoord = null;
 
             if (operation instanceof BuildTask bTask) {
                 taskCoord = bTask.getCoordinate();
-            } else if (operation instanceof model.time.UpgradeTask uTask) {
-                java.util.UUID bId = uTask.getBuildingId();
-                model.building.Building b = village.getBuildings().get(bId);
+            } else if (operation instanceof UpgradeTask uTask) {
+                UUID bId = uTask.getBuildingId();
+                Building b = village.getBuildings().get(bId);
                 if (b != null) taskCoord = b.getPosition();
+            }else if (operation instanceof BuildGlobalTowerTask towerTask) {
+                taskCoord = towerTask.getCoordinate();
             }
 
             if (taskCoord != null) {
@@ -388,8 +403,40 @@ public class GameCanvasView extends Canvas {
                 gc.fillRect(isoX + tileWidth * 0.1, isoY - 15, (tileWidth * 0.8) * progress, 6);
             }
         }
+        GlobalTower globalTower = village.getGlobalTower();
+        if (globalTower != null && globalTower.isActive() && globalTower.getPosition() != null) {
+            int towerRow = globalTower.getPosition().getX();
+            int towerCol = globalTower.getPosition().getY();
 
+            int bottomRow = towerRow + GlobalTower.HEIGHT - 1;
+            int bottomCol = towerCol + GlobalTower.WIDTH - 1;
 
+            double baseBottomX = originX + (bottomCol - bottomRow) * (tileWidth / 2);
+            double baseBottomY = originY + (bottomCol + bottomRow) * (tileHeight / 2) + tileHeight;
+
+            double customWidth = tileWidth * Math.max(GlobalTower.WIDTH, GlobalTower.HEIGHT) * 1.2;
+            double offsetX = baseBottomX - (customWidth / 2);
+
+            if (globalTowerImage != null && !globalTowerImage.isError()) {
+                double imageRatio = globalTowerImage.getHeight() / globalTowerImage.getWidth();
+                double customHeight = customWidth * imageRatio;
+                double offsetY = baseBottomY - (customHeight * 0.85);
+
+                gc.drawImage(globalTowerImage, offsetX, offsetY, customWidth, customHeight);
+            } else {
+                double placeholderHeight = tileHeight * 3;
+                double offsetY = baseBottomY - placeholderHeight;
+
+                gc.setFill(javafx.scene.paint.Color.rgb(77, 208, 225, 0.85));
+                gc.fillRoundRect(offsetX, offsetY, customWidth, placeholderHeight, 10, 10);
+                gc.setStroke(javafx.scene.paint.Color.WHITE);
+                gc.strokeRoundRect(offsetX, offsetY, customWidth, placeholderHeight, 10, 10);
+
+                gc.setFill(javafx.scene.paint.Color.WHITE);
+                gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
+                gc.fillText("TOWER", offsetX + customWidth / 2, offsetY + placeholderHeight / 2);
+            }
+        }
         double radiationFactor = 0.4;
         gc.setFill(Color.web("#3e2723", radiationFactor * 0.2));
         gc.fillRect(0, 0, width, height);

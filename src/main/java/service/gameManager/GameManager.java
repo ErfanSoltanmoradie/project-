@@ -71,7 +71,6 @@ public class GameManager {
         List<Player> snapshot = new ArrayList<>(playerRepository.getAllPlayers().values());
 
         for (Player player : snapshot) {
-
             player.getLock().writeLock().lock();
             try {
                 Village village = player.getVillage();
@@ -86,6 +85,7 @@ public class GameManager {
                 }
 
                 if (!survived) {
+                    player.setEliminationReason("Your colony failed to neutralize the cloud in time and was eliminated at the end of Phase 1.");
                     playerRepository.getAllPlayers().remove(player.getPlayerId());
                     userRepository.getAllUsers().remove(player.getUsername());
                     worldMap.releaseCoordinate(village.getCoordinate());
@@ -97,9 +97,53 @@ public class GameManager {
             }
         }
         dissolveAllAlliances(playerRepository);
-        gameState.setPhaseTwoStartTime(Instant.now());
+        if (gameState.getPhaseTwoStartTime() == null) {
+            gameState.setPhaseTwoStartTime(Instant.now());
+        }
 
         gameState.setPhaseOneEnforced(true);
+
+        System.out.println("Phase two start = " + gameState.getPhaseTwoStartTime());
+
+        return eliminatedUsernames;
+    }
+    public static List<String> checkAndEnforceTowerEliminations(PlayerRepository playerRepository,
+                                                                UserRepository userRepository,
+                                                                WorldMap worldMap) {
+
+        List<String> eliminatedUsernames = new ArrayList<>();
+
+        List<Player> snapshot = new ArrayList<>(playerRepository.getAllPlayers().values());
+
+        for (Player player : snapshot) {
+            player.getLock().writeLock().lock();
+            try {
+                Village village = player.getVillage();
+                if (village == null) continue;
+
+                boolean shouldEliminate;
+                village.getLock().writeLock().lock();
+                try {
+                    shouldEliminate = village.isPendingTowerElimination();
+                    if (shouldEliminate) {
+                        village.setPendingTowerElimination(false);
+                    }
+                } finally {
+                    village.getLock().writeLock().unlock();
+                }
+
+                if (shouldEliminate) {
+                    player.setEliminationReason("Your Global Tower was destroyed during its protectionTime. Your colony has been eliminated.");
+                    playerRepository.getAllPlayers().remove(player.getPlayerId());
+                    userRepository.getAllUsers().remove(player.getUsername());
+                    worldMap.releaseCoordinate(village.getCoordinate());
+                    eliminatedUsernames.add(player.getUsername());
+                }
+
+            } finally {
+                player.getLock().writeLock().unlock();
+            }
+        }
 
         return eliminatedUsernames;
     }
@@ -117,66 +161,108 @@ public class GameManager {
                                                     UserRepository userRepository,
                                                     WorldMap worldMap) {
 
+        if (!gameState.isPhaseOneEnforced()) {
+            return null;
+        }
+
         if (gameState.isPhaseTwoEnforced()) {
             return gameState.getGameWinner();
         }
 
         Instant phaseTwoStart = gameState.getPhaseTwoStartTime();
+
         if (phaseTwoStart == null) {
             return null;
         }
 
-        if (Duration.between(phaseTwoStart, Instant.now()).compareTo(PHASE_TWO_DURATION) < 0) {
+
+        long elapsed = Duration.between(phaseTwoStart, Instant.now()).getSeconds();
+
+        // هنوز زمان فاز دوم تمام نشده
+        if (Duration.between(phaseTwoStart, Instant.now())
+                .compareTo(PHASE_TWO_DURATION) < 0) {
             return null;
         }
 
-        List<Player> snapshot = new ArrayList<>(playerRepository.getAllPlayers().values());
+        List<Player> players =
+                new ArrayList<>(playerRepository.getAllPlayers().values());
 
         Player winnerPlayer = null;
-        Village winnerVillage = null;
+        GlobalTower winnerTower = null;
 
-        for (Player player : snapshot) {
+        boolean anyActiveTower = false;
+
+        for (Player player : players) {
+
             Village village = player.getVillage();
-            if (village == null) continue;
+
+            if (village == null)
+                continue;
 
             GlobalTower tower = village.getGlobalTower();
-            if (tower == null || !tower.isActive()) continue;
 
-            if (winnerVillage == null) {
-                winnerVillage = village;
+            if (tower == null)
+                continue;
+
+            if (!tower.isActive())
+                continue;
+
+            anyActiveTower = true;
+
+            if (winnerTower == null) {
+                winnerTower = tower;
                 winnerPlayer = player;
-            } else {
-                GlobalTower winnerTower = winnerVillage.getGlobalTower();
-                if (tower.getHp() > winnerTower.getHp()) {
-                    winnerVillage = village;
-                    winnerPlayer = player;
-                } else if (tower.getHp() == winnerTower.getHp()
-                        && tower.getConstructionCompleteTime().isBefore(winnerTower.getConstructionCompleteTime())) {
-                    winnerVillage = village;
-                    winnerPlayer = player;
-                }
+                continue;
+            }
+
+            if (tower.getHp() > winnerTower.getHp()) {
+                winnerTower = tower;
+                winnerPlayer = player;
+            }
+            else if (tower.getHp() == winnerTower.getHp()
+                    && tower.getConstructionCompleteTime()
+                    .isBefore(winnerTower.getConstructionCompleteTime())) {
+
+                winnerTower = tower;
+                winnerPlayer = player;
             }
         }
 
-        String winnerUsername = null;
+        String winner = null;
 
-        if (winnerPlayer != null) {
-            winnerUsername = winnerPlayer.getUsername();
-            System.out.println("Final winner: " + winnerUsername);
+        if (anyActiveTower) {
+
+            winner = winnerPlayer.getUsername();
+
+            System.out.println("Winner = " + winner);
+
         } else {
-            System.out.println("No active tower survived. No winner. All remaining villages are destroyed.");
-            for (Player player : snapshot) {
-                playerRepository.getAllPlayers().remove(player.getPlayerId());
-                userRepository.getAllUsers().remove(player.getUsername());
+
+            System.out.println("No active tower survived.");
+
+            for (Player player : players) {
+
+                playerRepository.getAllPlayers()
+                        .remove(player.getPlayerId());
+
+                userRepository.getAllUsers()
+                        .remove(player.getUsername());
+
                 if (player.getVillage() != null) {
-                    worldMap.releaseCoordinate(player.getVillage().getCoordinate());
+                    worldMap.releaseCoordinate(
+                            player.getVillage().getCoordinate());
                 }
             }
         }
 
-        gameState.setGameWinner(winnerUsername);
+        gameState.setGameWinner(winner);
         gameState.setPhaseTwoEnforced(true);
 
-        return winnerUsername;
+        return winner;
     }
+
+    public static boolean isPhaseTwoStarted(GameState gameState) {
+        return gameState.getPhaseTwoStartTime() != null;
+    }
+
 }

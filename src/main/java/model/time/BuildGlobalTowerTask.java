@@ -12,6 +12,7 @@ import java.time.Instant;
 public class BuildGlobalTowerTask extends TimedOperation implements Serializable{
     private final Village village;
     private final Coordinate coordinate;
+    private long buildCompletionTimestamp = 0;
 
     public BuildGlobalTowerTask(Instant startTime, Duration neededTime, Village village, Coordinate coordinate) {
         super(startTime, neededTime, TimedOperationType.BUILD_TASK);
@@ -19,9 +20,19 @@ public class BuildGlobalTowerTask extends TimedOperation implements Serializable
         this.coordinate = coordinate;
     }
 
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
     @Override
     public TaskResult execute() {
         TaskResult taskResult = new TaskResult();
+
+        GlobalTower previousTower = village.getGlobalTower();
+        if (previousTower != null) {
+            village.getGameMap().removeGlobalTower(previousTower);
+        }
+
         GlobalTower tower = new GlobalTower();
         tower.active();
         tower.setBuilderVillageUsername(village.getUserName());
@@ -32,5 +43,13 @@ public class BuildGlobalTowerTask extends TimedOperation implements Serializable
         GlobalTowerAnnouncer.announceTowerBuilt(village.getUserName());
 
         return taskResult;
+    }
+
+    public long getBuildCompletionTimestamp() {
+        return this.buildCompletionTimestamp;
+    }
+
+    public void setBuildCompletionTimestamp(long buildCompletionTimestamp) {
+        this.buildCompletionTimestamp = buildCompletionTimestamp;
     }
 }

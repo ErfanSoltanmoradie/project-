@@ -18,12 +18,7 @@
 
 <StackPane fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="596.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.map.VillageController">
    <children>
-      <Label fx:id="towerAnnouncementLabel" alignment="CENTER" managed="false" maxWidth="1.7976931348623157E308" style="-fx-background-color: rgba(11, 7, 16, 0.9); -fx-text-fill: #4dd0e1; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 8; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.5), 8, 0, 0, 0);" visible="false" StackPane.alignment="TOP_CENTER">
-         <StackPane.margin>
-            <Insets top="10.0" />
-         </StackPane.margin>
-      </Label>
-
+      <Label fx:id="towerAnnouncementLabel" alignment="CENTER" managed="false" maxWidth="400.0" style="-fx-background-color: rgba(11, 7, 16, 0.9); -fx-text-fill: #4dd0e1; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 8; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.5), 8, 0, 0, 0);" visible="false" wrapText="true" StackPane.alignment="CENTER" />
       <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
          <children>
             <Button fx:id="towerButton" layoutX="47.0" layoutY="529.0" mnemonicParsing="false" onAction="#onTowerButtonClicked" style="-fx-background-color: #0b0710; -fx-background-radius: 6; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-text-fill: white; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.4), 5, 0, 0, 0);" text="🗼 Tower" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="47.0">
@@ -80,6 +75,18 @@
                      <viewport>
                         <Rectangle2D />
                      </viewport>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="towerButton" layoutX="100.0" layoutY="366.0" mnemonicParsing="false" onAction="#onTowerButtonClicked" prefHeight="75.0" prefWidth="79.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="19.0" AnchorPane.rightAnchor="461.0">
+               <font>
+                  <Font name="System Bold Italic" size="13.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="60.0" fitWidth="64.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../../../icons/globalTower.png" />
+                     </image>
                   </ImageView>
                </graphic>
             </Button>
@@ -867,37 +874,33 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="globalTowerPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="480.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10; -fx-border-color: #4dd0e1; -fx-border-width: 2; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
-         <children>
-            <Label alignment="CENTER" layoutX="0.0" layoutY="14.0" prefWidth="480.0" text="برج خنثی‌کننده جهانی" textFill="#4dd0e1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
+       <AnchorPane fx:id="globalTowerPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="480.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10; -fx-border-color: #4dd0e1; -fx-border-width: 2; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
+           <children>
+               <Label alignment="CENTER" layoutY="14.0" prefWidth="480.0" text="Global Neutralizer Tower" textFill="#4dd0e1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+                   <font>
+                       <Font name="System Bold" size="18.0" />
+                   </font>
+               </Label>
 
-            <Label fx:id="towerStatusLabel" alignment="CENTER" layoutY="50.0" prefWidth="480.0" text="وضعیت: ساخته نشده" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
+               <Label fx:id="towerStatusLabel" alignment="CENTER" layoutY="50.0" prefWidth="480.0" text="Status: not built" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                   <font>
+                       <Font name="System Bold" size="14.0" />
+                   </font>
+               </Label>
 
-            <Label fx:id="towerHpLabel" alignment="CENTER" layoutY="80.0" prefWidth="480.0" text="سلامت: -- / 1200" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
+               <Label fx:id="towerHpLabel" alignment="CENTER" layoutY="80.0" prefWidth="480.0" text="Health: -- / 1200" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
 
-            <ProgressBar fx:id="towerHpBar" layoutX="40.0" layoutY="105.0" prefHeight="18.0" prefWidth="400.0" progress="0.0" style="-fx-accent: #4dd0e1;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="105.0" />
+               <ProgressBar fx:id="towerHpBar" layoutX="40.0" layoutY="105.0" prefHeight="18.0" prefWidth="400.0" progress="0.0" style="-fx-accent: #4dd0e1;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="105.0" />
 
-            <Label fx:id="towerProtectionLabel" alignment="CENTER" layoutY="135.0" prefWidth="480.0" text="" textFill="#ffcc00" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="135.0" />
+               <Label alignment="CENTER" layoutY="205.0" prefWidth="480.0" text="Cost: 25,000 Wood | 18,000 Stone | 12,000 Iron | 8,000 Gunpowder | 5,000 Clean Water | 5,000 Clean Soil" textFill="#bfa15f" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="205.0" />
 
-            <Label alignment="CENTER" layoutY="170.0" prefWidth="480.0" text="شرایط ساخت: ساختمان مرکزی سطح 5 و پژوهشکده سطح 5" textFill="#bfa15f" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="170.0" />
+               <Label fx:id="towerRequirementWarningLabel" alignment="CENTER" layoutY="260.0" prefWidth="480.0" text="" textFill="#ff5555" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="260.0" />
 
-            <Label alignment="CENTER" layoutY="205.0" prefWidth="480.0" text="هزینه: 25000 چوب | 18000 سنگ | 12000 آهن | 8000 باروت | 5000 آب سالم | 5000 خاک سالم" textFill="#bfa15f" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="205.0" />
+               <Button fx:id="buildTowerButton" alignment="CENTER" layoutX="140.0" layoutY="320.0" mnemonicParsing="false" onAction="#onBuildGlobalTowerClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: white; -fx-font-weight: bold;" text="Build Tower" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="140.0" />
 
-            <Label fx:id="towerRequirementWarningLabel" alignment="CENTER" layoutY="260.0" prefWidth="480.0" text="" textFill="#ff5555" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="260.0" />
-
-            <Button fx:id="buildTowerButton" alignment="CENTER" layoutX="140.0" layoutY="320.0" mnemonicParsing="false" onAction="#onBuildGlobalTowerClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: white; -fx-font-weight: bold;" text="ساخت برج" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="140.0" />
-
-            <Button fx:id="leaveTowerPanelButton" alignment="CENTER" layoutX="200.0" layoutY="365.0" mnemonicParsing="false" onAction="#onLeaveTowerPanelClicked" prefHeight="26.0" prefWidth="80.0" text="بستن" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
-         </children>
-      </AnchorPane>
+               <Button fx:id="leaveTowerPanelButton" alignment="CENTER" layoutX="200.0" layoutY="365.0" mnemonicParsing="false" onAction="#onLeaveTowerPanelClicked" prefHeight="26.0" prefWidth="80.0" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
+           </children>
+       </AnchorPane>
       <AnchorPane fx:id="sellResourcesPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="651.0" style="-fx-background-color: transparent;" visible="false">
          <children>
             <ScrollPane layoutX="29.0" layoutY="33.0" prefHeight="362.0" prefWidth="587.0" style="-fx-background: #000415;">
@@ -1106,5 +1109,7 @@
             <Insets bottom="120.0" />
          </StackPane.margin>
       </HBox>
+      <fx:include fx:id="winnerView" source="Winner.fxml" />
+      <fx:include fx:id="eliminatedView" source="Eliminated.fxml" />
    </children>
 </StackPane>

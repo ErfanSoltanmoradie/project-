@@ -1,5 +1,7 @@
 package model.building;
 
+import model.finalPart.GlobalTower;
+
 import java.time.Duration;
 
 public enum BuildingType {
@@ -35,6 +37,7 @@ public enum BuildingType {
    // PURIFICATION(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),1, 1),
 
     CUSTOMHOUSE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)), 9, 9);
+
 
     BuildingType(Cost baseBuildCost, int width, int height) {
         this.baseBuildCost = baseBuildCost;

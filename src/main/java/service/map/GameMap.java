@@ -162,6 +162,22 @@ public class GameMap implements Serializable {
         }
     }
 
+    public boolean removeGlobalTower(model.finalPart.GlobalTower tower) {
+        if (tower == null || tower.getPosition() == null) return false;
+
+        int startRow = tower.getPosition().getX();
+        int startCol = tower.getPosition().getY();
+
+        for (int i = startRow; i < startRow + model.finalPart.GlobalTower.HEIGHT; i++) {
+            for (int j = startCol; j < startCol + model.finalPart.GlobalTower.WIDTH; j++) {
+                if (isInside(i, j) && tiles[i][j].getObject() == tower) {
+                    tiles[i][j].setObject(null);
+                }
+            }
+        }
+        return true;
+    }
+
     public int getRows() {
         return rows;
     }

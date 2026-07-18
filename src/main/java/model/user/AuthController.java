@@ -206,9 +206,10 @@ public class AuthController {
             throw new RuntimeException(e);
         }
         VillageController villageController = loader.getController();
-        villageController.setPlayer(player);
 
+        villageController.setGameState(start.getGameState());
         villageController.setPlayerRepository(this.playerRepository);
+        villageController.setPlayer(player);
 
         Stage stage = new Stage();
 
