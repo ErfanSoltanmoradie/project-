@@ -20,7 +20,7 @@
                      <children>
                         <ImageView fitHeight="130.0" fitWidth="194.0" pickOnBounds="true">
                            <image>
-                              <Image url="@../../../ragnar.png" />
+                              <Image url="@../../../images/soldiers/ragnar.png" />
                            </image>
                         </ImageView>
                         <Label fx:id="ragnarCountLabel" alignment="CENTER" prefHeight="52.0" prefWidth="196.0" style="-fx-text-fill: #ff0000; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgb(255 0 0), 8, 0, 0, 0);" text="X">
@@ -33,7 +33,7 @@
                      <children>
                         <ImageView fitHeight="132.0" fitWidth="207.0" pickOnBounds="true">
                            <image>
-                              <Image url="@../../../rosoo.png" />
+                              <Image url="@../../../images/soldiers/rosoo.png" />
                            </image>
                         </ImageView>
                         <Label fx:id="rosooCountLabel" alignment="CENTER" prefHeight="52.0" prefWidth="189.0" style="-fx-text-fill: #ff0000; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgb(255 0 0), 8, 0, 0, 0);" text="X ">
@@ -46,7 +46,7 @@
                      <children>
                         <ImageView fitHeight="138.0" fitWidth="175.0" pickOnBounds="true">
                            <image>
-                              <Image url="@../../../lagerta.png" />
+                              <Image url="@../../../images/soldiers/lagerta.png" />
                            </image>
                         </ImageView>
                         <Label fx:id="lagertaCountLabel" alignment="CENTER" prefHeight="47.0" prefWidth="165.0" style="-fx-text-fill: #ff0000; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgb(255 0 0), 8, 0, 0, 0);" text="X ">
@@ -103,7 +103,7 @@
       </VBox>
       <ImageView fitHeight="531.0" fitWidth="716.0" layoutX="-12.0" layoutY="-18.0">
          <image>
-            <Image url="@../../../blue-kadr.png" />
+            <Image url="@../../../images/designs/blue-kadr.png" />
          </image>
       </ImageView>
       <Button fx:id="closeButton" layoutX="289.0" layoutY="471.0" mnemonicParsing="false" onAction="#onCloseClicked" prefHeight="25.0" prefWidth="116.0" style="-fx-background-color: #00241d; -fx-text-fill: #aafcff; -fx-border-color: #00ffea; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-radius: 5px;  -fx-font-weight: bold; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgb(0 255 255 / 0.6), 10, 0, 0, 0);" text="CLOSE" />

@@ -23,7 +23,7 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="171.0" pickOnBounds="true">
                                  <image>
-                                    <Image url="@../../../ragnar.png" />
+                                    <Image url="@../../../images/soldiers/ragnar.png" />
                                  </image>
                               </ImageView>
                            </children>
@@ -32,7 +32,7 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="166.0" pickOnBounds="true">
                                  <image>
-                                    <Image url="@../../../lagerta.png" />
+                                    <Image url="@../../../images/soldiers/lagerta.png" />
                                  </image>
                               </ImageView>
                            </children>
@@ -41,7 +41,7 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="165.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../../rosoo.png" />
+                                    <Image url="@../../../images/soldiers/rosoo.png" />
                                  </image>
                               </ImageView>
                            </children>
@@ -59,7 +59,7 @@
                                  <children>
                                     <ImageView fitHeight="39.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../../icons/wood.png" />
+                                          <Image url="@../../../images/icons/wood.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff;  -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="500 " />
@@ -69,7 +69,7 @@
                                  <children>
                                     <ImageView fitHeight="37.0" fitWidth="49.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-17.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-17.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff; -fx-font-weight: bold;  -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="200" />
@@ -79,7 +79,7 @@
                                  <children>
                                     <ImageView fitHeight="42.0" fitWidth="51.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-04.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-04.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff;  -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="300" />
@@ -89,7 +89,7 @@
                                  <children>
                                     <ImageView fitHeight="38.0" fitWidth="49.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-11.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-11.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="100" />
@@ -109,7 +109,7 @@
                                  <children>
                                     <ImageView fitHeight="39.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../../icons/wood.png" />
+                                          <Image url="@../../../images/icons/wood.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff;  -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="500 " />
@@ -119,7 +119,7 @@
                                  <children>
                                     <ImageView fitHeight="37.0" fitWidth="49.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-17.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-17.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff; -fx-font-weight: bold;  -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="200" />
@@ -129,7 +129,7 @@
                                  <children>
                                     <ImageView fitHeight="42.0" fitWidth="51.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-04.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-04.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff;  -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="300" />
@@ -139,7 +139,7 @@
                                  <children>
                                     <ImageView fitHeight="38.0" fitWidth="49.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-11.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-11.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="100" />
@@ -159,7 +159,7 @@
                                  <children>
                                     <ImageView fitHeight="39.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../../icons/wood.png" />
+                                          <Image url="@../../../images/icons/wood.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff;  -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="500 " />
@@ -169,7 +169,7 @@
                                  <children>
                                     <ImageView fitHeight="37.0" fitWidth="49.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-17.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-17.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff; -fx-font-weight: bold;  -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="200" />
@@ -179,7 +179,7 @@
                                  <children>
                                     <ImageView fitHeight="42.0" fitWidth="51.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-04.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-04.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff;  -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="300" />
@@ -189,7 +189,7 @@
                                  <children>
                                     <ImageView fitHeight="38.0" fitWidth="49.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../icons/photo_2026-07-13_16-20-11.png" />
+                                          <Image url="@../../../images/icons/photo_2026-07-13_16-20-11.png" />
                                        </image>
                                     </ImageView>
                                     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="86.0" style="-fx-text-fill: #00f3ff; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0, 243, 255, 0.8), 8, 0, 0, 0);" text="100" />
@@ -237,7 +237,7 @@
             </VBox>
             <ImageView fitHeight="447.0" fitWidth="638.0" layoutX="-2.0" layoutY="-13.0">
                <image>
-                  <Image url="@../../../purple-kadr.png" />
+                  <Image url="@../../../images/designs/purple-kadr.png" />
                </image>
             </ImageView>
             <Button layoutX="-29.0" layoutY="178.0" mnemonicParsing="false" onAction="#onQueueClicked" prefHeight="29.0" prefWidth="86.0" rotate="90.0" style="-fx-background-color: #120024; -fx-text-fill: #e0aaff; -fx-border-color: #bd00ff; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-radius: 5px;  -fx-font-weight: bold; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(189, 0, 255, 0.6), 10, 0, 0, 0);" text="Queue" />
@@ -253,7 +253,7 @@
             </ScrollPane>
             <ImageView fitHeight="440.0" fitWidth="638.0" layoutX="-9.0" layoutY="-8.0">
                <image>
-                  <Image url="@../../../blue-kadr.png" />
+                  <Image url="@../../../images/designs/blue-kadr.png" />
                </image>
             </ImageView>
          </children>

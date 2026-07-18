@@ -9,7 +9,8 @@ public class PlantFactory {
 
         return switch (buildTask.getPlantType()) {
             case NRC -> new Plant(PlantType.NRC, buildTask.getCoordinate(), labLevel, 1 , 1);
-
+            case SNRC -> new Plant(PlantType.SNRC, buildTask.getCoordinate(), labLevel, 1 , 1);
+            case PSNRC -> new Plant(PlantType.PSNRC, buildTask.getCoordinate(), labLevel, 1 , 1);
 
             default -> null;
         };

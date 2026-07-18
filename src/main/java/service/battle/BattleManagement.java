@@ -45,6 +45,7 @@ public class BattleManagement {
             return;
         }
         */
+
         System.out.println("Attacker Active Battles : "
                 + attackerVillage.getActiveBattles().size());
 
@@ -69,13 +70,12 @@ public class BattleManagement {
         if (barrack == null) {return false;}
 
 
-        /*  Comment this because i want to test
-        //check the number of requested armies
+
         for(ArmyType type : ArmyType.values()){
             if(attackerArmy.getArmyCount(type) > armies.getArmyStorage().getArmyCount(type))
                 return false;
         }
-        */
+
 
         return true;
     }
@@ -104,7 +104,7 @@ public class BattleManagement {
         return null;
     }
 
-    /*
+
     private void withdrawArmy(BattleArmy attackerArmy) {
 
         ArmyStorage armyStorage = armies.getArmyStorage();
@@ -118,7 +118,7 @@ public class BattleManagement {
             }
         }
     }
-    */
+
 
     public boolean startBattle(BattleArmy attackerArmy) {
 
@@ -129,7 +129,7 @@ public class BattleManagement {
             if (!canStartBattle(attackerArmy))
                 return false;
 
-            //withdrawArmy(attackerArmy);
+            withdrawArmy(attackerArmy);
 
             Battle battle = new Battle(
                     attackerVillage,

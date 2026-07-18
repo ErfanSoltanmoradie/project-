@@ -13,16 +13,12 @@ import model.army.ArmyCost;
 import model.army.ArmyType;
 import model.army.QueuedArmy;
 import model.building.ArmyProducer;
-import model.building.Barrack;
-import model.building.BuildingStatus;
 import model.player.Player;
 import service.army.ArmyManagement;
 import service.army.TrainArmyResult;
-import service.buildings.BuildingsManagement;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 
 public class ArmyProducerController {
 
@@ -294,9 +290,9 @@ public class ArmyProducerController {
                     "-fx-border-width: 1;");
 
             String imagePath = switch (army.armyType()) {
-                case RAGNAR -> "/ragnar.png";
-                case ROSOO -> "/rosoo.png";
-                case LAGERTA -> "/lagerta.png";
+                case RAGNAR -> "/images/soldiers/ragnar.png";
+                case ROSOO -> "/images/soldiers/rosoo.png";
+                case LAGERTA -> "/images/soldiers/lagerta.png";
             };
 
             ImageView imageView = new ImageView();
