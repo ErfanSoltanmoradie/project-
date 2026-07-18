@@ -607,7 +607,7 @@ public class VillageController {
                 "-fx-alignment: CENTER_LEFT;");
 
 
-        VBox playerVBox = new VBox();
+       /* VBox playerVBox = new VBox();
         playerVBox.setSpacing(5);
 
         String receiverPlayerName = tradeOffer.getReceiverVillage().getUserName();
@@ -619,19 +619,62 @@ public class VillageController {
         VBox resourcesContainer = new VBox();
         resourcesContainer.setSpacing(4);
 
+        //String offeredStr = String.valueOf(tradeOffer.getOfferedResources().get(ResourcesType.WOOD));
+        // String requestedStr = String.valueOf(tradeOffer.getRequestedResources().get(ResourcesType.IRON));
 
-        String offeredStr = String.valueOf(tradeOffer.getOfferedResources().get(ResourcesType.WOOD));
-        String requestedStr = String.valueOf(tradeOffer.getRequestedResources().get(ResourcesType.IRON));
+        //Label receiveLabel = new Label("RECEIVE: " + offeredStr);
+        //receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
 
-        Label receiveLabel = new Label("RECEIVE: " + offeredStr);
-        receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
+        // Label payLabel = new Label("SEND: " + requestedStr);
+//payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
 
-        Label payLabel = new Label("SEND: " + requestedStr);
-        payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
+        //resourcesContainer.getChildren().addAll(receiveLabel, payLabel);*/
 
-        resourcesContainer.getChildren().addAll(receiveLabel, payLabel);
+        VBox senderContainer = new VBox();
+        senderContainer.setSpacing(4);
+        senderContainer.setMinWidth(120);
+        senderContainer.setPrefWidth(120);
 
-        row.getChildren().addAll(playerVBox, resourcesContainer);
+        String receiverName = tradeOffer.getAlliancesreceiver().getVillage().getUserName();
+        Label senderLabel = new Label( "YOU ➔ " + receiverName);
+        senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
+
+        senderContainer.getChildren().addAll(senderLabel);
+
+        VBox offeredResourcesContainer = new VBox();
+        offeredResourcesContainer.setSpacing(4);
+        offeredResourcesContainer.setMinWidth(140);
+
+        for (Map.Entry<ResourcesType, Integer> entry :tradeOffer.getOfferedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #ff0000; -fx-font-size: 11px; -fx-font-weight: bold;");
+                offeredResourcesContainer.getChildren().add(label);
+            }
+        }
+
+        VBox requestedResourcesContainer = new VBox();
+        requestedResourcesContainer.setSpacing(4);
+        requestedResourcesContainer.setMinWidth(100);
+
+        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getRequestedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #00ff0f; -fx-font-size: 11px; -fx-font-weight: bold;");
+                requestedResourcesContainer.getChildren().add(label);
+            }
+        }
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+        //row.getChildren().addAll(playerVBox, resourcesContainer);
+        row.getChildren().addAll(senderContainer, offeredResourcesContainer, requestedResourcesContainer, spacer);
 
         row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
         row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
@@ -674,7 +717,7 @@ public class VillageController {
         senderContainer.setMinWidth(120);
         senderContainer.setPrefWidth(120);
 
-        String senderName = offer.getSenderVillage().getUserName();
+        String senderName = offer.getAlliancesender().getVillage().getUserName();
         Label senderLabel = new Label(senderName + " ➔ YOU");
         senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
 
