@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GameManager {
 
-    private static final Duration PHASE_ONE_DURATION = Duration.ofMinutes(5);
+    private static final Duration PHASE_ONE_DURATION = Duration.ofDays(7);
     private static final Duration PHASE_TWO_DURATION = Duration.ofDays(7);
 
     public static void checkGameWinner(List<Village> allVillages) {

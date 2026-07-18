@@ -97,7 +97,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.WATER_PURIFIER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/waterPurifier.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/waterPurifier-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.DIRTY_SOIL_MINE, new BuildingGraphicProperties(
@@ -121,11 +121,11 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.BARRACKS, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/barrack.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/barrach-3.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.ARMY_PRODUCER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/armyProducer.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/armyProducer-2.png"))),
                     1,1,1));
 
 
@@ -135,7 +135,7 @@ public class GameCanvasView extends Canvas {
 
 
             buildingGraphics.put(BuildingType.DIRTY_WATER_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WaterMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WaterMine-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.CUSTOMHOUSE, new BuildingGraphicProperties(
@@ -147,7 +147,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.BALLISTA_DEFENSIVE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/ballista.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/ballista-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.STONE_MINE, new BuildingGraphicProperties(

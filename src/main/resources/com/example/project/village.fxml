@@ -338,9 +338,9 @@
                      <children>
                         <VBox alignment="TOP_CENTER" minWidth="-Infinity" prefHeight="271.0" prefWidth="197.0" style="-fx-background-color: #121420; -fx-background-radius: 8; -fx-border-color: #ff0055; -fx-border-width: 1.2; -fx-padding: 8;">
                            <children>
-                              <ImageView fx:id="nrcImage" fitHeight="128.0" fitWidth="127.0" pickOnBounds="true">
+                              <ImageView fx:id="nrcImage" fitHeight="128.0" fitWidth="94.0" pickOnBounds="true">
                                  <image>
-                                    <Image url="@../../../images/plants/NRC.png" />
+                                    <Image url="@../../../images/plants/NRC-2.png" />
                                  </image>
                                  <VBox.margin>
                                     <Insets top="20.0" />
@@ -356,9 +356,9 @@
                         </VBox>
                         <VBox alignment="TOP_CENTER" minWidth="-Infinity" prefHeight="225.0" prefWidth="197.0" style="-fx-background-color: #121420; -fx-background-radius: 8; -fx-border-color: #ff0055; -fx-border-width: 1.2; -fx-padding: 8;">
                            <children>
-                              <ImageView fx:id="snrcImage" fitHeight="127.0" fitWidth="136.0" pickOnBounds="true">
+                              <ImageView fx:id="snrcImage" fitHeight="127.0" fitWidth="97.0" pickOnBounds="true">
                                  <image>
-                                    <Image url="@../../../images/plants/SNRC.png" />
+                                    <Image url="@../../../images/plants/SNRC-2.png" />
                                  </image>
                                  <VBox.margin>
                                     <Insets top="20.0" />
@@ -374,9 +374,9 @@
                         </VBox>
                         <VBox alignment="TOP_CENTER" minWidth="-Infinity" prefHeight="225.0" prefWidth="197.0" style="-fx-background-color: #121420; -fx-background-radius: 8; -fx-border-color: #ff0055; -fx-border-width: 1.2; -fx-padding: 8;">
                            <children>
-                              <ImageView fx:id="psnrcImage" fitHeight="129.0" fitWidth="131.0" pickOnBounds="true">
+                              <ImageView fx:id="psnrcImage" fitHeight="129.0" fitWidth="97.0" pickOnBounds="true">
                                  <image>
-                                    <Image url="@../../../images/plants/PSNRC.png" />
+                                    <Image url="@../../../images/plants/PSNRC-3.png" />
                                  </image>
                                  <VBox.margin>
                                     <Insets top="20.0" />
@@ -407,11 +407,24 @@
                <content>
                   <HBox fx:id="addBuildingHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="318.0" prefWidth="1426.0" spacing="10.0">
                      <children>
+                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onBallistaBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="166.0" fitWidth="187.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/ballista-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="254.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#onLabBuildClicked" prefHeight="318.0" prefWidth="251.0" style="-fx-background-color: transparent;">
                                  <graphic>
-                                    <ImageView fitHeight="181.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="188.0" fitWidth="228.0" pickOnBounds="true">
                                        <image>
                                           <Image url="@../../../images/building/good-lab.png" />
                                        </image>
@@ -421,156 +434,56 @@
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="232.0" prefWidth="277.0">
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="245.0">
                            <children>
-                              <Button fx:id="gunPowderMineBuildButton" mnemonicParsing="false" onAction="#onGunPowderMineBuildClicked" prefHeight="377.0" prefWidth="304.0" style="-fx-background-color: transparent;">
+                              <Button mnemonicParsing="false" onAction="#onSoilPurifierBuildClicked" prefHeight="318.0" prefWidth="223.0" style="-fx-background-color: transparent;">
                                  <graphic>
-                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="201.0" fitWidth="206.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../../images/building/GunpowderMine.png" />
+                                          <Image url="@../../../images/building/soilPurifier-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="274.0">
+                           <children>
+                              <Button fx:id="barrackBuildButton" mnemonicParsing="false" onAction="#oneBarrackBuildClicked" prefHeight="325.0" prefWidth="270.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="200.0" fitWidth="231.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/barrach-3.png" />
                                        </image>
                                     </ImageView>
                                  </graphic></Button>
-                           </children></VBox>
+                           </children>
+                        </VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="271.0">
                            <children>
                               <Button fx:id="StoneMineBuildButton" mnemonicParsing="false" onAction="#onStoneMineBuildClicked" prefHeight="338.0" prefWidth="307.0" style="-fx-background-color: transparent;">
                                  <graphic>
-                                    <ImageView fitHeight="147.0" fitWidth="183.0">
+                                    <ImageView fitHeight="194.0" fitWidth="206.0">
                                        <image>
                                           <Image url="@../../../images/building/StonMine.png" />
                                        </image>
                                     </ImageView>
                                  </graphic></Button>
                            </children></VBox>
-                        <VBox fx:id="addBuildingVBox" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="274.0">
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="232.0" prefWidth="277.0">
                            <children>
-                              <Button fx:id="woodMineBuildButton" mnemonicParsing="false" onAction="#onWoodMineBuildClicked" prefHeight="358.0" prefWidth="375.0" style="-fx-background-color: transparent;">
-                                 <font>
-                                    <Font size="24.0" />
-                                 </font>
+                              <Button fx:id="gunPowderMineBuildButton" mnemonicParsing="false" onAction="#onGunPowderMineBuildClicked" prefHeight="377.0" prefWidth="304.0" style="-fx-background-color: transparent;">
                                  <graphic>
-                                    <ImageView fitHeight="169.0" fitWidth="211.0" pickOnBounds="true">
+                                    <ImageView fitHeight="206.0" fitWidth="235.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../images/building/WoodMine.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#onSentinelBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="166.0" fitWidth="158.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/sentinel.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#onBallistaBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="166.0" fitWidth="187.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/ballista.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#onCatapultBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="183.0" fitWidth="210.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/catapult.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="258.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#onBuildCustomHouseClicked" prefHeight="344.0" prefWidth="312.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="190.0" fitWidth="218.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/customs.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="263.0">
-                           <children>
-                              <Button fx:id="armyProducerBuildButton" mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="331.0" prefWidth="293.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="174.0" fitWidth="223.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/armyProducer.png" />
+                                          <Image url="@../../../images/building/GunpowderMine.png" />
                                        </image>
                                     </ImageView>
                                  </graphic></Button>
                            </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="267.0">
-                           <children>
-                              <Button fx:id="soilMineBuildButton" mnemonicParsing="false" onAction="#onSoilMineBuildClicked" prefHeight="334.0" prefWidth="319.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="175.0" fitWidth="232.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/SoilMine.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="279.0">
-                           <children>
-                              <Button fx:id="waterMineBuildButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onWaterMineBuildClicked" prefHeight="322.0" prefWidth="285.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="181.0" fitWidth="258.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/WaterMine.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                           </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="297.0" prefWidth="241.0">
-                           <children>
-                              <Button fx:id="majorBuildingButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMajorBuildingBuildClicked" prefHeight="318.0" prefWidth="233.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="292.0" fitWidth="231.0" pickOnBounds="true">
-                                       <image>
-                                          <Image url="@../../../images/building/major.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                           </children>
-                        </VBox>
-                        <VBox alignment="TOP_CENTER" centerShape="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="249.0" scaleShape="false" style="-fx-background-color: #000415;">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <children>
-                              <Button fx:id="ironMineBuildButton" mnemonicParsing="false" onAction="#onIronMineBuildClicked" prefHeight="318.0" prefWidth="220.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../images/building/iron_mine.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                           </children>
-                        </VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="280.0">
                            <children>
                               <Button fx:id="researchCenter" mnemonicParsing="false" onAction="#onResearchCenterBuildClicked" prefHeight="318.0" prefWidth="275.0" style="-fx-background-color: transparent;">
@@ -594,33 +507,122 @@
                                     </ImageView>
                                  </graphic></Button>
                            </children></VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="274.0">
+                        <VBox alignment="TOP_CENTER" centerShape="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="249.0" scaleShape="false" style="-fx-background-color: #000415;">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
                            <children>
-                              <Button fx:id="barrackBuildButton" mnemonicParsing="false" onAction="#oneBarrackBuildClicked" prefHeight="325.0" prefWidth="270.0" style="-fx-background-color: transparent;">
+                              <Button fx:id="ironMineBuildButton" mnemonicParsing="false" onAction="#onIronMineBuildClicked" prefHeight="318.0" prefWidth="220.0" style="-fx-background-color: transparent;">
                                  <graphic>
-                                    <ImageView fitHeight="175.0" fitWidth="212.0" pickOnBounds="true">
+                                    <ImageView fitHeight="137.0" fitWidth="121.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../../images/building/barrack.png" />
+                                          <Image url="@../../../images/building/iron_mine.png" />
                                        </image>
                                     </ImageView>
                                  </graphic></Button>
                            </children>
                         </VBox>
-                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="245.0">
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="279.0">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#onSoilPurifierBuildClicked" prefHeight="318.0" prefWidth="223.0" style="-fx-background-color: transparent;">
+                              <Button fx:id="waterMineBuildButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onWaterMineBuildClicked" prefHeight="322.0" prefWidth="285.0" style="-fx-background-color: transparent;">
                                  <graphic>
-                                    <ImageView fitHeight="181.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="241.0" fitWidth="258.0" pickOnBounds="true">
                                        <image>
-                                          <Image url="@../../../images/building/soilPurifier.png" />
+                                          <Image url="@../../../images/building/WaterMine-2.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                               </Button>
                            </children>
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
+                        </VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="267.0">
+                           <children>
+                              <Button fx:id="soilMineBuildButton" mnemonicParsing="false" onAction="#onSoilMineBuildClicked" prefHeight="334.0" prefWidth="319.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="175.0" fitWidth="232.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/SoilMine.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                           </children></VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="263.0">
+                           <children>
+                              <Button fx:id="armyProducerBuildButton" mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="331.0" prefWidth="293.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="210.0" fitWidth="235.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/armyProducer-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                           </children></VBox>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="258.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onBuildCustomHouseClicked" prefHeight="344.0" prefWidth="312.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="190.0" fitWidth="218.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/customs.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onCatapultBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="183.0" fitWidth="210.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/catapult.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="297.0" prefWidth="241.0">
+                           <children>
+                              <Button fx:id="majorBuildingButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMajorBuildingBuildClicked" prefHeight="318.0" prefWidth="233.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="279.0" fitWidth="210.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/major2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Button>
+                           </children>
+                        </VBox>
+                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onSentinelBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="173.0" fitWidth="185.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/sentinel.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="addBuildingVBox" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="274.0">
+                           <children>
+                              <Button fx:id="woodMineBuildButton" mnemonicParsing="false" onAction="#onWoodMineBuildClicked" prefHeight="358.0" prefWidth="375.0" style="-fx-background-color: transparent;">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                                 <graphic>
+                                    <ImageView fitHeight="169.0" fitWidth="211.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/WoodMine.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
                         </VBox>
                      </children>
                   </HBox>

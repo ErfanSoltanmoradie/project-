@@ -1,4 +1,4 @@
-package model.time;
+/*package model.time;
 
 import model.building.Building;
 import model.building.WaterSoilPurifier;
@@ -12,21 +12,21 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-/*public class PurificationWaterAndSoilTask extends TimedOperation implements Serializable {
+public class PurificationWaterAndSoilTask extends TimedOperation implements Serializable {
 
     private final UUID buildingId;
     private final Duration neededTime;
     private ResourcesManagement resources;
 
-    public PurificationWaterAndSoilTask(Instant startTime, Instant finishTime,
-                                            TimedOperationType timedOperationType, Duration neededTime, UUID buildingId) {
-        super(startTime, finishTime, timedOperationType);
+    public PurificationWaterAndSoilTask(Instant startTime, Duration neededTime,
+                                            TimedOperationType timedOperationType, UUID buildingId) {
+        super(startTime, neededTime, timedOperationType);
         this.buildingId = buildingId;
         this.neededTime = neededTime;
     }
 
     @Override
-    public void execute(Village village, List<TimedOperation> toAdd) {
+    public TaskResult execute() {
 
             village.getLock().writeLock().lock();
             try{
