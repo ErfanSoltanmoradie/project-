@@ -41,9 +41,9 @@ public class GameCanvasView extends Canvas {
     private final Image woodMineImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine.png")));
     private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png")));
     //private final Image customhouseImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Customhouse.png")));
-    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/NRC.png")));
-    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/SNRC.png")));
-    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/PSNRC.png")));
+    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/NRC.png")));
+    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/SNRC.png")));
+    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/PSNRC.png")));
     //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.png")));
     private Image globalTowerImage;
 

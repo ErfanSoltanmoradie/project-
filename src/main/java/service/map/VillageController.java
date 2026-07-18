@@ -6,12 +6,9 @@ import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -52,7 +49,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
-
 
 public class VillageController {
 
@@ -226,9 +222,9 @@ public class VillageController {
 
     @FXML private Button researchCenter;
 
+
     @FXML private AnchorPane tradePanel;
 
-    @FXML private Button leaveTradePanel;
 
     @FXML private VBox tradePlayersContainer;
 
@@ -240,12 +236,9 @@ public class VillageController {
 
     @FXML TextField sendWoodTextField;
 
-    @FXML TextField receiveWoodTextField;
+    @FXML Button MakeADealButton;
 
-
-    @FXML private Button MakeADealButton;
-
-    @FXML private Button receivedtraderequests;
+    @FXML Button receivedtraderequests;
 
     @FXML AnchorPane receivedTradeRequestsPanel;
 
@@ -369,6 +362,8 @@ public class VillageController {
 
     @FXML Label coinLabel;
 
+    @FXML TextField receiveWoodTextField;
+
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -456,7 +451,7 @@ public class VillageController {
         this.gameCanvasView = new GameCanvasView(village);
 
         //this.borderImageView.fitWidthProperty().bind(rootStackPane.widthProperty());
-       // this.borderImageView.fitHeightProperty().bind(rootStackPane.heightProperty());
+        // this.borderImageView.fitHeightProperty().bind(rootStackPane.heightProperty());
         this.gameCanvasView.widthProperty().bind(rootStackPane.widthProperty());
         this.gameCanvasView.heightProperty().bind(rootStackPane.heightProperty());
 
@@ -513,7 +508,7 @@ public class VillageController {
 
                 if(BuildingsManagement.checkResearchCenterBuildingForTrade(player1) &&
                         BuildingsManagement.checkCustomHouseBuildingForTrade(player1)&&
-                            BuildingsManagement.checkCustomHouseBuildingForTrade(player1)){
+                        BuildingsManagement.checkCustomHouseBuildingForTrade(player1)){
 
                     this.traders.put(player1.getPlayerId(), player1);
                 }
@@ -662,87 +657,95 @@ public class VillageController {
     }
 
     private HBox createTradeRequestsRowElement(TradeOffer offer) {
-
         TradeService tradeService = new TradeService();
 
         HBox row = new HBox();
         row.setSpacing(15);
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         row.setStyle("-fx-padding: 12; " +
                 "-fx-background-color: #2b2b2b; " +
                 "-fx-background-radius: 8; " +
                 "-fx-border-color: #444444; " +
-                "-fx-border-width: 1; " +
-                "-fx-alignment: CENTER_LEFT;");
+                "-fx-border-width: 1;");
 
         VBox senderContainer = new VBox();
         senderContainer.setSpacing(4);
-
+        senderContainer.setMinWidth(120);
+        senderContainer.setPrefWidth(120);
 
         String senderName = offer.getSenderVillage().getUserName();
-        Label senderLabel = new Label("SENDER PLAYER [ " + senderName + " ]");
+        Label senderLabel = new Label(senderName + " ➔ YOU");
         senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
 
-        Label timeLabel = new Label("TRANSFER TIME: " + offer.getTradeTime() + " seconds");
-        timeLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 11px;");
+        Label timeLabel = new Label("Time: " + offer.getTradeTime() + "s");
+        timeLabel.setStyle("-fx-text-fill: #f5e9e9; -fx-font-size: 11px;");
 
         senderContainer.getChildren().addAll(senderLabel, timeLabel);
 
+        VBox offeredResourcesContainer = new VBox();
+        offeredResourcesContainer.setSpacing(4);
+        offeredResourcesContainer.setMinWidth(140);
 
-        VBox resourcesContainer = new VBox();
-        resourcesContainer.setSpacing(4);
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #00ff0b; -fx-font-size: 11px; -fx-font-weight: bold;");
+                offeredResourcesContainer.getChildren().add(label);
+            }
+        }
 
+        VBox requestedResourcesContainer = new VBox();
+        requestedResourcesContainer.setSpacing(4);
+        requestedResourcesContainer.setMinWidth(100);
 
-        String offeredStr = String.valueOf(offer.getOfferedResources().get(ResourcesType.WOOD));
-        String requestedStr = String.valueOf(offer.getRequestedResources().get(ResourcesType.IRON));
-
-        Label receiveLabel = new Label("RECEIVE: " + offeredStr);
-        receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
-
-        Label payLabel = new Label("SEND: " + requestedStr);
-        payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
-
-        resourcesContainer.getChildren().addAll(receiveLabel, payLabel);
-
+        for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #ff1000; -fx-font-size: 11px; -fx-font-weight: bold;");
+                requestedResourcesContainer.getChildren().add(label);
+            }
+        }
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-
         HBox actionButtons = new HBox(8);
         actionButtons.setStyle("-fx-alignment: CENTER_RIGHT;");
 
-
         Button acceptBtn = new Button("ACCEPT");
-        acceptBtn.setStyle("-fx-background-color: #4CAF50; " +
+        acceptBtn.setMinWidth(75);
+        acceptBtn.setPrefWidth(75);
+        acceptBtn.setStyle("-fx-background-color: #00ff0a; " +
                 "-fx-text-fill: white; " +
                 "-fx-font-weight: bold; " +
                 "-fx-background-radius: 5; " +
                 "-fx-cursor: hand;");
         acceptBtn.setOnAction(e -> {
-
             System.out.println("ACCEPTED");
             tradeService.acceptOffer(offer);
         });
 
-
         Button rejectBtn = new Button("REJECT");
-        rejectBtn.setStyle("-fx-background-color: #f44336; " +
+        rejectBtn.setMinWidth(75);
+        rejectBtn.setPrefWidth(75);
+        rejectBtn.setStyle("-fx-background-color: #ff1200; " +
                 "-fx-text-fill: white; " +
                 "-fx-font-weight: bold; " +
                 "-fx-background-radius: 5; " +
                 "-fx-cursor: hand;");
         rejectBtn.setOnAction(e -> {
-
             tradeService.rejectOffer(offer);
             System.out.println("REJECTED");
         });
 
         actionButtons.getChildren().addAll(acceptBtn, rejectBtn);
 
-
-        row.getChildren().addAll(senderContainer, resourcesContainer, spacer, actionButtons);
-
+        row.getChildren().addAll(senderContainer, offeredResourcesContainer, requestedResourcesContainer, spacer, actionButtons);
 
         row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
         row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
@@ -1089,63 +1092,214 @@ public class VillageController {
         this.showMakeATradePanel();
     }
 
-    @FXML
-    private void onBattleHistoryClicked(){
-        showAttackHistoryPanel();
-        this.showAttackHistory();
+    private int callCoin(int amount, ResourcesType resourcesType){
+        int coin=switch (resourcesType){
+            case WOOD -> amount/20;
+            case IRON -> amount/8;
+            case STONE -> amount/15;
+            case GUN_POWDER ->  amount/10;
+            case CLEAN_SOIL -> amount/10;
+            case CLEAN_WATER -> amount/10;
+            default  -> 0;
+        };
+        return coin;
+    }
+
+    private void setEmptySellRequestsField(){
+        if(this.receivedCoinFromSellingWood.getText().isEmpty()) this.receivedCoinFromSellingWood.setText("0");
+        if(this.receivedCoinFromSellingIron.getText().isEmpty()) this.receivedCoinFromSellingIron.setText("0");
+
+        if(this.receivedCoinFromSellingGunPowder.getText().isEmpty()) this.receivedCoinFromSellingGunPowder.setText("0");
+        if(this.receivedCoinFromSellingWater.getText().isEmpty()) this.receivedCoinFromSellingWater.setText("0");
+
+        if(this.receivedCoinFromSellingSoil.getText().isEmpty()) this.receivedCoinFromSellingSoil.setText("0");
+        if(this.receivedCoinFromSellingStone.getText().isEmpty()) this.receivedCoinFromSellingStone.setText("0");
+    }
+
+    private void clearSellResourcesTextFields(){
+        this.sellWoodTextField.clear();
+        this.sellWoodTextField.clear();
+        this.sellIronTextField.clear();
+        this.sellSoilTextField.clear();
+        this.sellWaterTextField.clear();
+        this.sellStoneTextField.clear();
+    }
+
+    private void makeDeals(Map<ResourcesType , Integer> offeredResources, Map<ResourcesType , Integer> requestedResources){
+
+        this.setEmptyTradeRequestField();
+
+        offeredResources.put(ResourcesType.WOOD, Integer.parseInt(this.receiveWoodTextField.getText()));
+        requestedResources.put((ResourcesType.WOOD), Integer.parseInt(this.sendWoodTextField.getText()));
+
+        offeredResources.put(ResourcesType.IRON, Integer.parseInt(this.receiveIronTextField.getText()));
+        requestedResources.put((ResourcesType.IRON), Integer.parseInt(this.sendIronTextField.getText()));
+
+        offeredResources.put(ResourcesType.GUN_POWDER, Integer.parseInt(this.receiveGunPowderTextField.getText()));
+        requestedResources.put((ResourcesType.GUN_POWDER), Integer.parseInt(this.sendGunPowderTextField.getText()));
+
+        offeredResources.put(ResourcesType.CLEAN_SOIL, Integer.parseInt(this.receiveSoilTextField.getText()));
+        requestedResources.put((ResourcesType.CLEAN_SOIL), Integer.parseInt(this.sendSoilTextField.getText()));
+
+        offeredResources.put(ResourcesType.STONE, Integer.parseInt(this.receiveStoneTextField.getText()));
+        requestedResources.put((ResourcesType.STONE), Integer.parseInt(this.sendStoneTextField.getText()));
+
+        offeredResources.put(ResourcesType.CLEAN_WATER, Integer.parseInt(this.receiveWaterTextField.getText()));
+        requestedResources.put((ResourcesType.CLEAN_WATER), Integer.parseInt(this.sendWaterTextField.getText()));
+
+        this.clearTradeTextFields();
+    }
+
+    private void setEmptyTradeRequestField(){
+        if(this.receiveWoodTextField.getText().isEmpty()) this.receiveWoodTextField.setText("0");
+        if(this.sendWoodTextField.getText().isEmpty()) this.sendWoodTextField.setText("0");
+
+        if(this.receiveIronTextField.getText().isEmpty()) this.receiveIronTextField.setText("0");
+        if(this.sendIronTextField.getText().isEmpty()) this.sendIronTextField.setText("0");
+
+        if(this.receiveStoneTextField.getText().isEmpty()) this.receiveStoneTextField.setText("0");
+        if(this.sendStoneTextField.getText().isEmpty()) this.sendStoneTextField.setText("0");
+
+        if(this.receiveGunPowderTextField.getText().isEmpty()) this.receiveGunPowderTextField.setText("0");
+        if(this.sendGunPowderTextField.getText().isEmpty()) this.sendGunPowderTextField.setText("0");
+
+        if(this.receiveSoilTextField.getText().isEmpty()) this.receiveSoilTextField.setText("0");
+        if(this.sendSoilTextField.getText().isEmpty()) this.sendSoilTextField.setText("0");
+
+        if(this.receiveWaterTextField.getText().isEmpty()) this.receiveWaterTextField.setText("0");
+        if(this.sendWaterTextField.getText().isEmpty()) this.sendWaterTextField.setText("0");
+    }
+
+    private void clearTradeTextFields(){
+        this.receiveWoodTextField.clear();
+        this.sendWoodTextField.clear();
+        this.receiveIronTextField.clear();
+        this.receiveGunPowderTextField.clear();
+        this.sendIronTextField.clear();
+        this.sendGunPowderTextField.clear();
+        this.receiveSoilTextField.clear();
+        this.sendSoilTextField.clear();
+        this.receiveStoneTextField.clear();
+        this.sendStoneTextField.clear();
+        this.receiveWaterTextField.clear();
+        this.sendWaterTextField.clear();
+    }
+
+    private void setupResourceSalesListeners() {
+        sellWoodTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingWood.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingWood.setText(String.valueOf(callCoin(amount, ResourcesType.WOOD)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellIronTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingIron.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingIron.setText(String.valueOf(callCoin(amount, ResourcesType.IRON)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellStoneTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingStone.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingStone.setText(String.valueOf(callCoin(amount, ResourcesType.STONE)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellSoilTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingSoil.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingSoil.setText(String.valueOf(callCoin(amount, ResourcesType.CLEAN_SOIL)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }
+        });
+
+        sellWaterTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingWater.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingWater.setText(String.valueOf(callCoin(amount, ResourcesType.CLEAN_WATER)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }});
+
+        sellGunPowderTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue.isEmpty()) {
+                    receivedCoinFromSellingGunPowder.setText("0");
+                } else {
+                    int amount = Integer.parseInt(newValue);
+                    receivedCoinFromSellingGunPowder.setText(String.valueOf(callCoin(amount, ResourcesType.GUN_POWDER)));
+                }
+            } catch (NumberFormatException e) {
+                sellWoodTextField.setText(oldValue);
+            }});
     }
 
     @FXML
-    private void onBattleButtonClicked(){
-        this.showAttackPanel();
-        this.setEnemies();
-        this.showEnemies();
+    private void onMakeASellDealClicked(){
+        this.player.getVillage().getLock().writeLock().lock();
+        try {
+            ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
+            resourcesManagement.sellResource(Integer.parseInt(sellWoodTextField.getText()), ResourcesType.WOOD);
+            resourcesManagement.sellResource(Integer.parseInt(sellIronTextField.getText()), ResourcesType.IRON);
+            resourcesManagement.sellResource(Integer.parseInt(sellGunPowderTextField.getText()), ResourcesType.GUN_POWDER);
+            resourcesManagement.sellResource(Integer.parseInt(sellWaterTextField.getText()), ResourcesType.CLEAN_WATER);
+            resourcesManagement.sellResource(Integer.parseInt(sellSoilTextField.getText()), ResourcesType.CLEAN_SOIL);
+
+            this.hideSellResourcesPanel();
+            this.hideDecisionCustomhousePanel();
+        }finally {
+            this.player.getVillage().getLock().writeLock().unlock();
+        }
+
     }
 
     @FXML
-    private void onManagePendingAllianceRequestsClicked(){
-        this.hideAlliancePanel();
-        this.showAllianceRequestsPanel();
-        this.showAllianceRequests();
+    private void onUpgradeCustomhouseDecisionClicked(){
+        this.showBuildingInfo(this.selectedCustomhouse);
+        this.hideDecisionPanel();
     }
 
     @FXML
-    private void onAllianceButtonClicked(){
-        this.showAlliancePanel();
-        this.findAllowedPlayerForAlliance();
-        showAllowedToAllianceOnPanel(this.allowedToAlliance);
+    private void onManageCostumeHouseDecisionClicked(){
+        this.showSellResourcesPanel();
+
     }
 
     @FXML
-    private void onTradeButtonClicked(){
-        this.showTradePanel();
-        this.validPlayersToTrade();
-        this.showTradersOnPanel(this.traders);
+    private void onBuildPlantClicked(){
+        this.showAddPlantPanel();
+        this.hideShopPanel();
     }
 
-    @FXML
-    private void onPendingSentRequestButtonClicked(){
-        this.hideTradePanel();
-        this.showSentTradeRequestsPanel();
-        this.showSentTradeRequestsOnPanel();
-    }
-
-    @FXML
-    private void onMakeADealClicked(){
-
-        Map<ResourcesType , Integer> offeredResources = new HashMap<>();
-        Map<ResourcesType , Integer> requestedResources = new HashMap<>();
-
-        offeredResources.put(ResourcesType.WOOD, Integer.parseInt(this.sendWoodTextField.getText()));
-        requestedResources.put((ResourcesType.IRON), Integer.parseInt(this.receiveIronTextField.getText()));
-
-
-        TradeService tradeService = new TradeService();
-        tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
-
-
-        this.hideMakeATradePanel();
-    }
 
     @FXML
     private void onReceivedTradeRequests(){
@@ -1161,23 +1315,22 @@ public class VillageController {
             return;
         }
 
-        // اگر گیاهی انتخاب شده باشد، آن را حذف یا مدیریت می‌کند
         if (this.controller.getSelectedPlant() != null) {
             var selectedPlant = this.controller.getSelectedPlant();
 
-            //حذف گیاه از لیست دهکده بازیکن
             this.player.getVillage().getPlants().remove(selectedPlant.getId());
 
-            // آزاد کردن تایل نقشه از گیاه قبلی
             this.player.getVillage().getGameMap().getTile(
                     selectedPlant.getPosition().getX(),
                     selectedPlant.getPosition().getY()
             ).setPlant(null);
 
             this.hideInfoPanel();
+            this.hideDecisionCustomhousePanel();
         } else {
             this.controller.handleUpgradeClicked();
             this.hideInfoPanel();
+            this.hideDecisionCustomhousePanel();
         }
     }
 
@@ -1204,6 +1357,53 @@ public class VillageController {
             if(showConstructionConfirmation("WoodMiner")) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.WOOD_MINE);
+            }
+        }
+    }
+
+    @FXML
+    private void onBuildCustomHouseClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
+            if(showConstructionConfirmation("CUSTOMHOUSE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
+            }
+        }
+    }
+
+    @FXML
+    private void onBallistaBuildClicked(){
+
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.BALLISTA_DEFENSIVE)) return;
+            if(showConstructionConfirmation("BALLISTA_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.BALLISTA_DEFENSIVE);
+            }
+        }
+    }
+
+    @FXML
+    private void onSentinelBuildClicked(){
+
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.SENTINEL_DEFENSIVE)) return;
+            if(showConstructionConfirmation("SENTINEL_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.SENTINEL_DEFENSIVE);
+            }
+        }
+
+    }
+
+    @FXML
+    private void onCatapultBuildClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.CATAPULT_DEFENSIVE)) return;
+            if(showConstructionConfirmation("CATAPULT_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.CATAPULT_DEFENSIVE);
             }
         }
     }
@@ -1263,16 +1463,6 @@ public class VillageController {
         }
     }
 
-    @FXML
-    private void onLaboratoryBuildClicked(ActionEvent actionEvent){
-        if (controller != null) {
-            if(!checkResourcesAndAlert(BuildingType.LABORATORY)) return;
-            if(showConstructionConfirmation("Laboratory")) {
-                this.hideAddBuildingPanel();
-                controller.enterBuildMode(BuildingType.LABORATORY);
-            }
-        }
-    }
 
     @FXML
     private void onCustomhouseBuildClicked(ActionEvent actionEvent) {
@@ -1297,6 +1487,33 @@ public class VillageController {
     }
 
     @FXML
+    private  void onLabBuildClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.LABORATORY)) return;
+            if(showConstructionConfirmation("Laboratory")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.LABORATORY);
+            }
+        }
+    }
+
+    @FXML
+    private void onWaterPurifierBuildClicked(){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.WATER_PURIFIER);
+        }
+    }
+
+    @FXML
+    private void onSoilPurifierBuildClicked(){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.SOIL_PURIFIER);
+        }
+    }
+
+    @FXML
     private void onResearchCenterBuildClicked(){
         if(controller != null){
             if(!checkResourcesAndAlert(BuildingType.RESEARCH_CENTER)) return;
@@ -1314,6 +1531,7 @@ public class VillageController {
             if(showConstructionConfirmation("NRC Plant")) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.NRC);
+                this.hideAddPlantPanel();
             }
         }
     }
@@ -1325,6 +1543,7 @@ public class VillageController {
             if(showConstructionConfirmation("SNRC Plant")) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.SNRC);
+                this.hideAddPlantPanel();
             }
         }
     }
@@ -1336,6 +1555,7 @@ public class VillageController {
             if(showConstructionConfirmation("PSNRC Plant")) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.PSNRC);
+                this.hideAddPlantPanel();
             }
         }
     }
@@ -1353,12 +1573,6 @@ public class VillageController {
         java.util.Optional<ButtonType> result = confirmAlert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.YES;
     }
-
-    @FXML
-    private void onLeaveTradeButtonClicked(){
-        this.hideTradePanel();
-    }
-
 
     private void showReceivedTradeRequestsPanel(){
         this.receivedTradeRequestsPanel.setVisible(true);
@@ -1378,6 +1592,184 @@ public class VillageController {
     public void hideTradePanel(){
         this.tradePanel.setVisible(false);
         this.tradePanel.setManaged(false);
+    }
+
+    @FXML
+    private void onArmyProducerBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
+        }
+    }
+
+    @FXML
+    private void oneBarrackBuildClicked(ActionEvent actionEvent){
+        if(controller != null){
+            this.hideAddBuildingPanel();
+            controller.enterBuildMode(BuildingType.BARRACKS);
+        }
+    }
+
+
+    @FXML
+    private void onUpgradeDecisionClicked(){
+        this.showBuildingInfo(this.SelectedArmyProducer);
+        this.hideDecisionPanel();
+    }
+
+    @FXML
+    private void onManageArmyDecisionClicked(){
+        this.openArmyProducer(this.SelectedArmyProducer);
+        this.hideDecisionPanel();
+    }
+
+    @FXML
+    private void onPendingOrdersClicked(){
+        this.showDecidePanel();
+    }
+
+    @FXML
+    private void onBattleHistoryClicked(){
+        showAttackHistoryPanel();
+        this.showAttackHistory();
+    }
+
+    @FXML
+    private void onBattleButtonClicked(){
+        this.showAttackPanel();
+        this.setEnemies();
+        this.showEnemies();
+    }
+
+    @FXML
+    private void onManagePendingAllianceRequestsClicked(){
+        this.hideAlliancePanel();
+        this.showAllianceRequestsPanel();
+        this.showAllianceRequests();
+    }
+
+    @FXML
+    private void onAllianceButtonClicked(){
+        this.showAlliancePanel();
+        this.findAllowedPlayerForAlliance();
+        showAllowedToAllianceOnPanel(this.allowedToAlliance);
+    }
+
+    @FXML
+    private void onTradeButtonClicked(){
+        this.showTradePanel();
+        this.validPlayersToTrade();
+        this.showTradersOnPanel(this.traders);
+    }
+
+    @FXML
+    private void onPendingSentRequestButtonClicked(){
+        this.hideTradePanel();
+        this.showSentTradeRequestsPanel();
+        this.showSentTradeRequestsOnPanel();
+    }
+
+    @FXML
+    private void onMakeADealClicked(){
+
+        Map<ResourcesType , Integer> offeredResources = new HashMap<>();
+        Map<ResourcesType , Integer> requestedResources = new HashMap<>();
+
+        this.makeDeals(offeredResources, requestedResources);
+        this.clearTradeTextFields();
+
+        TradeService tradeService = new TradeService();
+        tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
+
+        this.hideMakeATradePanel();
+    }
+
+    @FXML
+    private void onManageBarracksDecisionClicked(){
+        this.openBarrack(this.selectedBarrack);
+        this.hideDecisionBarrackPanel();
+    }
+
+    private Barrack selectedBarrack;
+
+    @FXML
+    private  void onUpgradeBarracksDecisionClicked(){
+        this.showBuildingInfo(this.selectedBarrack);
+        this.hideDecisionBarrackPanel();
+    }
+
+    @FXML
+    private void onTowerButtonClicked(){
+        this.refreshGlobalTowerPanel();
+        this.showGlobalTowerPanel();
+    }
+
+    @FXML
+    private void onLeaveTowerPanelClicked(){
+        this.hideGlobalTowerPanel();
+    }
+
+
+
+    public void openArmyProducer(ArmyProducer armyProducer) {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/project/armyProducer.fxml")
+            );
+
+            Parent root = loader.load();
+
+            ArmyProducerController armyProducerController = loader.getController();
+            armyProducerController.setPlayer(player,armyProducer/*, this.controller*/);
+            armyProducerController.hideQueuePanel();
+            armyProducerController.showArmyProducerPanel();
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            Stage stage = new Stage();
+            stage.setTitle("Army Producer");
+            stage.setScene(scene);
+
+            stage.initStyle(StageStyle.UNDECORATED);
+
+            stage.setResizable(false);
+
+            stage.show();
+            stage.setOnHidden(e -> armyProducerController.stopRefresh());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void openBarrack(Barrack barrack) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/example/project/barrack.fxml")
+            );
+
+            Parent root = loader.load();
+
+            BarrackController controller = loader.getController();
+            controller.setPlayer(player, barrack);
+
+            Stage stage = new Stage();
+            stage.setTitle("Barrack");
+            stage.setScene(new Scene(root));
+
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setResizable(false);
+
+            stage.show();
+            stage.setOnHidden(e -> controller.stopRefresh());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setTradeButtonEnable(){
@@ -1423,7 +1815,6 @@ public class VillageController {
         buildingLevelLabel.setVisible(true);
         buildingLevelLabel.setText("Level: " + building.getLevel());
 
-        //  منطق اختصاصی مربوط به آزمایشگاه
         if (building.getType() == BuildingType.LABORATORY) {
             plantsCountLabel.setVisible(true);
             neutralizationPowerLabel.setVisible(true);
@@ -1497,7 +1888,7 @@ public class VillageController {
         this.sentTradeRequestsPanel.setManaged(true);
     }
 
-   public void hideSentTradeRequestsPanel(){
+    public void hideSentTradeRequestsPanel(){
         this.sentTradeRequestsPanel.setVisible(false);
         this.sentTradeRequestsPanel.setManaged(false);
     }
@@ -1553,21 +1944,6 @@ public class VillageController {
     }
 
     @FXML
-    private void onTowerButtonClicked(){
-        this.refreshGlobalTowerPanel();
-        this.showGlobalTowerPanel();
-    }
-
-    @FXML
-    private void onLeaveTowerPanelClicked(){
-        this.hideGlobalTowerPanel();
-    }
-
-    public void hideDecisionPanel(){
-        this.decisionPanel.setVisible(false);
-        this.decisionPanel.setManaged(false);
-    }
-    @FXML
     private void onBuildGlobalTowerClicked() {
         if (gameState == null || gameState.getPhaseTwoStartTime() == null) {
             refreshGlobalTowerPanel();
@@ -1585,6 +1961,10 @@ public class VillageController {
         this.controller.enterGlobalTowerBuildMode();
     }
 
+    public void hideDecisionPanel(){
+        this.decisionPanel.setVisible(false);
+        this.decisionPanel.setManaged(false);
+    }
     public void showDecisionPanel(Building building){
         this.SelectedArmyProducer = (ArmyProducer) building;
         this.decisionPanel.setManaged(true);
@@ -1619,7 +1999,7 @@ public class VillageController {
         globalTowerPanel.setManaged(true);
     }
 
-    private void hideGlobalTowerPanel() {
+    public void hideGlobalTowerPanel() {
         globalTowerPanel.setVisible(false);
         globalTowerPanel.setManaged(false);
     }
@@ -1711,6 +2091,7 @@ public class VillageController {
 
     private void updateResourcesUI(){
         Resources resources = this.player.getVillage().getResources();
+
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
 
         int maxWoodCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.WOOD);
@@ -2042,13 +2423,14 @@ public class VillageController {
         }
         if (labLevel < 1) {
             nrcBuildButton.setDisable(true);
-            nrcLabel.setText("NRC (Lab Lvl 1 Required) -> Current: " + labLevel); // در FXML شما اسمش snrcLabel است
+            nrcLabel.setText("NRC (Lab Lvl 1 Required) -> Current: " + labLevel);
             nrcLabel.setTextFill(Color.RED);
         } else {
             nrcBuildButton.setDisable(false);
             nrcLabel.setText("NRC");
             nrcLabel.setTextFill(Color.GREEN);
         }
+
 
         if (labLevel < 2) {
             snrcBuildButton.setDisable(true);
@@ -2073,6 +2455,7 @@ public class VillageController {
     private boolean checkResourcesAndAlert(PlantType plant) {
         Cost cost = plant.getBasePlantCost();
         if (cost == null) return true;
+
 
         boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
         if (!hasResources) {
@@ -2297,6 +2680,7 @@ public class VillageController {
     public AnimationTimer getGameLoop() {
         return gameLoop;
     }
+
 
     public Player getReceiverTradeRequest() {
         return receiverTradeRequest;
