@@ -18,7 +18,11 @@ public class WinnerController {
     }
 
     public void show(String winnerName) {
-        winnerLabel.setText("Winner: " + winnerName);
+        if (winnerName == null) {
+            winnerLabel.setText("All lands have been destroyed. Humanity has gone extinct.");
+        } else {
+            winnerLabel.setText("Winner: " + winnerName);
+        }
         winnerPanel.setVisible(true);
         winnerPanel.setManaged(true);
     }

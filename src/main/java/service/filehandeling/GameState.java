@@ -1,5 +1,6 @@
 package service.filehandeling;
 
+import model.army.LinkedList;
 import model.player.Player;
 import model.repository.PlayerRepository;
 import model.repository.UserRepository;
@@ -23,6 +24,7 @@ public class GameState implements Serializable{
     private boolean phaseTwoEnforced = false;
     private String gameWinner;
 
+    private LinkedList<String> eliminatedUsernames = new LinkedList<>();
 
     public GameState() {
         this.user = new HashMap<>();
@@ -71,4 +73,9 @@ public class GameState implements Serializable{
     public String getGameWinner() {return gameWinner;}
 
     public void setGameWinner(String gameWinner) {this.gameWinner = gameWinner;}
+
+    public LinkedList<String> getEliminatedUsernames() { return eliminatedUsernames; }
+    public void setEliminatedUsernames(LinkedList<String> eliminatedUsernames) {
+        this.eliminatedUsernames = eliminatedUsernames;
+    }
 }

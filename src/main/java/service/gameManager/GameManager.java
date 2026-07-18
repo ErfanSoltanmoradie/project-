@@ -1,5 +1,6 @@
 package service.gameManager;
 
+import model.army.LinkedList;
 import model.finalPart.GlobalTower;
 import model.player.Player;
 import model.repository.PlayerRepository;
@@ -15,8 +16,8 @@ import java.util.List;
 
 public class GameManager {
 
-    private static final Duration PHASE_ONE_DURATION = Duration.ofDays(7);
-    private static final Duration PHASE_TWO_DURATION = Duration.ofDays(7);
+    private static final Duration PHASE_ONE_DURATION = Duration.ofSeconds(160);
+    private static final Duration PHASE_TWO_DURATION = Duration.ofSeconds(200);
 
     public static void checkGameWinner(List<Village> allVillages) {
         Village winnerVillage = null;
@@ -87,7 +88,7 @@ public class GameManager {
                 if (!survived) {
                     player.setEliminationReason("Your colony failed to neutralize the cloud in time and was eliminated at the end of Phase 1.");
                     playerRepository.getAllPlayers().remove(player.getPlayerId());
-                    userRepository.getAllUsers().remove(player.getUsername());
+                    gameState.getEliminatedUsernames().add(player.getUsername());
                     worldMap.releaseCoordinate(village.getCoordinate());
                     eliminatedUsernames.add(player.getUsername());
                 }
@@ -107,11 +108,11 @@ public class GameManager {
 
         return eliminatedUsernames;
     }
-    public static List<String> checkAndEnforceTowerEliminations(PlayerRepository playerRepository,
-                                                                UserRepository userRepository,
-                                                                WorldMap worldMap) {
-
-        List<String> eliminatedUsernames = new ArrayList<>();
+    public static LinkedList<String> checkAndEnforceTowerEliminations(GameState gameState,
+                                                                      PlayerRepository playerRepository,
+                                                                      UserRepository userRepository,
+                                                                      WorldMap worldMap) {
+        LinkedList<String> eliminatedUsernames = new LinkedList<>();
 
         List<Player> snapshot = new ArrayList<>(playerRepository.getAllPlayers().values());
 
@@ -133,9 +134,9 @@ public class GameManager {
                 }
 
                 if (shouldEliminate) {
-                    player.setEliminationReason("Your Global Tower was destroyed during its protectionTime. Your colony has been eliminated.");
+                    player.setEliminationReason("...");
                     playerRepository.getAllPlayers().remove(player.getPlayerId());
-                    userRepository.getAllUsers().remove(player.getUsername());
+                    gameState.getEliminatedUsernames().add(player.getUsername());
                     worldMap.releaseCoordinate(village.getCoordinate());
                     eliminatedUsernames.add(player.getUsername());
                 }
@@ -238,21 +239,9 @@ public class GameManager {
 
         } else {
 
-            System.out.println("No active tower survived.");
-
-            for (Player player : players) {
-
-                playerRepository.getAllPlayers()
-                        .remove(player.getPlayerId());
-
-                userRepository.getAllUsers()
-                        .remove(player.getUsername());
-
-                if (player.getVillage() != null) {
-                    worldMap.releaseCoordinate(
-                            player.getVillage().getCoordinate());
-                }
-            }
+        System.out.println("No active tower survived.");
+        // هیچ بازیکنی اینجا حذف نمی‌شه؛ فقط پنل گیم‌اور/برنده بهشون نشون داده می‌شه
+        // (که خودش از طریق phaseTwoEnforced=true در پایین همین متد فعال می‌شه)
         }
 
         gameState.setGameWinner(winner);

@@ -610,7 +610,7 @@ public class VillageController {
         VBox playerVBox = new VBox();
         playerVBox.setSpacing(5);
 
-        String receiverPlayerName = tradeOffer.getReceiverVillage().getUserName();
+        String receiverPlayerName = tradeOffer.getReceiverPlayer().getVillage().getUserName();
         Label receiverLabel = new Label("receiver player [ " + receiverPlayerName + " ]");
         receiverLabel.setStyle("-fx-text-fill: #FF9800FF; -fx-font-size: 14px; -fx-font-weight: bold;");
 
@@ -657,7 +657,7 @@ public class VillageController {
     }
 
     private HBox createTradeRequestsRowElement(TradeOffer offer) {
-        TradeService tradeService = new TradeService();
+        TradeService tradeService = new TradeService(UUID.randomUUID());
 
         HBox row = new HBox();
         row.setSpacing(15);
@@ -674,7 +674,7 @@ public class VillageController {
         senderContainer.setMinWidth(120);
         senderContainer.setPrefWidth(120);
 
-        String senderName = offer.getSenderVillage().getUserName();
+        String senderName = offer.getSenderPlayer().getVillage().getUserName();
         Label senderLabel = new Label(senderName + " ➔ YOU");
         senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
 
@@ -1678,7 +1678,7 @@ public class VillageController {
         this.makeDeals(offeredResources, requestedResources);
         this.clearTradeTextFields();
 
-        TradeService tradeService = new TradeService();
+        TradeService tradeService = new TradeService(UUID.randomUUID());
         tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
 
         this.hideMakeATradePanel();
@@ -2068,17 +2068,6 @@ public class VillageController {
             this.towerHpLabel.setText("Health: " + tower.getHp() + " / " + tower.getMaxHp());
             this.towerHpBar.setProgress((double) tower.getHp() / tower.getMaxHp());
 
-            java.time.LocalDateTime completeTime = tower.getConstructionCompleteTime();
-            if (completeTime != null) {
-                java.time.LocalDateTime protectionEnds = completeTime.plusHours(24);
-                if (java.time.LocalDateTime.now().isBefore(protectionEnds)) {
-                    long minutesLeft = java.time.Duration.between(java.time.LocalDateTime.now(), protectionEnds).toMinutes();
-                    this.towerProtectionLabel.setText("in protecting: " + minutesLeft + "remained ");
-                } else {
-                    this.towerProtectionLabel.setText("");
-                }
-            }
-
             this.buildTowerButton.setDisable(true);
             this.buildTowerButton.setVisible(false);
             this.towerRequirementWarningLabel.setText("");
@@ -2325,16 +2314,20 @@ public class VillageController {
             @Override
             public void handle(long now) {
 
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
                 setTradeButtonEnable();
                 setAllianceButtonEnable();
 
                 taskProcessor.process();
+
+                if (!winnerWindowShown
+                        && gameState != null
+                        && gameState.isPhaseTwoEnforced()) {
+
+                    winnerWindowShown = true;
+                    stopGameLoop(gameLoop);
+                    winnerViewController.show(gameState.getGameWinner());
+                    return;
+                }
 
                 if (!eliminatedWindowShown
                         && playerRepository != null
@@ -2344,16 +2337,6 @@ public class VillageController {
                     eliminatedWindowShown = true;
                     stopGameLoop(gameLoop);
                     eliminatedViewController.show(player.getEliminationReason());
-                    return;
-                }
-
-                if (!winnerWindowShown
-                        && gameState != null
-                        && gameState.isPhaseTwoEnforced()) {
-
-                    winnerWindowShown = true;
-                    stopGameLoop(gameLoop);
-                    winnerViewController.show(gameState.getGameWinner());
                     return;
                 }
 

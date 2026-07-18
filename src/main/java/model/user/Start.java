@@ -1,5 +1,6 @@
 package model.user;
 
+import model.army.LinkedList;
 import model.player.Player;
 import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
@@ -56,6 +57,7 @@ public class Start {
         this.gameState.setPhaseTwoStartTime(loaded.getPhaseTwoStartTime());
         this.gameState.setPhaseTwoEnforced(loaded.isPhaseTwoEnforced());
         this.gameState.setGameWinner(loaded.getGameWinner());
+        this.gameState.setEliminatedUsernames(loaded.getEliminatedUsernames());
         if (this.gameState.getGameStartTime() == null) {
 
             this.gameState.setGameStartTime(Instant.now());
@@ -65,8 +67,7 @@ public class Start {
         GameInitializer.init(this.gameState);
         //this.addProducedResources();
 
-        this.authService = new AuthService(userRepository, playerRepository, playerFactory);
-
+        this.authService = new AuthService(userRepository, playerRepository, playerFactory, gameState);
         this.startPhaseOneWatcher();
     }
 
@@ -80,7 +81,6 @@ public class Start {
 
         this.phaseOneScheduler.scheduleAtFixedRate(() -> {
             try {
-
                 // پایان فاز اول
                 List<String> eliminated = GameManager.checkAndEnforcePhaseOneEnd(
                         this.gameState,
@@ -94,10 +94,8 @@ public class Start {
                 }
 
                 // حذف بازیکنانی که برجشان در بازه‌ی حفاظت ۲۴ ساعته نابود شده
-                List<String> towerEliminated = GameManager.checkAndEnforceTowerEliminations(
-                        this.playerRepository,
-                        this.userRepository,
-                        this.worldMap);
+                LinkedList<String> towerEliminated = GameManager.checkAndEnforceTowerEliminations(
+                        this.gameState, this.playerRepository, this.userRepository, this.worldMap);
 
                 if (!towerEliminated.isEmpty()) {
                     System.out.println("Eliminated due to tower destroyed during protection window: " + towerEliminated);
@@ -117,7 +115,7 @@ public class Start {
 
                     if (!phaseTwoWasEnforced && this.gameState.isPhaseTwoEnforced()) {
                         System.out.println("Phase 2 ended. Winner: "
-                                + (winner != null ? winner : "NONE"));
+                                + (winner != null ? winner : "\"All lands have been destroyed. Humanity has gone extinct.\""));
                         this.saveAllData();
                     }
                 }
@@ -218,5 +216,6 @@ public class Start {
     public GameState getGameState() {
         return gameState;
     }
+
 
 }
