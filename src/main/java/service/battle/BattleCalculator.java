@@ -171,15 +171,30 @@ public class BattleCalculator {
                     defenderVillage.getGameMap().removeGlobalTower(tower);
                     tower.setPosition(null);
 
-                    // اگر برج در طول ۲۴ ساعت اول پس از تکمیل ساخت نابود شود،
-                    // دهکده باید از بازی حذف شود (نه صرفاً امکان بازسازی برج)
                     if (wasUnderProtection) {
-                        defenderVillage.setPendingTowerElimination(true);
+                        applyTowerProtectionFailurePenalty(defenderVillage);
                     }
                 }
             }
         } finally {
             defenderVillage.getLock().writeLock().unlock();
+        }
+    }
+
+    private void applyTowerProtectionFailurePenalty(Village village) {
+
+        // صفر کردن تمام منابع دهکده
+        Resources resources = village.getResources();
+        for (ResourcesType type : ResourcesType.values()) {
+            resources.withdraw(type, resources.getAmount(type));
+        }
+
+        // برگردوندن ساختمون مرکزی (Major Building) به لول ۱
+        for (Building building : village.getBuildings().values()) {
+            if (building instanceof MajorBuilding) {
+                building.setLevel(1);
+                break;
+            }
         }
     }
 

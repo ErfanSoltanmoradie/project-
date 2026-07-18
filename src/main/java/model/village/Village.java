@@ -58,9 +58,6 @@ public class Village implements Serializable {
     private final Map<UUID, TradeOffer>  tradeOffers = new HashMap<>();
     private AllianceRequest allianceRequest;
     private GlobalTower  globalTower=null;
-    // اگر برج جهانی در طول بازه‌ی حفاظت ۲۴ ساعته نابود شود، این فلگ true می‌شود
-    // و بازیکن مربوطه توسط GameManager از بازی حذف خواهد شد
-    private boolean pendingTowerElimination = false;
 
     public GameMap getGameMap() {
         return gameMap;
@@ -210,14 +207,6 @@ public class Village implements Serializable {
 
     public void setGlobalTower(GlobalTower globalTower) {
         this.globalTower = globalTower;
-    }
-
-    public boolean isPendingTowerElimination() {
-        return pendingTowerElimination;
-    }
-
-    public void setPendingTowerElimination(boolean pendingTowerElimination) {
-        this.pendingTowerElimination = pendingTowerElimination;
     }
 
     /*public Map<UUID, BattleHistory> getBattleHistory() {

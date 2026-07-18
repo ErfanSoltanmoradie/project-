@@ -16,8 +16,8 @@ import java.util.List;
 
 public class GameManager {
 
-    private static final Duration PHASE_ONE_DURATION = Duration.ofSeconds(160);
-    private static final Duration PHASE_TWO_DURATION = Duration.ofSeconds(200);
+    private static final Duration PHASE_ONE_DURATION = Duration.ofSeconds(200);
+    private static final Duration PHASE_TWO_DURATION = Duration.ofSeconds(400);
 
     public static void checkGameWinner(List<Village> allVillages) {
         Village winnerVillage = null;
@@ -105,46 +105,6 @@ public class GameManager {
         gameState.setPhaseOneEnforced(true);
 
         System.out.println("Phase two start = " + gameState.getPhaseTwoStartTime());
-
-        return eliminatedUsernames;
-    }
-    public static LinkedList<String> checkAndEnforceTowerEliminations(GameState gameState,
-                                                                      PlayerRepository playerRepository,
-                                                                      UserRepository userRepository,
-                                                                      WorldMap worldMap) {
-        LinkedList<String> eliminatedUsernames = new LinkedList<>();
-
-        List<Player> snapshot = new ArrayList<>(playerRepository.getAllPlayers().values());
-
-        for (Player player : snapshot) {
-            player.getLock().writeLock().lock();
-            try {
-                Village village = player.getVillage();
-                if (village == null) continue;
-
-                boolean shouldEliminate;
-                village.getLock().writeLock().lock();
-                try {
-                    shouldEliminate = village.isPendingTowerElimination();
-                    if (shouldEliminate) {
-                        village.setPendingTowerElimination(false);
-                    }
-                } finally {
-                    village.getLock().writeLock().unlock();
-                }
-
-                if (shouldEliminate) {
-                    player.setEliminationReason("...");
-                    playerRepository.getAllPlayers().remove(player.getPlayerId());
-                    gameState.getEliminatedUsernames().add(player.getUsername());
-                    worldMap.releaseCoordinate(village.getCoordinate());
-                    eliminatedUsernames.add(player.getUsername());
-                }
-
-            } finally {
-                player.getLock().writeLock().unlock();
-            }
-        }
 
         return eliminatedUsernames;
     }

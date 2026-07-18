@@ -1,6 +1,5 @@
 package model.user;
 
-import model.army.LinkedList;
 import model.player.Player;
 import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
@@ -90,15 +89,6 @@ public class Start {
 
                 if (!eliminated.isEmpty()) {
                     System.out.println("Phase 1 ended. Eliminated players: " + eliminated);
-                    this.saveAllData();
-                }
-
-                // حذف بازیکنانی که برجشان در بازه‌ی حفاظت ۲۴ ساعته نابود شده
-                LinkedList<String> towerEliminated = GameManager.checkAndEnforceTowerEliminations(
-                        this.gameState, this.playerRepository, this.userRepository, this.worldMap);
-
-                if (!towerEliminated.isEmpty()) {
-                    System.out.println("Eliminated due to tower destroyed during protection window: " + towerEliminated);
                     this.saveAllData();
                 }
 
