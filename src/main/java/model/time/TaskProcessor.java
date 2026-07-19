@@ -67,7 +67,7 @@ public class TaskProcessor {
             throw new IllegalStateException("TaskProcessor is running concurrently!");
         }
 
-        if( (int) ((System.currentTimeMillis() - this.lastCloudNeutralization) / 1000) % 5 == 0  || !this.firstCloudNeutralization)
+        if( System.currentTimeMillis() - lastCloudNeutralization >= 5000 )
             this.cloudNeutralization();
 
 
@@ -363,8 +363,9 @@ public class TaskProcessor {
                                 task.getAttackerArmyLosses(),
                                 task.getDefenderArmyLosses(),
                                 task.getAttackerLoot(),
-                                battle.getDefenderUsername(),
-                                battle.getAttackerUsername());
+                                battle.getAttackerUsername(),
+                                battle.getDefenderUsername());
+
 
                         /*battle.getAttackerVillage().getBattleHistory().put(history.getBattleId(), history);
                         battle.getDefenderVillage().getBattleHistory().put(history.getBattleId(), history);*/

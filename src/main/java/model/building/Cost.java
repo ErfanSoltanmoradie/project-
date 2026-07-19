@@ -13,6 +13,9 @@ public class Cost  implements Serializable {
     private final int coin;
     private final Duration neededTime;
 
+    private int requiredScienceLevel = 1;
+    private int requiredMajorBuildingLevel = 1;
+
     public Cost(int wood, int stone, int iron, int gunPowder,
                 int cleanWater, int cleanSoil, int coin, Duration neededTime) {
 
@@ -26,6 +29,21 @@ public class Cost  implements Serializable {
         this.neededTime = neededTime;
     }
 
+    public Cost(int requiredMajorBuildingLevel, int requiredScienceLevel, int wood, int stone, int iron, int gunPowder,
+                int cleanWater, int cleanSoil, int coin, Duration neededTime) {
+
+        this.wood = wood;
+        this.iron = iron;
+        this.gunPowder = gunPowder;
+        this.cleanWater = cleanWater;
+        this.cleanSoil = cleanSoil;
+        this.coin = coin;
+        this.stone = stone;
+        this.neededTime = neededTime;
+        this.requiredMajorBuildingLevel = requiredMajorBuildingLevel;
+        this.requiredScienceLevel = requiredScienceLevel;
+    }
+
 
     public static Cost buildCost(BuildingType buildingType) {
         return buildingType.getBaseBuildCost();
@@ -33,35 +51,43 @@ public class Cost  implements Serializable {
 
     public static Cost buildCost(PlantType plantType) {return plantType.getBasePlantCost();}
 
+    private static Cost safeCost(UpgradeBuildingInfo info) {
+        if (info == null) {
+            return new Cost(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE,
+                    Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Duration.ofDays(9999));
+        }
+        return info.getCost();
+    }
+
     public static Cost upgradeCost(Building building){
 
         return switch (building.getType()) {
             case WOOD_MINE, STONE_MINE, IRON_MINE , SOIL_PURIFIER, DIRTY_WATER_MINE, GUNPOWDER_MINE ->
-                    MinerBuilding.getMineUpgradeInfo(building.getLevel()).getCost();
+                    safeCost(MinerBuilding.getMineUpgradeInfo(building.getLevel()));
 
             case WATER_STORAGE, SOIL_STORAGE, STONE_STORAGE, WOOD_STORAGE, IRON_STORAGE, GUNPOWDER_STORAGE ->
-                    StorageBuilding.getUpgradeStoragesCost(building.getLevel()).getCost();
+                    safeCost(StorageBuilding.getUpgradeStoragesCost(building.getLevel()));
 
-            case BALLISTA_DEFENSIVE -> Ballista.getBallistaUpgradeInfo(building.getLevel()).getCost();
+            case BALLISTA_DEFENSIVE -> safeCost(Ballista.getBallistaUpgradeInfo(building.getLevel()));
 
-            case CATAPULT_DEFENSIVE -> Catapult.getCatapultUpgradeInfo(building.getLevel()).getCost();
+            case CATAPULT_DEFENSIVE -> safeCost(Catapult.getCatapultUpgradeInfo(building.getLevel()));
 
-            case SENTINEL_DEFENSIVE -> Sentinel.getSentinelUpgradeInfo(building.getLevel()).getCost();
-
-
-            case LABORATORY -> Laboratory.upgradeBuildingInfo(building.getLevel()).getCost();
-
-            case CUSTOMHOUSE -> Customhouse.upgradeBuildingInfo(building.getLevel()).getCost();
+            case SENTINEL_DEFENSIVE -> safeCost(Sentinel.getSentinelUpgradeInfo(building.getLevel()));
 
 
-            case BARRACKS           -> Barrack.getBarrackUpgradeInfo(building.getLevel()).getCost();
+            case LABORATORY -> safeCost(Laboratory.upgradeBuildingInfo(building.getLevel()));
 
-            case ARMY_PRODUCER      -> ArmyProducer.getArmyProducerUpgradeInfo(building.getLevel()).getCost();
+            case CUSTOMHOUSE -> safeCost(Customhouse.upgradeBuildingInfo(building.getLevel()));
 
 
-            case MAJOR_BUILDING -> MajorBuilding.upgradeBuildingInfo(building.getLevel()).getCost();
+            case BARRACKS  -> safeCost(Barrack.getBarrackUpgradeInfo(building.getLevel()));
 
-            case RESEARCH_CENTER -> ResearchCenter.upgradeBuildingInfo(building.getLevel()).getCost();
+            case ARMY_PRODUCER -> safeCost(ArmyProducer.getArmyProducerUpgradeInfo(building.getLevel()));
+
+
+            case MAJOR_BUILDING -> safeCost(MajorBuilding.upgradeBuildingInfo(building.getLevel()));
+
+            case RESEARCH_CENTER -> safeCost(ResearchCenter.upgradeBuildingInfo(building.getLevel()));
 
 
             default -> new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofMinutes(0));
@@ -73,6 +99,10 @@ public class Cost  implements Serializable {
     }
 
     public int getWood() {return wood;}
+
+    public boolean isMaxLevelReached() {
+        return this.wood == Integer.MAX_VALUE;
+    }
 
     public int getStone() {return stone;}
 
@@ -88,5 +118,21 @@ public class Cost  implements Serializable {
 
     public Duration getNeededTime() {
         return neededTime;
+    }
+
+    public int getRequiredMajorBuildingLevel() {
+        return requiredMajorBuildingLevel;
+    }
+
+    public void setRequiredMajorBuildingLevel(int requiredMajorBuildingLevel) {
+        this.requiredMajorBuildingLevel = requiredMajorBuildingLevel;
+    }
+
+    public int getRequiredScienceLevel() {
+        return requiredScienceLevel;
+    }
+
+    public void setRequiredScienceLevel(int requiredScienceLevel) {
+        this.requiredScienceLevel = requiredScienceLevel;
     }
 }

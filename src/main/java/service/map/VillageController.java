@@ -6,11 +6,19 @@ import javafx.fxml.FXML;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.army.ArmyStorage;
+import model.army.ArmyType;
 import model.battle.BattleArmy;
 import model.battle.BattleHistory;
 
@@ -26,6 +34,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import model.building.*;
+import model.finalPart.GlobalTower;
 import model.player.Player;
 import model.repository.PlayerRepository;
 import model.resources.Resources;
@@ -43,12 +52,15 @@ import service.trade.TradeOffer;
 import service.trade.TradeService;
 import service.trade.TradeStatus;
 
-import java.awt.event.MouseEvent;
+
+import java.io.IOException;
+import java.time.Duration;
 import java.util.*;
 
 public class VillageController {
 
     private PlayerRepository playerRepository;
+    private int lastSeenAnnouncementCount = 0;
 
     public PlayerRepository getPlayerRepository() {
         return playerRepository;
@@ -67,6 +79,12 @@ public class VillageController {
     @FXML private Button upgradeButton;
 
     @FXML private Button buyBuilding;
+
+    @FXML private Label infoPanelTitleLabel;
+    @FXML private Label buildingLevelLabel;
+    @FXML private Label plantsCountLabel;
+    @FXML private Label neutralizationPowerLabel;
+    @FXML private Label towerAnnouncementLabel;
 
     @FXML private Label woodLabel;
 
@@ -92,7 +110,69 @@ public class VillageController {
 
     @FXML private ImageView woodMineImage;
 
+    @FXML private ImageView ironMineImage;
+
+    @FXML private ImageView stoneMineImage;
+
+    @FXML private ImageView LaboratoryMineImage;
+
+    @FXML private ImageView nrcImage;
+
+    @FXML private ImageView snrcImage;
+
+    @FXML private ImageView psnrcImage;
+
     @FXML private Label woodMineLabel;
+
+    @FXML private Label ironMineLabel;
+
+    @FXML private Label stoneMineLabel;
+
+    @FXML private Label cleanWaterMineLabel;
+
+    @FXML private Label cleanSoilMineLabel;
+
+    @FXML private Label gunPowderMineLabel;
+
+    @FXML private Label laboratoryLabel;
+
+    @FXML private Label customhouseLabel;
+
+    @FXML private Label nrcLabel;
+
+    @FXML private Label snrcLabel;
+
+    @FXML private Label psnrcLabel;
+
+    @FXML private Label dirtyWaterMineLabel;
+
+    @FXML private Label dirtySoilMineLabel;
+
+    @FXML private Label waterPurifierLabel;
+
+    @FXML private Label soilPurifierLabel;
+
+    @FXML private Label woodStorageLabel;
+
+    @FXML private Label ironStorageLabel;
+
+    @FXML private Label stoneStorageLabel;
+
+    @FXML private Label gunPowderStorageLabel;
+
+    @FXML private Label waterStorageLabel;
+
+    @FXML private Label soilStorageLabel;
+
+    @FXML private Label ballistaDefensiveLabel;
+
+    @FXML private Label catapultDefensiveLabel;
+
+    @FXML private Label sentinelDefensiveLabel;
+
+    @FXML private Label majorBuildingLabel;
+
+    @FXML private Label researchCenterLabel;
 
     @FXML private Button woodMineBuildButton;
 
@@ -105,6 +185,42 @@ public class VillageController {
     @FXML private Button gunPowderMineBuildButton;
 
     @FXML private Button StoneMineBuildButton;
+
+    @FXML private Button waterStorageBuildButton;
+
+    @FXML private Button soilStorageBuildButton;
+
+    @FXML private Button waterPurifierBuildButton;
+
+    @FXML private Button soilPurifierBuildButton;
+
+    @FXML private Button woodStorageBuildButton;
+
+    @FXML private Button stoneMineBuildButton;
+
+    @FXML private Button ironStorageBuildButton;
+
+    @FXML private Button stoneStorageBuildButton;
+
+    @FXML private Button gunPowderStorageBuildButton;
+
+    @FXML private Button ballistaDefensiveBuildButton;
+
+    @FXML private Button catapultDefensiveBuildButton;
+
+    @FXML private Button sentinelDefensiveBuildButton;
+
+    @FXML private Button customhouseBuildButton;
+
+    @FXML private Button laboratoryBuildButton;
+
+    @FXML private Button researchCenterBuildButton;
+
+    @FXML private Button nrcBuildButton;
+
+    @FXML private Button snrcBuildButton;
+
+    @FXML private Button psnrcBuildButton;
 
     @FXML private Button tradeButton;
 
@@ -158,11 +274,29 @@ public class VillageController {
 
     @FXML AnchorPane battlePanel;
 
+    @FXML AnchorPane finalBattlePanel;
+
     @FXML Button battleHistoryButton;
 
     @FXML VBox battleHistoryContainer;
 
     @FXML AnchorPane battleHistoryPannel;
+
+    @FXML private Label ragnarAvailableLabel;
+    @FXML private Label rosooAvailableLabel;
+    @FXML private Label lagertaAvailableLabel;
+
+    @FXML private TextField ragnarSendTextField;
+    @FXML private TextField rosooSendTextField;
+    @FXML private TextField lagertaSendTextField;
+
+    @FXML private Label troopSelectionErrorLabel;
+
+    @FXML private Button confirmAttackButton;
+    @FXML private Button cancelTroopSelectionButton;
+
+    private Player selectedTarget;
+
 
     @FXML ProgressBar woodProgressBar;
 
@@ -206,9 +340,25 @@ public class VillageController {
 
     @FXML AnchorPane barracksDecisionPanel;
 
+    @FXML AnchorPane addPlantPanel;
 
-    //@FXML private ImageView borderImageView;
+    @FXML Label healthAmountLabel;
 
+    @FXML Label usernameLabel2;
+    @FXML ProgressBar healthProgressBar;
+
+    @FXML Button towerButton;
+    @FXML AnchorPane globalTowerPanel;
+    @FXML Label towerStatusLabel;
+    @FXML Label towerHpLabel;
+    @FXML ProgressBar towerHpBar;
+    @FXML Label towerProtectionLabel;
+    @FXML Label towerRequirementWarningLabel;
+    @FXML Button buildTowerButton;
+    @FXML Button leaveTowerPanelButton;
+
+    @FXML Label radiationLabel;
+    @FXML ProgressBar radiationProgressBar;
 
     private Player player;
     private TaskProcessor taskProcessor;
@@ -227,12 +377,63 @@ public class VillageController {
     private ArmyProducer SelectedArmyProducer;
 
     public void setPlayer(Player player) {
+        if (player == null) {
+            return;
+        }
+        if (player.getVillage() == null) {
+            return;
+        }
         this.player = player;
         this.updateResourcesUI();
         this.taskProcessor = new TaskProcessor(player.getVillage());
 
+        this.usernameLabel2.setText(null);
+        this.usernameLabel2.setText(this.player.getUsername());
+
         initMap();
         startGameLoop();
+    }
+
+    private void healthProgressBar(){
+        this.healthAmountLabel.setText(null);
+        this.healthAmountLabel.setText(String.valueOf(this.checkHealth()));
+
+        this.healthProgressBar.setMaxWidth(Double.MAX_VALUE);
+        this.healthProgressBar.setProgress( ((double) this.checkHealth() / 2000));
+        this.healthProgressBar.getStyleClass().add("neon-progress-bar");
+        this.healthProgressBar.setStyle("-fx-accent: #ff0202;");
+    }
+
+    private void radiationProgressBar(){
+        this.radiationLabel.setText(null);
+
+        this.radiationProgressBar.setMaxWidth(Double.MAX_VALUE);
+        this.radiationProgressBar.setProgress(checkRadiation());
+
+        this.radiationProgressBar.getStyleClass().add("neon-progress-bar");
+        this.radiationProgressBar.setStyle("-fx-accent: #38ff00;");
+    }
+
+
+
+    private double checkRadiation(){
+        this.player.getVillage().getLock().readLock().lock();
+        try {
+            this.radiationLabel.setText(String.valueOf(player.getVillage().getCloud().getRadiation()));
+
+            return  ((double) player.getVillage().getCloud().getRadiation() / 2000);
+        }finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+    }
+
+    private int checkHealth(){
+        this.player.getVillage().getLock().readLock().lock();
+        try {
+            return this.player.getVillage().getHealth();
+        }finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
     }
 
     private void initMap() {
@@ -385,73 +586,8 @@ public class VillageController {
         }
     }
 
-    private HBox createSentTradeRequestsRowElement(TradeOffer offer){
-        TradeService tradeService = new TradeService();
-
+    private HBox createSentTradeRequestsRowElement(TradeOffer tradeOffer){
         HBox row = new HBox();
-        row.setSpacing(15);
-        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-
-        row.setStyle("-fx-padding: 12; " +
-                "-fx-background-color: #2b2b2b; " +
-                "-fx-background-radius: 8; " +
-                "-fx-border-color: #444444; " +
-                "-fx-border-width: 1;");
-
-        VBox senderContainer = new VBox();
-        senderContainer.setSpacing(4);
-        senderContainer.setMinWidth(120);
-        senderContainer.setPrefWidth(120);
-
-        String receiverName = offer.getReceiverVillage().getUserName();
-        Label receiverLabel = new Label("RECEIVER: " + receiverName);
-        receiverLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
-        receiverLabel.setAlignment(Pos.CENTER);
-
-        senderContainer.getChildren().addAll(receiverLabel);
-
-        VBox offeredResourcesContainer = new VBox();
-        offeredResourcesContainer.setSpacing(4);
-        offeredResourcesContainer.setMinWidth(140);
-
-        for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
-            ResourcesType resourcesType = entry.getKey();
-            int amount = entry.getValue();
-            if (amount > 0) {
-                Label label = new Label(resourcesType.toString() + ": " + amount);
-                label.setStyle("-fx-text-fill: #ff0000; -fx-font-size: 11px; -fx-font-weight: bold;");
-                offeredResourcesContainer.getChildren().add(label);
-            }
-        }
-
-        VBox requestedResourcesContainer = new VBox();
-        requestedResourcesContainer.setSpacing(4);
-        requestedResourcesContainer.setMinWidth(100);
-
-        for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
-            ResourcesType resourcesType = entry.getKey();
-            int amount = entry.getValue();
-            if (amount > 0) {
-                Label label = new Label(resourcesType.toString() + ": " + amount);
-                label.setStyle("-fx-text-fill: #08ff00; -fx-font-size: 11px; -fx-font-weight: bold;");
-                requestedResourcesContainer.getChildren().add(label);
-            }
-        }
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        Region spacer2 = new Region();
-        HBox.setHgrow(spacer2, Priority.ALWAYS);
-
-        row.getChildren().addAll(senderContainer, spacer, offeredResourcesContainer, spacer2, requestedResourcesContainer);
-
-        row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2d2d2d; -fx-border-color: #ff9800;"));
-        row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #333333;"));
-
-
-        return row;
-        /*HBox row = new HBox();
         row.setSpacing(15);
 
         row.setStyle("-fx-padding: 10; " +
@@ -491,7 +627,7 @@ public class VillageController {
         row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
         row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
 
-        return row;*/
+        return row;
     }
 
 
@@ -788,11 +924,11 @@ public class VillageController {
             try {
                 AllianceService.lockVillages(this.player, targetPlayer);
                 try {
-                        if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
-                            HBox playerRow = this.createEnemiesElement(targetPlayer);
+                    if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
+                        HBox playerRow = this.createEnemiesElement(targetPlayer);
 
-                            this.playersContainerForAttack.getChildren().add(playerRow);
-                        }
+                        this.playersContainerForAttack.getChildren().add(playerRow);
+                    }
                 }finally {
                     AllianceService.unlockVillages(this.player, targetPlayer);
                 }
@@ -837,9 +973,9 @@ public class VillageController {
                 "-fx-cursor: hand;");
 
         selectBtn.setOnAction(e -> {
-            // do the attack
+            this.selectedTarget = targetPlayer; // ذخیره کردن هدف
             this.hideAttackPanel();
-            this.doAttack(targetPlayer);
+            this.showTroopSelectionPanel();
         });
 
         row.getChildren().addAll(textContainer, spacer, selectBtn);
@@ -850,14 +986,116 @@ public class VillageController {
         return row;
     }
 
-    private void doAttack(Player targetPlayer){
+    private boolean doAttack(Player targetPlayer, BattleArmy battleArmy){
 
         BattleManagement battleManagement = new BattleManagement(this.player.getVillage(), targetPlayer.getVillage());
-        BattleArmy battleArmy = new BattleArmy(10, 10, 10);
-        //you need to create an army first it's just a test
-         battleManagement.startBattle(battleArmy);
-         this.battleButton.setDisable(true);
+
+        boolean started = battleManagement.startBattle(battleArmy);
+
+        if (started) {
+            this.battleButton.setDisable(true);
+        }
+
+        return started;
     }
+
+    private void showTroopSelectionPanel(){
+
+        if (this.troopSelectionErrorLabel != null) {
+            this.troopSelectionErrorLabel.setText("");
+        }
+
+        player.getVillage().getLock().readLock().lock();
+        try {
+            ArmyStorage armyStorage = player.getVillage().getArmies().getArmyStorage();
+
+            this.ragnarAvailableLabel.setText("Available Ragnar:" + armyStorage.getArmyCount(ArmyType.RAGNAR));
+            this.rosooAvailableLabel.setText("Available Rosso: " + armyStorage.getArmyCount(ArmyType.ROSOO));
+            this.lagertaAvailableLabel.setText("Available Lagerta:" + armyStorage.getArmyCount(ArmyType.LAGERTA));
+        } finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+
+
+        this.ragnarSendTextField.setText("0");
+        this.rosooSendTextField.setText("0");
+        this.lagertaSendTextField.setText("0");
+
+        this.finalBattlePanel.setVisible(true);
+        this.finalBattlePanel.setManaged(true);
+    }
+
+    private void hideTroopSelectionPanel(){
+        this.finalBattlePanel.setVisible(false);
+        this.finalBattlePanel.setManaged(false);
+    }
+
+    @FXML
+    private void onConfirmAttackClicked(){
+
+        if (this.selectedTarget == null) {
+            this.hideTroopSelectionPanel();
+            return;
+        }
+
+        int ragnarCount;
+        int rosooCount;
+        int lagertaCount;
+
+        try {
+            ragnarCount = parseArmyCount(this.ragnarSendTextField.getText());
+            rosooCount = parseArmyCount(this.rosooSendTextField.getText());
+            lagertaCount = parseArmyCount(this.lagertaSendTextField.getText());
+        } catch (NumberFormatException ex) {
+            this.troopSelectionErrorLabel.setText("Enter a valid number");
+            return;
+        }
+
+        BattleArmy battleArmy = new BattleArmy(ragnarCount, rosooCount, lagertaCount);
+
+        if (battleArmy.getTotalArmyCount() == 0) {
+            this.troopSelectionErrorLabel.setText("You must select at least one army");
+            return;
+        }
+
+        player.getVillage().getLock().readLock().lock();
+        try {
+            ArmyStorage armyStorage = player.getVillage().getArmies().getArmyStorage();
+
+            for (ArmyType type : ArmyType.values()) {
+                if (battleArmy.getArmyCount(type) > armyStorage.getArmyCount(type)) {
+                    this.troopSelectionErrorLabel.setText("You dont have enough armies ");
+                    return;
+                }
+            }
+        } finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+
+        boolean started = this.doAttack(this.selectedTarget, battleArmy);
+
+        if (started) {
+            this.hideTroopSelectionPanel();
+            this.selectedTarget = null;
+        } else {
+            this.troopSelectionErrorLabel.setText("You cant battle this village because the target village is currently in a battle");
+        }
+    }
+
+    @FXML
+    private void onCancelTroopSelectionClicked(){
+        this.selectedTarget = null;
+        this.hideTroopSelectionPanel();
+    }
+
+    private int parseArmyCount(String text){
+        if (text == null || text.isBlank()) {
+            return 0;
+        }
+        int value = Integer.parseInt(text.trim());
+        return Math.max(value, 0);
+    }
+
 
     private void showAttackHistory(){
 
@@ -1008,6 +1246,13 @@ public class VillageController {
     }
 
     @FXML
+    private void onBuildPlantClicked(){
+        this.showAddPlantPanel();
+        this.hideShopPanel();
+    }
+
+
+    @FXML
     private void onReceivedTradeRequests(){
         this.hideTradePanel();
         this.showReceivedTradeRequestsPanel();
@@ -1016,8 +1261,23 @@ public class VillageController {
 
 
     @FXML
-    private void onUpgradeClicked() {
-        if (this.controller != null) {
+    private void onUpgradeClicked(ActionEvent event) {
+        if (this.controller == null) {
+            return;
+        }
+
+        if (this.controller.getSelectedPlant() != null) {
+            var selectedPlant = this.controller.getSelectedPlant();
+
+            this.player.getVillage().getPlants().remove(selectedPlant.getId());
+
+            this.player.getVillage().getGameMap().getTile(
+                    selectedPlant.getPosition().getX(),
+                    selectedPlant.getPosition().getY()
+            ).setPlant(null);
+
+            this.hideInfoPanel();
+        } else {
             this.controller.handleUpgradeClicked();
             this.hideInfoPanel();
         }
@@ -1042,64 +1302,147 @@ public class VillageController {
     @FXML
     private void onWoodMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.WOOD_MINE);
+            if(!checkResourcesAndAlert(BuildingType.WOOD_MINE)) return;
+            if(showConstructionConfirmation("WoodMiner")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.WOOD_MINE);
+            }
+        }
+    }
+
+    @FXML
+    private void onBuildCustomHouseClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
+            if(showConstructionConfirmation("CUSTOMHOUSE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
+            }
+        }
+    }
+
+    @FXML
+    private void onBallistaBuildClicked(){
+
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.BALLISTA_DEFENSIVE)) return;
+            if(showConstructionConfirmation("BALLISTA_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.BALLISTA_DEFENSIVE);
+            }
+        }
+    }
+
+    @FXML
+    private void onSentinelBuildClicked(){
+
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.SENTINEL_DEFENSIVE)) return;
+            if(showConstructionConfirmation("SENTINEL_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.SENTINEL_DEFENSIVE);
+            }
+        }
+
+    }
+
+    @FXML
+    private void onCatapultBuildClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.CATAPULT_DEFENSIVE)) return;
+            if(showConstructionConfirmation("CATAPULT_DEFENSIVE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.CATAPULT_DEFENSIVE);
+            }
         }
     }
 
     @FXML
     private void onIronMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.IRON_MINE);
+            if(!checkResourcesAndAlert(BuildingType.IRON_MINE)) return;
+            if(showConstructionConfirmation("IronMiner")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.IRON_MINE);
+            }
         }
     }
 
     @FXML
     private void onStoneMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.STONE_MINE);
+            if(!checkResourcesAndAlert(BuildingType.STONE_MINE)) return;
+            if(showConstructionConfirmation("StoneMiner")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.STONE_MINE);
+            }
         }
     }
 
     @FXML
     private void onWaterMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.DIRTY_WATER_MINE);
+            if(!checkResourcesAndAlert(BuildingType.WATER_STORAGE)) return;
+            if(showConstructionConfirmation("DirtyWaterMine")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.DIRTY_WATER_MINE);
+            }
         }
     }
 
     @FXML
     private void onSoilMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.DIRTY_SOIL_MINE);
+            if(!checkResourcesAndAlert(BuildingType.SOIL_STORAGE)) return;
+            if(showConstructionConfirmation("DirtySoilMine")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.DIRTY_SOIL_MINE);
+            }
         }
     }
 
     @FXML
     private void onGunPowderMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.GUNPOWDER_MINE);
+            if(!checkResourcesAndAlert(BuildingType.GUNPOWDER_MINE)) return;
+            if(showConstructionConfirmation("GunpowderMine")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.GUNPOWDER_MINE);
+            }
+        }
+    }
+
+
+    @FXML
+    private void onCustomhouseBuildClicked(ActionEvent actionEvent) {
+        if (controller != null) {
+            if (!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
+            if(showConstructionConfirmation("Customhouse")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
+            }
         }
     }
 
     @FXML
     private void onMajorBuildingBuildClicked(ActionEvent actionEvent){
         if(controller != null){
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.MAJOR_BUILDING);
+            if(!checkResourcesAndAlert(BuildingType.MAJOR_BUILDING)) return;
+            if(showConstructionConfirmation("TownHall")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.MAJOR_BUILDING);
+            }
         }
     }
 
     @FXML
     private  void onLabBuildClicked(){
-        if(controller != null){
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.LABORATORY);
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.LABORATORY)) return;
+            if(showConstructionConfirmation("Laboratory")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.LABORATORY);
+            }
         }
     }
 
@@ -1122,9 +1465,62 @@ public class VillageController {
     @FXML
     private void onResearchCenterBuildClicked(){
         if(controller != null){
-            this.hideAddBuildingPanel();
-            controller.enterBuildMode(BuildingType.RESEARCH_CENTER);
+            if(!checkResourcesAndAlert(BuildingType.RESEARCH_CENTER)) return;
+            if(showConstructionConfirmation("ResearchCenter")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.RESEARCH_CENTER);
+            }
         }
+    }
+
+    @FXML
+    private void onNRCBuildClicked(ActionEvent actionEvent){
+        if(controller != null) {
+            if(!checkResourcesAndAlert(PlantType.NRC)) return;
+            if(showConstructionConfirmation("NRC Plant")) {
+                this.hideAddBuildingPanel();
+                controller.enterPlantBuildMode(PlantType.NRC);
+                this.hideAddPlantPanel();
+            }
+        }
+    }
+
+    @FXML
+    private void onSNRCBuildClicked(ActionEvent actionEvent){
+        if(controller != null) {
+            if(!checkResourcesAndAlert(PlantType.SNRC)) return;
+            if(showConstructionConfirmation("SNRC Plant")) {
+                this.hideAddBuildingPanel();
+                controller.enterPlantBuildMode(PlantType.SNRC);
+                this.hideAddPlantPanel();
+            }
+        }
+    }
+
+    @FXML
+    private void onPSNRCBuildClicked(ActionEvent actionEvent){
+        if(controller != null) {
+            if(!checkResourcesAndAlert(PlantType.PSNRC)) return;
+            if(showConstructionConfirmation("PSNRC Plant")) {
+                this.hideAddBuildingPanel();
+                controller.enterPlantBuildMode(PlantType.PSNRC);
+                this.hideAddPlantPanel();
+            }
+        }
+    }
+
+    private boolean showConstructionConfirmation(String typeName) {
+        Alert confirmAlert = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to build " + typeName + "?",
+                ButtonType.YES,
+                ButtonType.NO
+        );
+        confirmAlert.setTitle("Final Approval");
+        confirmAlert.setHeaderText("Confirm Construction");
+
+        java.util.Optional<ButtonType> result = confirmAlert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.YES;
     }
 
     private void showReceivedTradeRequestsPanel(){
@@ -1350,12 +1746,61 @@ public class VillageController {
     }
 
     public void showBuildingInfo(Building building){
-        System.out.println(building.getBuildingStatus().toString());
-        if(building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING){
-            this.upgradeButton.setDisable(true);
-        }else {
-            this.upgradeButton.setDisable(false);
+        if (building == null) return;
+
+        infoPanelTitleLabel.setText(building.getType().toString());
+        buildingLevelLabel.setVisible(true);
+        buildingLevelLabel.setText("Level: " + building.getLevel());
+
+        if (building.getType() == BuildingType.LABORATORY) {
+            plantsCountLabel.setVisible(true);
+            neutralizationPowerLabel.setVisible(true);
+
+            int totalPlants = player.getVillage().getPlants().size();
+            plantsCountLabel.setText("Total Plants: " + totalPlants);
+
+            double totalPower = 0;
+            for (model.building.Plant plant : player.getVillage().getPlants().values()) {
+                totalPower += plant.getNeutralizationPower();
+            }
+            neutralizationPowerLabel.setText("Neutralization Power: " + totalPower);
+        } else {
+            plantsCountLabel.setVisible(false);
+            neutralizationPowerLabel.setVisible(false);
         }
+
+        boolean isMaxLevel = Cost.upgradeCost(building).isMaxLevelReached();
+
+        if (isMaxLevel) {
+            this.upgradeButton.setText("حداکثر سطح");
+            this.upgradeButton.setDisable(true);
+        } else {
+            this.upgradeButton.setText("Upgrade " + building.getType().toString() + " (Lvl " + building.getLevel() + ")");
+
+            if (building.getBuildingStatus() == BuildingStatus.UPGRADING || building.getBuildingStatus() == BuildingStatus.BUILDING) {
+                this.upgradeButton.setDisable(true);
+            } else {
+                this.upgradeButton.setDisable(false);
+            }
+        }
+
+        this.infoPanel.setVisible(true);
+        this.infoPanel.setManaged(true);
+
+        System.out.println("UI Panel updated for: " + building.getType() + " Level: " + building.getLevel());
+    }
+
+    public void showPlantInfo(Plant plant){
+        if(plant==null){return;}
+        this.infoPanelTitleLabel.setText(plant.getType().toString());
+        this.buildingLevelLabel.setVisible(false);
+        this.plantsCountLabel.setVisible(false);
+        this.neutralizationPowerLabel.setVisible(false);
+
+        this.upgradeButton.setText("Remove " + plant.getType().toString() + " (Power: " + plant.getNeutralizationPower() + ")");
+        this.upgradeButton.setDisable(false);
+        this.upgradeButton.setVisible(true);
+
         this.infoPanel.setVisible(true);
         this.infoPanel.setManaged(true);
     }
@@ -1455,6 +1900,91 @@ public class VillageController {
         this.selectedBarrack = (Barrack) building;
         this.barracksDecisionPanel.setManaged(true);
         this.barracksDecisionPanel.setVisible(true);
+    }
+
+    private void showAddPlantPanel(){
+        this.addPlantPanel.setVisible(true);
+        this.addPlantPanel.setManaged(true);
+    }
+
+    public void hideAddPlantPanel(){
+        this.addPlantPanel.setVisible(false);
+        this.addPlantPanel.setManaged(false);
+    }
+
+    @FXML
+    private void onTowerButtonClicked(){
+        this.refreshGlobalTowerPanel();
+        this.showGlobalTowerPanel();
+    }
+
+    @FXML
+    private void onLeaveTowerPanelClicked(){
+        this.hideGlobalTowerPanel();
+    }
+
+    @FXML
+    private void onBuildGlobalTowerClicked(){
+        BuildingsManagement buildingsManagement = this.controller.getBuildingsManagement();
+
+        if (!buildingsManagement.canBuildGlobalTower()) {
+            this.refreshGlobalTowerPanel();
+            return;
+        }
+
+        this.hideGlobalTowerPanel();
+        this.controller.enterGlobalTowerBuildMode();
+    }
+
+    private void showGlobalTowerPanel(){
+        this.globalTowerPanel.setVisible(true);
+        this.globalTowerPanel.setManaged(true);
+    }
+
+    public void hideGlobalTowerPanel(){
+        this.globalTowerPanel.setVisible(false);
+        this.globalTowerPanel.setManaged(false);
+    }
+
+    private void refreshGlobalTowerPanel(){
+        GlobalTower tower = this.player.getVillage().getGlobalTower();
+        BuildingsManagement buildingsManagement = this.controller.getBuildingsManagement();
+
+        if (tower == null || !tower.isActive()) {
+
+            this.towerStatusLabel.setText(tower != null ? "Status: destroyed" : "Status: not built ");
+            this.towerHpLabel.setText("health: -- / " + (tower != null ? tower.getMaxHp() : 1200));
+            this.towerHpBar.setProgress(0);
+            this.towerProtectionLabel.setText("");
+
+            boolean canBuild = buildingsManagement.canBuildGlobalTower();
+            this.buildTowerButton.setDisable(!canBuild);
+            this.buildTowerButton.setVisible(true);
+            this.towerRequirementWarningLabel.setText(canBuild
+                    ? ""
+                    : "(The construction requirements are not fully met (the main building and the research center must be at level 5, and you need sufficient resources).");
+
+        } else {
+
+            this.towerStatusLabel.setText("Status: active");
+            this.towerHpLabel.setText("Health: " + tower.getHp() + " / " + tower.getMaxHp());
+            this.towerHpBar.setProgress((double) tower.getHp() / tower.getMaxHp());
+
+            java.time.LocalDateTime completeTime = tower.getConstructionCompleteTime();
+            if (completeTime != null) {
+                java.time.LocalDateTime protectionEnds = completeTime.plusHours(24);
+                if (java.time.LocalDateTime.now().isBefore(protectionEnds)) {
+                    long minutesLeft = java.time.Duration.between(java.time.LocalDateTime.now(), protectionEnds).toMinutes();
+                    this.towerProtectionLabel.setText("in protecting: " + minutesLeft + "remained ");
+                } else {
+                    this.towerProtectionLabel.setText("");
+                }
+            }
+
+            this.buildTowerButton.setDisable(true);
+            this.buildTowerButton.setVisible(false);
+            this.towerRequirementWarningLabel.setText("");
+        }
     }
 
     private void updateResourcesUI(){
@@ -1683,6 +2213,9 @@ public class VillageController {
 
                 taskProcessor.process();
 
+                updateShopButtonsAvailability();
+                checkBuildingButtonsLimit();
+
                 if(player.getVillage().getActiveBattles().isEmpty()){
                     battleButton.setDisable(false);
                 }else {
@@ -1702,6 +2235,27 @@ public class VillageController {
                 if (gameCanvasView != null) {
                     gameCanvasView.draw();
                 }
+
+                healthProgressBar();
+                radiationProgressBar();
+
+                int currentAnnouncementCount = model.finalPart.GlobalTowerAnnouncer.getAnnouncementCount();
+                if (currentAnnouncementCount > lastSeenAnnouncementCount) {
+                    java.util.List<String> announcements = model.finalPart.GlobalTowerAnnouncer.getAnnouncements();
+                    String latest = announcements.get(announcements.size() - 1);
+                    towerAnnouncementLabel.setText(latest);
+                    towerAnnouncementLabel.setVisible(true);
+                    towerAnnouncementLabel.setManaged(true);
+
+                    javafx.animation.PauseTransition hideDelay = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(8));
+                    hideDelay.setOnFinished(e -> {
+                        towerAnnouncementLabel.setVisible(false);
+                        towerAnnouncementLabel.setManaged(false);
+                    });
+                    hideDelay.play();
+
+                    lastSeenAnnouncementCount = currentAnnouncementCount;
+                }
             }
         };
         gameLoop.start();
@@ -1710,6 +2264,270 @@ public class VillageController {
     public void stopGameLoop(AnimationTimer gameLoop){
         gameLoop.stop();
     }
+
+    private void updateShopButtonsAvailability() {
+        int labLevel = 0;
+        for (model.building.Building b : player.getVillage().getBuildings().values()) {
+            if (b.getType() == model.building.BuildingType.LABORATORY && b.getBuildingStatus() == model.building.BuildingStatus.ACTIVE) {
+                labLevel = b.getLevel();
+                break;
+            }
+        }
+        if (labLevel < 1) {
+            nrcBuildButton.setDisable(true);
+            nrcLabel.setText("NRC (Lab Lvl 1 Required) -> Current: " + labLevel);
+            nrcLabel.setTextFill(Color.RED);
+        } else {
+            nrcBuildButton.setDisable(false);
+            nrcLabel.setText("NRC");
+            nrcLabel.setTextFill(Color.GREEN);
+        }
+
+
+        if (labLevel < 2) {
+            snrcBuildButton.setDisable(true);
+            snrcLabel.setText("SNRC (Lab Lvl 2 Required) -> Current: "+ labLevel);
+            snrcLabel.setTextFill(Color.RED);
+        } else {
+            snrcBuildButton.setDisable(false);
+            snrcLabel.setText("SNRC");
+            snrcLabel.setTextFill(Color.GREEN);
+        }
+
+        if (labLevel < 3) {
+            psnrcBuildButton.setDisable(true);
+            psnrcLabel.setText("PSNRC (Lab Lvl 3 Required) -> Current: "+ labLevel);
+            psnrcLabel.setTextFill(Color.RED);
+        } else {
+            psnrcBuildButton.setDisable(false);
+            psnrcLabel.setText("PSNRC");
+            psnrcLabel.setTextFill(Color.GREEN);
+        }
+    }
+    private boolean checkResourcesAndAlert(PlantType plant) {
+        Cost cost = plant.getBasePlantCost();
+        if (cost == null) return true;
+
+
+        boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
+        if (!hasResources) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("error in building");
+            alert.setHeaderText("you don't have enough resources!");
+            alert.setContentText("for building " + plant + " you need " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
+    private boolean checkResourcesAndAlert(BuildingType type) {
+        model.building.Cost cost = model.building.Cost.buildCost(type);
+        if (cost == null) return true;
+
+        boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
+        if (!hasResources) {
+            javafx.scene.control.Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("error in building");
+            alert.setHeaderText("you don't have enough resources!");
+            alert.setContentText("for building " + type + " you need " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
+    private void checkBuildingButtonsLimit(){
+        Village village = player.getVillage();
+        if (village == null || village.getBuildings() == null) return;
+
+        int woodMines = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.WOOD_MINE).count();
+        if (woodMineBuildButton != null) {
+            boolean isLimitReached = woodMines >= 5;
+            woodMineBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && woodMineLabel != null) {
+                woodMineLabel.setText("The number of woodMine has reached the limit");
+            }
+        }
+
+        int stoneMines = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.STONE_MINE).count();
+        if (stoneMineBuildButton != null) {
+            boolean isLimitReached = stoneMines >= 5;
+            stoneMineBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && stoneMineLabel != null) {
+                stoneMineLabel.setText("The number of stoneMine has reached the limit");
+            }
+        }
+
+        int ironMines = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.IRON_MINE).count();
+        if (ironMineBuildButton != null) {
+            boolean isLimitReached = ironMines >= 5;
+            ironMineBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && ironMineLabel != null) {
+                ironMineLabel.setText("The number of ironMine has reached the limit");
+            }
+        }
+
+        int gunPowderMines = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.GUNPOWDER_MINE).count();
+        if (gunPowderMineBuildButton != null) {
+            boolean isLimitReached = gunPowderMines >= 4;
+            gunPowderMineBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && gunPowderMineLabel != null) {
+                gunPowderMineLabel.setText("The number of gunPowderMine has reached the limit");
+            }
+        }
+
+        int dirtyWaterMines = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.DIRTY_WATER_MINE).count();
+        if (waterMineBuildButton != null) {
+            boolean isLimitReached = dirtyWaterMines >= 4; // اصلاح سقف به ۴ طبق صورت مسئله شما
+            waterMineBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && dirtyWaterMineLabel != null) {
+                dirtyWaterMineLabel.setText("The number of dirtyWaterMine has reached the limit");
+            }
+        }
+
+        int dirtySoilMines = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.DIRTY_SOIL_MINE).count();
+        if (soilMineBuildButton != null) {
+            boolean isLimitReached = dirtySoilMines >= 4;
+            soilMineBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && dirtySoilMineLabel != null) {
+                dirtySoilMineLabel.setText("The number of dirtySoilMine has reached the limit");
+            }
+        }
+
+        int woodStorages = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.WOOD_STORAGE).count();
+        if (woodStorageBuildButton != null) {
+            boolean isLimitReached = woodStorages >= 4;
+            woodStorageBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && woodStorageLabel != null) {
+                woodStorageLabel.setText("The number of woodStorage has reached the limit");
+            }
+        }
+
+        int stoneStorages = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.STONE_STORAGE).count();
+        if (stoneStorageBuildButton != null) {
+            boolean isLimitReached = stoneStorages >= 4;
+            stoneStorageBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && stoneStorageLabel != null) {
+                stoneStorageLabel.setText("The number of stoneStorages has reached the limit");
+            }
+        }
+
+        int ironStorages = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.IRON_STORAGE).count();
+        if (ironStorageBuildButton != null) {
+            boolean isLimitReached = ironStorages >= 4;
+            ironStorageBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && ironStorageLabel != null) {
+                ironStorageLabel.setText("The number of ironStorages has reached the limit");
+            }
+        }
+
+        int gunPowderStorages = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.GUNPOWDER_STORAGE).count();
+        if (gunPowderStorageBuildButton != null) {
+            boolean isLimitReached = gunPowderStorages >= 4;
+            gunPowderStorageBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && gunPowderStorageLabel != null) { // اصلاح نام متغیر لیبل به gunPowderStorageLabel
+                gunPowderStorageLabel.setText("The number of gunPowderStorages has reached the limit");
+            }
+        }
+
+        int waterPurifiers = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.WATER_PURIFIER).count();
+        if (waterPurifierBuildButton != null) {
+            boolean isLimitReached = waterPurifiers >= 3;
+            waterPurifierBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && waterPurifierLabel != null) {
+                waterPurifierLabel.setText("The number of waterPurifier has reached the limit");
+            }
+        }
+
+        int soilPurifiers = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.SOIL_PURIFIER).count();
+        if (soilPurifierBuildButton != null) {
+            boolean isLimitReached = soilPurifiers >= 3;
+            soilPurifierBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && soilPurifierLabel != null) {
+                soilPurifierLabel.setText("The number of soilPurifier has reached the limit");
+            }
+        }
+
+        int waterStorages = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.WATER_STORAGE).count();
+        if (waterStorageBuildButton != null) {
+            boolean isLimitReached = waterStorages >= 3;
+            waterStorageBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && waterStorageLabel != null) {
+                waterStorageLabel.setText("The number of waterStorage has reached the limit");
+            }
+        }
+
+        int soilStorages = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.SOIL_STORAGE).count();
+        if (soilStorageBuildButton != null) {
+            boolean isLimitReached = soilStorages >= 3;
+            soilStorageBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && soilStorageLabel != null) {
+                soilStorageLabel.setText("The number of soilStorage has reached the limit");
+            }
+        }
+
+        int ballistaDefensive = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.BALLISTA_DEFENSIVE).count();
+        if (ballistaDefensiveBuildButton != null) {
+            boolean isLimitReached = ballistaDefensive >= 8;
+            ballistaDefensiveBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && ballistaDefensiveLabel != null) {
+                ballistaDefensiveLabel.setText("The number of ballistaDefensive has reached the limit");
+            }
+        }
+
+        int catapultDefensive = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.CATAPULT_DEFENSIVE).count();
+        if (catapultDefensiveBuildButton != null) {
+            boolean isLimitReached = catapultDefensive >= 6;
+            catapultDefensiveBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && catapultDefensiveLabel != null) {
+                catapultDefensiveLabel.setText("The number of catapultDefensive has reached the limit");
+            }
+        }
+
+        int sentinelDefensive = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.SENTINEL_DEFENSIVE).count();
+        if (sentinelDefensiveBuildButton != null) {
+            boolean isLimitReached = sentinelDefensive >= 6;
+            sentinelDefensiveBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && sentinelDefensiveLabel != null) {
+                sentinelDefensiveLabel.setText("The number of sentinelDefensive has reached the limit");
+            }
+        }
+
+        int majorBuildings = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.MAJOR_BUILDING).count();
+        if (majorBuildingButton != null) {
+            boolean isLimitReached = majorBuildings >= 1;
+            majorBuildingButton.setDisable(isLimitReached);
+            if (isLimitReached && majorBuildingLabel != null) {
+                majorBuildingLabel.setText("The number of majorBuildings has reached the limit");
+            }
+        }
+
+        int researchCenters = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.RESEARCH_CENTER).count();
+        if (researchCenterBuildButton != null) {
+            boolean isLimitReached = researchCenters >= 1;
+            researchCenterBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && researchCenterLabel != null) {
+                researchCenterLabel.setText("The number of researchCenters has reached the limit");
+            }
+        }
+
+        int customhouse = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.CUSTOMHOUSE).count();
+        if (customhouseBuildButton != null) {
+            boolean isLimitReached = customhouse >= 1;
+            customhouseBuildButton.setDisable(isLimitReached);
+            if (isLimitReached && customhouseLabel != null) {
+                customhouseLabel.setText("The number of customhouse has reached the limit");
+            }
+        }
+        int laboratory = (int) village.getBuildings().values().stream().filter(b -> b.getType() == BuildingType.LABORATORY).count();
+        if (laboratoryBuildButton != null) {
+            boolean isLimitReached = laboratory >= 1;
+            laboratoryBuildButton.setDisable(isLimitReached);
+            if(isLimitReached && laboratoryLabel != null) {
+                laboratoryLabel.setText("The number of laboratory has reached the limit");
+            }
+        }
+    }
+
 
     public AnimationTimer getGameLoop() {
         return gameLoop;
@@ -1748,4 +2566,3 @@ public class VillageController {
         this.enemies = enemies;
     }
 }
-

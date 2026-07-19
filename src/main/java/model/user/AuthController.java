@@ -234,16 +234,16 @@ public class AuthController {
                 int producedIron = this.callProducedIron(player, passedTime);
                 int producedWood = this.callProducedWood(player, passedTime);
                 int producedDirtyWater = this.callProducedDirtyWater(player, passedTime);
-                int producedCleanWater = this.callProducedCleanWater(player, passedTime);
+                //int producedCleanWater = this.callProducedCleanWater(player, passedTime);
                 int producedStone = this.callProducedStone(player, passedTime);
                 int producedGunPowder = this.callProducedGunPowder(player, passedTime);
-                int producedCleanSoil = this.callProducedCleanSoil(player, passedTime);
+                //int producedCleanSoil = this.callProducedCleanSoil(player, passedTime);
                 int producedDirtySoil = this.callProducedDirtySoil(player, passedTime);
 
                 player.getVillage().getResourcesManagement().addResource(producedIron, ResourcesType.IRON);
-                player.getVillage().getResourcesManagement().addResource(producedCleanSoil, ResourcesType.CLEAN_SOIL);
+                //player.getVillage().getResourcesManagement().addResource(producedCleanSoil, ResourcesType.CLEAN_SOIL);
                 player.getVillage().getResourcesManagement().addResource(producedDirtySoil, ResourcesType.DIRTY_SOIL);
-                player.getVillage().getResourcesManagement().addResource(producedCleanWater, ResourcesType.CLEAN_WATER);
+                //player.getVillage().getResourcesManagement().addResource(producedCleanWater, ResourcesType.CLEAN_WATER);
                 player.getVillage().getResourcesManagement().addResource(producedStone, ResourcesType.STONE);
                 player.getVillage().getResourcesManagement().addResource(producedGunPowder, ResourcesType.GUN_POWDER);
                 player.getVillage().getResourcesManagement().addResource(producedWood, ResourcesType.WOOD);

@@ -26,7 +26,27 @@ public class ResourcesManagement{
                 && resources.getAmount(ResourcesType.COIN) >= cost.getCoin()
                 && resources.getAmount(ResourcesType.CLEAN_SOIL) >= cost.getCleanSoil()
                 && resources.getAmount(ResourcesType.CLEAN_WATER) >= cost.getCleanWater()
-                && resources.getAmount(ResourcesType.GUN_POWDER) >= cost.getGunPowder();
+                && resources.getAmount(ResourcesType.GUN_POWDER) >= cost.getGunPowder()
+                && findMajor() >= cost.getRequiredMajorBuildingLevel()
+                && findMajor() >= cost.getRequiredScienceLevel();
+    }
+
+    private int findMajor(){
+        for(Building building : this.village.getBuildings().values()){
+            if(building instanceof MajorBuilding){
+                return building.getLevel();
+            }
+        }
+        return 1;
+    }
+
+    private int findResearchCenter(){
+        for(Building building : this.village.getBuildings().values()){
+            if(building instanceof ResearchCenter){
+                return building.getLevel();
+            }
+        }
+        return 1;
     }
 
     public void withdrawResourcesCost(Cost cost) {

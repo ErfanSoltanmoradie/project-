@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class UpgradeBuildingInfo  implements Serializable {
 
     private final Cost cost;
-    private final int requiredScienceLevel;
-    private final int requiredMajorBuildingLevel;
+    //private final int requiredScienceLevel;
+    //private final int requiredMajorBuildingLevel;
 
-    public UpgradeBuildingInfo(int requiredScienceLevel, int requiredMajorBuildingLevel, Cost cost) {
-        this.requiredScienceLevel = requiredScienceLevel;
-        this.requiredMajorBuildingLevel = requiredMajorBuildingLevel;
+    public UpgradeBuildingInfo(Cost cost) {
+      //this.requiredScienceLevel = requiredScienceLevel;
+        //this.requiredMajorBuildingLevel = requiredMajorBuildingLevel;
         this.cost = cost;
     }
 
@@ -18,11 +18,11 @@ public class UpgradeBuildingInfo  implements Serializable {
         return cost;
     }
 
-    public int getRequiredScienceLevel() {
+    /*public int getRequiredScienceLevel() {
         return requiredScienceLevel;
     }
 
     public int getRequiredMajorBuildingLevel() {
         return requiredMajorBuildingLevel;
-    }
+    }*/
 }

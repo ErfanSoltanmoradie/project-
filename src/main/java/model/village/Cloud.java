@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Cloud implements Serializable {
     private int radiation;
-    private int neutralized = 300;
+    private int neutralized = 0;
 
     public Cloud() {
         this.radiation = 2000;
@@ -21,6 +21,8 @@ public class Cloud implements Serializable {
     public void setNeutralized(int neutralized) {
         this.neutralized = neutralized;
     }
+
+    public boolean isFullyNeutralized() {
+        return this.radiation <= 0;
+    }
 }
-
-
