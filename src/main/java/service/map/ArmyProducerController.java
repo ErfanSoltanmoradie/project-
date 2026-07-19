@@ -252,6 +252,9 @@ public class ArmyProducerController {
 
             case NOT_ENOUGH_RESOURCES ->
                     showAlert("Training", "Not enough resources.");
+
+            case IS_APGRADING ->
+                    showAlert("Training", "Army Producer is already apgrading.");
         }
     }
 

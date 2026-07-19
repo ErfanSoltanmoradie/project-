@@ -403,6 +403,19 @@
                      <children>
                         <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
                            <children>
+                              <Button mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="166.0" fitWidth="187.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/armyProducer-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
+                           <children>
                               <Button mnemonicParsing="false" onAction="#onBallistaBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">
                                  <graphic>
                                     <ImageView fitHeight="166.0" fitWidth="187.0" pickOnBounds="true">
@@ -743,6 +756,45 @@
             </ImageView>
          </children>
       </AnchorPane>
+      <AnchorPane fx:id="finalBattlePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="480.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10; -fx-border-color: #ff9800; -fx-border-width: 2; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" layoutY="14.0" prefWidth="480.0" text="Select Armies For Battle" textFill="#ff9800" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+
+            <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="60.0" prefWidth="420.0" spacing="10.0">
+               <children>
+                  <Label prefWidth="90.0" text="RAGNAR" textFill="#39ff14" />
+                  <Label fx:id="ragnarAvailableLabel" prefWidth="110.0" text="Available: 0" textFill="#bfa15f" />
+                  <TextField fx:id="ragnarSendTextField" alignment="CENTER" prefWidth="90.0" style="-fx-background-color: #181826; -fx-text-fill: #39ff14; -fx-border-color: #ba55d3;" text="0" />
+               </children>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="105.0" prefWidth="420.0" spacing="10.0">
+               <children>
+                  <Label prefWidth="90.0" text="ROSOO" textFill="#39ff14" />
+                  <Label fx:id="rosooAvailableLabel" prefWidth="110.0" text="Available: 0" textFill="#bfa15f" />
+                  <TextField fx:id="rosooSendTextField" alignment="CENTER" prefWidth="90.0" style="-fx-background-color: #181826; -fx-text-fill: #39ff14; -fx-border-color: #ba55d3;" text="0" />
+               </children>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" layoutX="30.0" layoutY="150.0" prefWidth="420.0" spacing="10.0">
+               <children>
+                  <Label prefWidth="90.0" text="LAGERTA" textFill="#39ff14" />
+                  <Label fx:id="lagertaAvailableLabel" prefWidth="110.0" text="Available: 0" textFill="#bfa15f" />
+                  <TextField fx:id="lagertaSendTextField" alignment="CENTER" prefWidth="90.0" style="-fx-background-color: #181826; -fx-text-fill: #39ff14; -fx-border-color: #ba55d3;" text="0" />
+               </children>
+            </HBox>
+
+            <Label fx:id="troopSelectionErrorLabel" alignment="CENTER" layoutY="200.0" prefWidth="480.0" text="" textFill="#ff5555" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="200.0" />
+
+            <Button fx:id="confirmAttackButton" alignment="CENTER" layoutX="130.0" layoutY="250.0" mnemonicParsing="false" onAction="#onConfirmAttackClicked" prefHeight="40.0" prefWidth="220.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: white; -fx-font-weight: bold;" text="Attack" />
+
+            <Button fx:id="cancelTroopSelectionButton" alignment="CENTER" layoutX="200.0" layoutY="295.0" mnemonicParsing="false" onAction="#onCancelTroopSelectionClicked" prefHeight="26.0" prefWidth="80.0" text="cancel" />
+         </children>
+      </AnchorPane>
       <AnchorPane fx:id="makeATradePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="535.0" style="-fx-background-color: #1a1a2e;" visible="false" StackPane.alignment="CENTER">
          <children>
             <ScrollPane layoutY="5.0" prefHeight="329.0" prefWidth="533.0" style="-fx-background: #000415;">
@@ -899,7 +951,7 @@
                <Button fx:id="leaveTowerPanelButton" alignment="CENTER" layoutX="200.0" layoutY="365.0" mnemonicParsing="false" onAction="#onLeaveTowerPanelClicked" prefHeight="26.0" prefWidth="80.0" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
            </children>
        </AnchorPane>
-      <AnchorPane fx:id="sellResourcesPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="651.0" style="-fx-background-color: transparent;">
+      <AnchorPane fx:id="sellResourcesPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="651.0" style="-fx-background-color: transparent;" visible="false">
          <children>
             <ScrollPane layoutX="29.0" layoutY="33.0" prefHeight="362.0" prefWidth="587.0" style="-fx-background: #000415;">
                <content>

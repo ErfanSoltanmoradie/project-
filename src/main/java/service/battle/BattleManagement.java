@@ -35,40 +35,16 @@ public class BattleManagement {
         //check dont battle to itself
         if(attackerVillage == defenderVillage) {return false;}
 
-        //checking the allied village
-
-
-        /*
-        if (attackerVillage.getAlliance() != null &&
-                (attackerVillage.getAlliance().getSender().equals(defender) ||
-                 attackerVillage.getAlliance().getReceiver().equals(defender))) {
-            return;
-        }
-        */
-
-        System.out.println("Attacker Active Battles : "
-                + attackerVillage.getActiveBattles().size());
-
-        System.out.println("Defender Active Battles : "
-                + defenderVillage.getActiveBattles().size());
-
-
-        if (!attackerVillage.getActiveBattles().isEmpty() || !defenderVillage.getActiveBattles().isEmpty()) {
-            return false;
-        }
+        if (!attackerVillage.getActiveBattles().isEmpty() || !defenderVillage.getActiveBattles().isEmpty()) {return false;}
 
         //army count must be > 0
-        if(attackerArmy.getTotalArmyCount()==0) {
-            System.out.println("attackerArmy.getTotalArmyCount()=  : " +  attackerArmy.getTotalArmyCount());
-            return false;
-        }
+        if(attackerArmy.getTotalArmyCount()==0) {return false;}
 
         ArmyProducer producer = getArmyProducer();
         if (producer == null) {return false;}
 
         Barrack barrack = getBarrack();
         if (barrack == null) {return false;}
-
 
 
         for(ArmyType type : ArmyType.values()){
