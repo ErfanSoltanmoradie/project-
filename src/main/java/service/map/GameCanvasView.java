@@ -104,9 +104,6 @@ public class GameCanvasView extends Canvas {
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine.png"))),
                     1,1,1));
 
-            buildingGraphics.put(BuildingType.IRON_STORAGE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/ironStorage.png"))),
-                    1,1,1));
 
             buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
                 new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/major2.png"))),
@@ -117,7 +114,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/good-lab.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/good-lab-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.BARRACKS, new BuildingGraphicProperties(
@@ -152,6 +149,22 @@ public class GameCanvasView extends Canvas {
 
             buildingGraphics.put(BuildingType.STONE_MINE, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/StonMine.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.STONE_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/stone-storage-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.WOOD_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/wood-storage-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.GUNPOWDER_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/gunPowder-storage-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.IRON_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/iron-storage-2.png"))),
                     1,1,1));
 
         } catch(NullPointerException e) {

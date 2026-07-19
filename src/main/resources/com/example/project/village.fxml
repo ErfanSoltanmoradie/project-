@@ -401,6 +401,58 @@
                <content>
                   <HBox fx:id="addBuildingHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="318.0" prefWidth="1426.0" spacing="10.0">
                      <children>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="303.0" prefWidth="269.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onStoneStorageBuildButtonClicked" prefHeight="342.0" prefWidth="316.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="191.0" fitWidth="185.0">
+                                       <image>
+                                          <Image url="@../../../images/building/stone-storage-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="274.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onBuildWoodStorageButtonClicked" prefHeight="345.0" prefWidth="321.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="179.0" fitWidth="204.0">
+                                       <image>
+                                          <Image url="@../../../images/building/wood-storage-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="316.0" prefWidth="272.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onGunPowderBuildButtonClicked" prefHeight="331.0" prefWidth="312.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="204.0" fitWidth="206.0">
+                                       <image>
+                                          <Image url="@../../../images/building/gunPowder-storage-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="314.0" prefWidth="250.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onIronStorageBuildButtonClicked" prefHeight="335.0" prefWidth="250.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="191.0" fitWidth="202.0">
+                                       <image>
+                                          <Image url="@../../../images/building/iron-storage-2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
                         <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="268.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="348.0" prefWidth="357.0" style="-fx-background-color: transparent;">

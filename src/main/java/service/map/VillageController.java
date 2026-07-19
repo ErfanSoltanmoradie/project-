@@ -1623,6 +1623,50 @@ public class VillageController {
     }
 
     @FXML
+    private void onStoneStorageBuildButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.STONE_STORAGE)) return;
+            if(showConstructionConfirmation("STONE_STORAGE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.STONE_STORAGE);
+            }
+        }
+    }
+
+    @FXML
+    private void onBuildWoodStorageButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.WOOD_STORAGE)) return;
+            if(showConstructionConfirmation("WOOD_STORAGE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.WOOD_STORAGE);
+            }
+        }
+    }
+
+    @FXML
+    private void onGunPowderBuildButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.GUNPOWDER_STORAGE)) return;
+            if(showConstructionConfirmation("GUNPOWDER_STORAGE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.GUNPOWDER_STORAGE);
+            }
+        }
+    }
+
+    @FXML
+    private void onIronStorageBuildButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.IRON_STORAGE)) return;
+            if(showConstructionConfirmation("IRON_STORAGE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.IRON_STORAGE);
+            }
+        }
+    }
+
+    @FXML
     private void onSoilMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.SOIL_STORAGE)) return;

@@ -18,12 +18,12 @@ public enum BuildingType {
     GUNPOWDER_MINE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),5, 5),
     //REFINERY(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
 
-    WOOD_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
-    IRON_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
-    STONE_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
-    WATER_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
-    SOIL_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
-    GUNPOWDER_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),1, 1),
+    WOOD_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),7, 7),
+    IRON_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),7, 7),
+    STONE_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),7, 7),
+    WATER_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),7, 7),
+    SOIL_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),7, 7),
+    GUNPOWDER_STORAGE(new Cost(10, 10, 10, 0, 0, 0, 0, Duration.ofSeconds(1)),7, 7),
 
     BALLISTA_DEFENSIVE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),6, 6),
     CATAPULT_DEFENSIVE(new Cost(10, 10, 10, 10,10,10,10, Duration.ofSeconds(2)),6, 6),
