@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public enum PlantType {
-    NRC(1, 15, new Cost(0, 0, 0, 0, 50, 50, 0, Duration.ofSeconds(2)),1,1),
-    SNRC(2, 35, new Cost(0, 0, 0, 0, 125, 125, 0, Duration.ofSeconds(2)),1,1),
-    PSNRC(3, 60, new Cost(0, 0, 0, 0, 250, 250, 0, Duration.ofSeconds(2)),1,1);
+    NRC(1, 15, new Cost(0, 0, 0, 0, 50, 50, 0, Duration.ofSeconds(2)),2,2),
+    SNRC(2, 35, new Cost(0, 0, 0, 0, 125, 125, 0, Duration.ofSeconds(2)),2,2),
+    PSNRC(3, 60, new Cost(0, 0, 0, 0, 250, 250, 0, Duration.ofSeconds(2)),2,2);
     private final int requiredLaboratoryLevel;
     private final int neutralizationPower;
     private final Cost basePlantCost;
