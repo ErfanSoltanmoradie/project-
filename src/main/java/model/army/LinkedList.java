@@ -97,6 +97,15 @@ public class LinkedList<T> implements Serializable,Iterable<T> {
         return data;
     }
 
+    public boolean contains(T value) {
+        Node current = head;
+        while (current != null) {
+            if (java.util.Objects.equals(current.data, value)) return true;
+            current = current.link;
+        }
+        return false;
+    }
+
     public boolean isEmpty(){
         return this.head == null;
     }

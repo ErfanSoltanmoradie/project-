@@ -11,14 +11,14 @@ public class Customhouse extends Building {
     private static final Map<Integer, UpgradeBuildingInfo> upgradeCustomhouseBuildingsCost;
 
     public Customhouse(BuildingType type, Coordinate position) {
-        super(type, position, 1, 1);
+        super(type, position, 9, 9);
 
     }
     static {
         upgradeCustomhouseBuildingsCost=new HashMap<>();
-        upgradeCustomhouseBuildingsCost.put(1,new UpgradeBuildingInfo(2,3,new Cost(500,400,300,0,100,100,0,Duration.ofHours(4))));
-        upgradeCustomhouseBuildingsCost.put(2,new UpgradeBuildingInfo(3,4,new Cost(600,450,300,0,180,180,0,Duration.ofHours(4))));
-        upgradeCustomhouseBuildingsCost.put(3,new UpgradeBuildingInfo(4,5,new Cost(1000,800,600,0,200,200,0,Duration.ofHours(6))));
+        upgradeCustomhouseBuildingsCost.put(1,new UpgradeBuildingInfo(new Cost(1,1,500,400,300,0,100,100,0,Duration.ofSeconds(4))));
+        upgradeCustomhouseBuildingsCost.put(2,new UpgradeBuildingInfo(new Cost(3,4,600,450,300,0,180,180,0,Duration.ofHours(4))));
+        upgradeCustomhouseBuildingsCost.put(3,new UpgradeBuildingInfo(new Cost(4,5,1000,800,600,0,200,200,0,Duration.ofHours(6))));
     }
 
     public static UpgradeBuildingInfo upgradeBuildingInfo(int level) {

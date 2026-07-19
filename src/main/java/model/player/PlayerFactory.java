@@ -18,7 +18,7 @@ public class PlayerFactory {
         if (coordinate == null) {
             throw new RuntimeException("Map is full, no new players allowed!");
         }
-        Village village = new Village(coordinate, 200);
+        Village village = new Village(coordinate, 2000);
         Player player = new Player(username, village);
         return player;
     }

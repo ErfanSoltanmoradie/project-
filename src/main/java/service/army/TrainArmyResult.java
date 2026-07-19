@@ -8,5 +8,6 @@ public enum TrainArmyResult {
     SOLDIER_LOCKED,
     QUEUE_FULL,
     BARRACK_FULL,
-    NOT_ENOUGH_RESOURCES
+    NOT_ENOUGH_RESOURCES,
+    IS_APGRADING
 }

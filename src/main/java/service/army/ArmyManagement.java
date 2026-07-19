@@ -1,10 +1,7 @@
 package service.army;
 
 import model.army.*;
-import model.building.ArmyProducer;
-import model.building.Barrack;
-import model.building.Building;
-import model.building.BuildingType;
+import model.building.*;
 import model.player.Player;
 import model.village.Village;
 import service.resource.ResourcesManagement;
@@ -40,6 +37,10 @@ public class ArmyManagement {
         Barrack barrack = getBarrack();
         if(barrack == null)
             return TrainArmyResult.NO_BARRACK;
+
+        //no upgrading
+        if(producer.getBuildingStatus()== BuildingStatus.UPGRADING)
+            return TrainArmyResult.IS_APGRADING;
 
         //has the soldier been unlocked or not
         if (!type.isUnlocked(producer.getLevel())) {

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -12,16 +13,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.MinerBuilding;
+import model.building.*;
 import model.player.Player;
 import model.repository.PlayerRepository;
 import model.resources.ResourcesType;
 import service.map.VillageController;
 
-import javax.swing.event.AncestorEvent;
 import java.io.IOException;
 
 
@@ -121,7 +118,14 @@ public class AuthController {
     @FXML
     public void onLoginClicked(){
         AuthResult authResult = this.authService.login(this.getUsername1(), this.getPassword1());
-
+        if (authResult.getAuthStatus() == AuthStatus.ELIMINATED) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Eliminated");
+            alert.setHeaderText(null);
+            alert.setContentText("You have been eliminated and can no longer play this game.");
+            alert.showAndWait();
+            return;
+        }
         if(authResult.getAuthStatus() != AuthStatus.SUCCESS) {
             this.warningLabel.setText(null);
             this.warningLabel.setText(authResult.getAuthStatus().toString());
@@ -142,6 +146,14 @@ public class AuthController {
     public void onSignupClicked(){
         AuthResult authResult = this.authService.register(this.getUsername(), this.getPassword());
 
+        if (authResult.getAuthStatus() == AuthStatus.SIGNUP_CLOSED) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Signup Closed");
+            alert.setContentText("Phase 1 has ended. New players can no longer join this game.");
+            alert.showAndWait();
+            return;
+        }
+
         if(authResult.getAuthStatus() != AuthStatus.SUCCESS){
             this.warningLabel.setText(null);
             this.warningLabel.setText(authResult.getAuthStatus().toString());
@@ -154,6 +166,12 @@ public class AuthController {
                 showVillage(authResult.getPlayer());
                 hideSignupPanel();
             }
+        }
+    }
+
+    private void disableSignupIfPhaseOneEnded() {
+        if (this.start != null && this.start.getGameState().isPhaseOneEnforced()) {
+            this.signupButton.setDisable(true);
         }
     }
 
@@ -206,9 +224,10 @@ public class AuthController {
             throw new RuntimeException(e);
         }
         VillageController villageController = loader.getController();
-        villageController.setPlayer(player);
 
+        villageController.setGameState(start.getGameState());
         villageController.setPlayerRepository(this.playerRepository);
+        villageController.setPlayer(player);
 
         Stage stage = new Stage();
 
@@ -240,6 +259,11 @@ public class AuthController {
                 int producedCleanSoil = this.callProducedCleanSoil(player, passedTime);
                 int producedDirtySoil = this.callProducedDirtySoil(player, passedTime);
 
+                int neutralization = this.calNeutralization(player, passedTime);
+
+                player.getVillage().getCloud().setRadiation(player.getVillage().getCloud().getRadiation() - neutralization);
+                player.getVillage().getCloud().addNeutralized(neutralization);
+
                 player.getVillage().getResourcesManagement().addResource(producedIron, ResourcesType.IRON);
                 player.getVillage().getResourcesManagement().addResource(producedCleanSoil, ResourcesType.CLEAN_SOIL);
                 player.getVillage().getResourcesManagement().addResource(producedDirtySoil, ResourcesType.DIRTY_SOIL);
@@ -253,6 +277,14 @@ public class AuthController {
                 player.getVillage().getLock().writeLock().unlock();
             }
     }
+
+    private int calNeutralization(Player player, long passedTime){
+        return (int) passedTime * PlantType.getTotalNeutralizationPower(player.getVillage().getPlants());
+    }
+
+
+
+
 
     private int callProducedWood(Player player, long passedTime){
         int amount = 0;
@@ -292,7 +324,7 @@ public class AuthController {
         for (Building building : player.getVillage().getBuildings().values()){
 
             if(building.getType() == BuildingType.WATER_PURIFIER){
-                amount += (int) (passedTime * ((MinerBuilding) building).getProduction());
+                amount += (int) (passedTime * ((WaterSoilPurifier) building).getProduction());
             }
         }
         return amount;
@@ -303,7 +335,7 @@ public class AuthController {
         for (Building building : player.getVillage().getBuildings().values()){
 
             if(building.getType() == BuildingType.SOIL_PURIFIER){
-                amount += (int) (passedTime * ((MinerBuilding) building).getProduction());
+                amount += (int) (passedTime * ((WaterSoilPurifier) building).getProduction());
             }
         }
         return amount;
@@ -360,6 +392,16 @@ public class AuthController {
     private void showLoginPanel(){
         this.loginPanel.setVisible(true);
         this.loginPanel.setManaged(true);
+    }
+
+    @FXML
+    public void initialize() {
+        javafx.animation.Timeline signupCheckTimer = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(1),
+                        e -> disableSignupIfPhaseOneEnded())
+        );
+        signupCheckTimer.setCycleCount(javafx.animation.Timeline.INDEFINITE);
+        signupCheckTimer.play();
     }
 
     public PlayerRepository getPlayerRepository() {

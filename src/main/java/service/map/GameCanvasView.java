@@ -6,13 +6,20 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.building.Building;
 import model.building.BuildingType;
+import model.building.Plant;
+import model.building.PlantType;
+import model.finalPart.GlobalTower;
+import model.time.BuildGlobalTowerTask;
+import model.time.BuildTask;
+import model.time.TimedOperation;
+import model.time.UpgradeTask;
 import model.village.Village;
 import model.world.Coordinate;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
+import java.util.UUID;
 
 
 public class GameCanvasView extends Canvas {
@@ -28,12 +35,20 @@ public class GameCanvasView extends Canvas {
     private final double MIN_TILE_WIDTH = 10;
     private final double MAX_TILE_WIDTH = 250;
 
-    private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/grass.png")));
-    private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree3.png")));
-    private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/tree2.png")));
-    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png")));
+    private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/grass.png")));
+    private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/tree3.png")));
+    private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/tree2.png")));
+    private final Image woodMineImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine.png")));
+    private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png")));
+    //private final Image customhouseImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Customhouse.png")));
+    private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/NRC.png")));
+    private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/SNRC.png")));
+    private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/PSNRC.png")));
+    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.png")));
+    private Image globalTowerImage;
 
     private final Map<BuildingType, BuildingGraphicProperties> buildingGraphics = new HashMap<>();
+    private final Map<PlantType, PlantGraphicProperties> plantGraphics = new HashMap<>();
 
     public Village getVillage() {
         return village;
@@ -56,6 +71,8 @@ public class GameCanvasView extends Canvas {
         this.gameMap = village.getGameMap();
 
         loadBuildingGraphic();
+        loadPlantGraphic();
+        loadGlobalTowerGraphic();
 
         widthProperty().addListener((obs, oldVal, newVal) -> draw());
         heightProperty().addListener((obs, oldVal, newVal) -> draw());
@@ -63,34 +80,126 @@ public class GameCanvasView extends Canvas {
 
     private void loadBuildingGraphic() {
         try {
-        /*buildingGraphics.put(BuildingType.WOOD_MINE, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/wood_mine.png"))),
-                1.4, 0.75
-        ));*/
+            buildingGraphics.put(BuildingType.WOOD_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine-2.png"))),
+                    1,1,1));
 
-        buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/iron_mine.png"))), 1, 1, 1));
-
-        buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/major.png"))), 1,1, 1));
-
-        buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/research_center.png"))), 1, 1, 1));
-
-        buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/lab.png"))), 1, 1, 1));
-
-        buildingGraphics.put(BuildingType.WATER_PURIFIER, new BuildingGraphicProperties(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/water-purifier.png"))), 1, 1, 1));
+            buildingGraphics.put(BuildingType.IRON_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/IronMine.png"))),
+                    1,1,1));
 
             buildingGraphics.put(BuildingType.SOIL_PURIFIER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/soil-purifier.png"))), 1, 1, 1));
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/soilPurifier-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.GUNPOWDER_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/GunpowderMine.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.WATER_PURIFIER, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/waterPurifier-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.DIRTY_SOIL_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine.png"))),
+                    1,1,1));
+
+
+            buildingGraphics.put(BuildingType.MAJOR_BUILDING, new BuildingGraphicProperties(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/major2.png"))),
+                1,1,1));
+
+            buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/good-lab-2.png"))),
+                    1,1,1));
 
             buildingGraphics.put(BuildingType.BARRACKS, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/barrack.png"))), 1, 1, 1));
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/barrach-3.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.ARMY_PRODUCER, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/armyProducer-2.png"))),
+                    1,1,1));
+
+
+            buildingGraphics.put(BuildingType.CATAPULT_DEFENSIVE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/catapult.png"))),
+                    1,1,1));
+
+
+            buildingGraphics.put(BuildingType.DIRTY_WATER_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WaterMine-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.CUSTOMHOUSE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/customs.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.SENTINEL_DEFENSIVE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/sentinel.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.BALLISTA_DEFENSIVE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/ballista-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.STONE_MINE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/StonMine.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.STONE_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/stone-storage-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.WOOD_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/wood-storage-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.GUNPOWDER_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/gunPowder-storage-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.IRON_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/iron-storage-2.png"))),
+                    1,1,1));
 
         } catch(NullPointerException e) {
             System.err.println("Error loading building graphics: " + e.getMessage());
+        }
+
+    }
+
+    public void loadPlantGraphic(){
+        try {
+            plantGraphics.put(PlantType.NRC, new PlantGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/NRC.png"))),
+                    1.2,1.2,0.72
+            ));
+
+            plantGraphics.put(PlantType.SNRC, new PlantGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/SNRC.png"))),
+                    1.2,1.2,0.72
+            ));
+
+            plantGraphics.put(PlantType.PSNRC, new PlantGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/PSNRC.png"))),
+                    1.2,1.2,0.72
+            ));
+        }catch(NullPointerException e) {
+            System.err.println("Error loading plant graphics: " + e.getMessage());
+        }
+    }
+
+    private void loadGlobalTowerGraphic() {
+        try {
+            this.globalTowerImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/GlobalTower.png")));
+        } catch (NullPointerException e) {
+            System.err.println("Error loading global tower graphic (image not added yet): " + e.getMessage());
+            this.globalTowerImage = null;
         }
     }
 
@@ -239,12 +348,112 @@ public class GameCanvasView extends Canvas {
                                 gc.drawImage(props.image, Math.round(offsetX), Math.round(offsetY), Math.round(imgWidth), Math.round(imgHeight));
                             }
                         }
+                    }if (tile.getPlant() != null) {
+                        Plant p = tile.getPlant();
+                        Coordinate pos = p.getPosition();
+
+                        if (pos.getX() == r && pos.getY() == c) {
+                            PlantGraphicProperties props = plantGraphics.get(p.getType());
+
+                            if (props != null && props.image != null && !props.image.isError()) {
+                                int bW = p.getWidth();
+                                int bH = p.getHeight();
+
+                                int bottomRow = r + bH - 1;
+                                int bottomCol = c + bW - 1;
+
+                                double baseBottomX = originX + (bottomCol - bottomRow) * (tileWidth / 2);
+                                double baseBottomY = originY + (bottomCol + bottomRow) * (tileHeight / 2) + tileHeight;
+
+                                double customWidth = tileWidth * Math.max(bW, bH) * 1.0 * props.widthScale;
+
+                                double imageRatio = props.image.getHeight() / props.image.getWidth();
+                                double customHeight = customWidth * imageRatio * props.heightScale;
+
+                                double offsetX = baseBottomX - (customWidth / 2);
+
+                                double offsetY = baseBottomY - (customHeight * props.yOffsetScale);
+
+                                gc.drawImage(props.image, offsetX, offsetY, customWidth, customHeight);
+                            }
+                        }
                     }
                 }
             }
         }
 
         gc.setImageSmoothing(true);
+        for (TimedOperation operation : village.getTimedOperation().values()) {
+            Coordinate taskCoord = null;
+
+            if (operation instanceof BuildTask bTask) {
+                taskCoord = bTask.getCoordinate();
+            } else if (operation instanceof UpgradeTask uTask) {
+                UUID bId = uTask.getBuildingId();
+                Building b = village.getBuildings().get(bId);
+                if (b != null) taskCoord = b.getPosition();
+            }else if (operation instanceof BuildGlobalTowerTask towerTask) {
+                taskCoord = towerTask.getCoordinate();
+            }
+
+            if (taskCoord != null) {
+                int r = taskCoord.getX();
+                int c = taskCoord.getY();
+                double isoX = originX + (c - r) * (tileWidth / 2);
+                double isoY = originY + (c + r) * (tileHeight / 2);
+
+                long elapsed = java.time.Duration.between(operation.getStartTime(), java.time.Instant.now()).toMillis();
+                long total = java.time.Duration.between(operation.getStartTime(), operation.getFinishTime()).toMillis();
+
+                double progress = 1.0;
+                if (total > 0) progress = Math.min(1.0, (double) elapsed / total);
+
+
+                gc.setFill(Color.RED);
+                gc.fillRect(isoX + tileWidth * 0.1, isoY - 15, tileWidth * 0.8, 6);
+
+                gc.setFill(Color.CHARTREUSE);
+                gc.fillRect(isoX + tileWidth * 0.1, isoY - 15, (tileWidth * 0.8) * progress, 6);
+            }
+        }
+        GlobalTower globalTower = village.getGlobalTower();
+        if (globalTower != null && globalTower.isActive() && globalTower.getPosition() != null) {
+            int towerRow = globalTower.getPosition().getX();
+            int towerCol = globalTower.getPosition().getY();
+
+            int bottomRow = towerRow + GlobalTower.HEIGHT - 1;
+            int bottomCol = towerCol + GlobalTower.WIDTH - 1;
+
+            double baseBottomX = originX + (bottomCol - bottomRow) * (tileWidth / 2);
+            double baseBottomY = originY + (bottomCol + bottomRow) * (tileHeight / 2) + tileHeight;
+
+            double customWidth = tileWidth * Math.max(GlobalTower.WIDTH, GlobalTower.HEIGHT) * 1.2;
+            double offsetX = baseBottomX - (customWidth / 2);
+
+            if (globalTowerImage != null && !globalTowerImage.isError()) {
+                double imageRatio = globalTowerImage.getHeight() / globalTowerImage.getWidth();
+                double customHeight = customWidth * imageRatio;
+                double offsetY = baseBottomY - (customHeight * 0.85);
+
+                gc.drawImage(globalTowerImage, offsetX, offsetY, customWidth, customHeight);
+            } else {
+                double placeholderHeight = tileHeight * 3;
+                double offsetY = baseBottomY - placeholderHeight;
+
+                gc.setFill(javafx.scene.paint.Color.rgb(77, 208, 225, 0.85));
+                gc.fillRoundRect(offsetX, offsetY, customWidth, placeholderHeight, 10, 10);
+                gc.setStroke(javafx.scene.paint.Color.WHITE);
+                gc.strokeRoundRect(offsetX, offsetY, customWidth, placeholderHeight, 10, 10);
+
+                gc.setFill(javafx.scene.paint.Color.WHITE);
+                gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
+                gc.fillText("TOWER", offsetX + customWidth / 2, offsetY + placeholderHeight / 2);
+            }
+        }
+        double radiationFactor = 0.4;
+        gc.setFill(Color.web("#3e2723", radiationFactor * 0.2));
+        gc.fillRect(0, 0, width, height);
+
     }
 
     public void zoom(double factor, double mouseX, double mouseY) {
@@ -294,6 +503,19 @@ public class GameCanvasView extends Canvas {
         final double yOffsetScale;
 
         public BuildingGraphicProperties(Image image, double heightScale, double widthScale, double yOffsetScale) {
+            this.image = image;
+            this.heightScale = heightScale;
+            this.widthScale = widthScale;
+            this.yOffsetScale = yOffsetScale;
+        }
+    }
+    private static class PlantGraphicProperties {
+        final Image image;
+        final double heightScale;
+        final double widthScale;
+        final double yOffsetScale;
+
+        public PlantGraphicProperties(Image image, double heightScale, double widthScale, double yOffsetScale) {
             this.image = image;
             this.heightScale = heightScale;
             this.widthScale = widthScale;
