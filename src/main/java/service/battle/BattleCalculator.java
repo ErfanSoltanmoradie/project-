@@ -140,7 +140,7 @@ public class BattleCalculator {
 
         for (ResourcesType type : lootableResources) {
             int amount = resources.getAmount(type);
-            int loot = Math.round(amount * 0.4f);
+            int loot = Math.min(1200,Math.round(amount * 0.4f));
 
             taskResult.getAttackerLoot().put(type, loot);
             taskResult.getDefenderResourceLoss().put(type, loot);

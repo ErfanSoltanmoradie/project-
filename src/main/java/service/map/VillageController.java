@@ -17,6 +17,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.army.ArmyStorage;
+import model.army.ArmyType;
 import model.battle.BattleArmy;
 import model.battle.BattleHistory;
 
@@ -272,11 +274,29 @@ public class VillageController {
 
     @FXML AnchorPane battlePanel;
 
+    @FXML AnchorPane finalBattlePanel;
+
     @FXML Button battleHistoryButton;
 
     @FXML VBox battleHistoryContainer;
 
     @FXML AnchorPane battleHistoryPannel;
+
+    @FXML private Label ragnarAvailableLabel;
+    @FXML private Label rosooAvailableLabel;
+    @FXML private Label lagertaAvailableLabel;
+
+    @FXML private TextField ragnarSendTextField;
+    @FXML private TextField rosooSendTextField;
+    @FXML private TextField lagertaSendTextField;
+
+    @FXML private Label troopSelectionErrorLabel;
+
+    @FXML private Button confirmAttackButton;
+    @FXML private Button cancelTroopSelectionButton;
+
+    private Player selectedTarget;
+
 
     @FXML ProgressBar woodProgressBar;
 
@@ -904,11 +924,11 @@ public class VillageController {
             try {
                 AllianceService.lockVillages(this.player, targetPlayer);
                 try {
-                        if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
-                            HBox playerRow = this.createEnemiesElement(targetPlayer);
+                    if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
+                        HBox playerRow = this.createEnemiesElement(targetPlayer);
 
-                            this.playersContainerForAttack.getChildren().add(playerRow);
-                        }
+                        this.playersContainerForAttack.getChildren().add(playerRow);
+                    }
                 }finally {
                     AllianceService.unlockVillages(this.player, targetPlayer);
                 }
@@ -953,9 +973,9 @@ public class VillageController {
                 "-fx-cursor: hand;");
 
         selectBtn.setOnAction(e -> {
-            // do the attack
+            this.selectedTarget = targetPlayer; // ذخیره کردن هدف
             this.hideAttackPanel();
-            this.doAttack(targetPlayer);
+            this.showTroopSelectionPanel();
         });
 
         row.getChildren().addAll(textContainer, spacer, selectBtn);
@@ -966,14 +986,116 @@ public class VillageController {
         return row;
     }
 
-    private void doAttack(Player targetPlayer){
+    private boolean doAttack(Player targetPlayer, BattleArmy battleArmy){
 
         BattleManagement battleManagement = new BattleManagement(this.player.getVillage(), targetPlayer.getVillage());
-        BattleArmy battleArmy = new BattleArmy(10, 10, 10);
-        //you need to create an army first it's just a test
-         battleManagement.startBattle(battleArmy);
-         this.battleButton.setDisable(true);
+
+        boolean started = battleManagement.startBattle(battleArmy);
+
+        if (started) {
+            this.battleButton.setDisable(true);
+        }
+
+        return started;
     }
+
+    private void showTroopSelectionPanel(){
+
+        if (this.troopSelectionErrorLabel != null) {
+            this.troopSelectionErrorLabel.setText("");
+        }
+
+        player.getVillage().getLock().readLock().lock();
+        try {
+            ArmyStorage armyStorage = player.getVillage().getArmies().getArmyStorage();
+
+            this.ragnarAvailableLabel.setText("Available Ragnar:" + armyStorage.getArmyCount(ArmyType.RAGNAR));
+            this.rosooAvailableLabel.setText("Available Rosso: " + armyStorage.getArmyCount(ArmyType.ROSOO));
+            this.lagertaAvailableLabel.setText("Available Lagerta:" + armyStorage.getArmyCount(ArmyType.LAGERTA));
+        } finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+
+
+        this.ragnarSendTextField.setText("0");
+        this.rosooSendTextField.setText("0");
+        this.lagertaSendTextField.setText("0");
+
+        this.finalBattlePanel.setVisible(true);
+        this.finalBattlePanel.setManaged(true);
+    }
+
+    private void hideTroopSelectionPanel(){
+        this.finalBattlePanel.setVisible(false);
+        this.finalBattlePanel.setManaged(false);
+    }
+
+    @FXML
+    private void onConfirmAttackClicked(){
+
+        if (this.selectedTarget == null) {
+            this.hideTroopSelectionPanel();
+            return;
+        }
+
+        int ragnarCount;
+        int rosooCount;
+        int lagertaCount;
+
+        try {
+            ragnarCount = parseArmyCount(this.ragnarSendTextField.getText());
+            rosooCount = parseArmyCount(this.rosooSendTextField.getText());
+            lagertaCount = parseArmyCount(this.lagertaSendTextField.getText());
+        } catch (NumberFormatException ex) {
+            this.troopSelectionErrorLabel.setText("Enter a valid number");
+            return;
+        }
+
+        BattleArmy battleArmy = new BattleArmy(ragnarCount, rosooCount, lagertaCount);
+
+        if (battleArmy.getTotalArmyCount() == 0) {
+            this.troopSelectionErrorLabel.setText("You must select at least one army");
+            return;
+        }
+
+        player.getVillage().getLock().readLock().lock();
+        try {
+            ArmyStorage armyStorage = player.getVillage().getArmies().getArmyStorage();
+
+            for (ArmyType type : ArmyType.values()) {
+                if (battleArmy.getArmyCount(type) > armyStorage.getArmyCount(type)) {
+                    this.troopSelectionErrorLabel.setText("You dont have enough armies ");
+                    return;
+                }
+            }
+        } finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+
+        boolean started = this.doAttack(this.selectedTarget, battleArmy);
+
+        if (started) {
+            this.hideTroopSelectionPanel();
+            this.selectedTarget = null;
+        } else {
+            this.troopSelectionErrorLabel.setText("You cant battle this village because the target village is currently in a battle");
+        }
+    }
+
+    @FXML
+    private void onCancelTroopSelectionClicked(){
+        this.selectedTarget = null;
+        this.hideTroopSelectionPanel();
+    }
+
+    private int parseArmyCount(String text){
+        if (text == null || text.isBlank()) {
+            return 0;
+        }
+        int value = Integer.parseInt(text.trim());
+        return Math.max(value, 0);
+    }
+
 
     private void showAttackHistory(){
 
