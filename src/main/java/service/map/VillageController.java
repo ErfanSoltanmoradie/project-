@@ -976,20 +976,11 @@ public class VillageController {
             try {
                 AllianceService.lockVillages(this.player, targetPlayer);
                 try {
-                    if(targetPlayer.getAlliance() != null && player.getAlliance() != null){
-                        if(!targetPlayer.getAlliance().getReceiver().equals(player) || !targetPlayer.getAlliance().getSender().equals(player)){
-                            if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
-                                continue;
-                            }
-                        }
-                    }else {
-                        if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
-                            HBox playerRow = this.createEnemiesElement(targetPlayer);
+                    if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
+                        HBox playerRow = this.createEnemiesElement(targetPlayer);
 
-                            this.playersContainerForAttack.getChildren().add(playerRow);
-                        }
+                        this.playersContainerForAttack.getChildren().add(playerRow);
                     }
-
                 }finally {
                     AllianceService.unlockVillages(this.player, targetPlayer);
                 }
@@ -1320,11 +1311,15 @@ public class VillageController {
         this.player.getVillage().getLock().writeLock().lock();
         try {
             ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
-            resourcesManagement.sellResource(Integer.parseInt(sellWoodTextField.getText()), ResourcesType.WOOD);
-            resourcesManagement.sellResource(Integer.parseInt(sellIronTextField.getText()), ResourcesType.IRON);
-            resourcesManagement.sellResource(Integer.parseInt(sellGunPowderTextField.getText()), ResourcesType.GUN_POWDER);
-            resourcesManagement.sellResource(Integer.parseInt(sellWaterTextField.getText()), ResourcesType.CLEAN_WATER);
-            resourcesManagement.sellResource(Integer.parseInt(sellSoilTextField.getText()), ResourcesType.CLEAN_SOIL);
+            if(!sellWoodTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellWoodTextField.getText()), ResourcesType.WOOD);
+
+            if(!sellIronTextField.getText().isEmpty())resourcesManagement.sellResource(Integer.parseInt(sellIronTextField.getText()), ResourcesType.IRON);
+
+            if(!sellGunPowderTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellGunPowderTextField.getText()), ResourcesType.GUN_POWDER);
+
+            if(!sellWaterTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellWaterTextField.getText()), ResourcesType.CLEAN_WATER);
+
+            if(!sellSoilTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellSoilTextField.getText()), ResourcesType.CLEAN_SOIL);
 
             this.hideSellResourcesPanel();
             this.hideDecisionCustomhousePanel();
@@ -1827,7 +1822,7 @@ public class VillageController {
     private void setTradeButtonEnable(){
         if(BuildingsManagement.checkResearchCenterBuildingForTrade(this.player) &&
                 BuildingsManagement.checkCustomHouseBuildingForTrade(this.player)&&
-                BuildingsManagement.checkResearchCenterBuildingForTrade(this.player))
+                BuildingsManagement.checkCustomHouseBuildingForTrade(this.player))
 
             this.tradeButton.setDisable(false);
     }
@@ -2382,6 +2377,16 @@ public class VillageController {
 
                 taskProcessor.process();
 
+                if (!winnerWindowShown
+                        && gameState != null
+                        && gameState.isPhaseTwoEnforced()) {
+
+                    winnerWindowShown = true;
+                    stopGameLoop(gameLoop);
+                    winnerViewController.show(gameState.getGameWinner());
+                    return;
+                }
+
                 if (!eliminatedWindowShown
                         && playerRepository != null
                         && player != null
@@ -2390,16 +2395,6 @@ public class VillageController {
                     eliminatedWindowShown = true;
                     stopGameLoop(gameLoop);
                     eliminatedViewController.show(player.getEliminationReason());
-                    return;
-                }
-
-                if (!winnerWindowShown
-                        && gameState != null
-                        && gameState.isPhaseTwoEnforced()) {
-
-                    winnerWindowShown = true;
-                    stopGameLoop(gameLoop);
-                    winnerViewController.show(gameState.getGameWinner());
                     return;
                 }
 

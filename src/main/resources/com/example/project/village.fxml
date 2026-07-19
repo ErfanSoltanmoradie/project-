@@ -21,13 +21,7 @@
       <Label fx:id="towerAnnouncementLabel" alignment="CENTER" managed="false" maxWidth="400.0" style="-fx-background-color: rgba(11, 7, 16, 0.9); -fx-text-fill: #4dd0e1; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 8; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.5), 8, 0, 0, 0);" visible="false" wrapText="true" StackPane.alignment="CENTER" />
       <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
          <children>
-            <Button fx:id="towerButton" layoutX="47.0" layoutY="529.0" mnemonicParsing="false" onAction="#onTowerButtonClicked" style="-fx-background-color: #0b0710; -fx-background-radius: 6; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 6; -fx-text-fill: white; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.4), 5, 0, 0, 0);" text="🗼 Tower" AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="47.0">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
-
-            <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="58.0" prefWidth="66.0" style="-fx-background-color: transparent;" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
+             <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="58.0" prefWidth="66.0" style="-fx-background-color: transparent;" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
                <font>
                   <Font name="System Bold Italic" size="16.0" />
                </font>
@@ -548,11 +542,11 @@
                            </children></VBox>
                         <VBox maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="318.0" prefWidth="263.0">
                            <children>
-                              <Button fx:id="armyProducerBuildButton" mnemonicParsing="false" onAction="#onArmyProducerBuildClicked" prefHeight="331.0" prefWidth="293.0" style="-fx-background-color: transparent;">
+                              <Button mnemonicParsing="false" onAction="#onLabBuildClicked" prefHeight="318.0" prefWidth="251.0" style="-fx-background-color: transparent;">
                                  <graphic>
-                                    <ImageView fitHeight="210.0" fitWidth="235.0" pickOnBounds="true">
+                                    <ImageView fitHeight="181.0" fitWidth="211.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../../images/building/armyProducer-2.png" />
+                                          <Image url="@../../../images/building/lab.png" />
                                        </image>
                                     </ImageView>
                                  </graphic></Button>
@@ -894,7 +888,9 @@
 
                <ProgressBar fx:id="towerHpBar" layoutX="40.0" layoutY="105.0" prefHeight="18.0" prefWidth="400.0" progress="0.0" style="-fx-accent: #4dd0e1;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="105.0" />
 
-               <Label alignment="CENTER" layoutY="205.0" prefWidth="480.0" text="Cost: 25,000 Wood | 18,000 Stone | 12,000 Iron | 8,000 Gunpowder | 5,000 Clean Water | 5,000 Clean Soil" textFill="#bfa15f" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="205.0" />
+              <Label fx:id="towerProtectionLabel" alignment="CENTER" layoutY="135.0" prefWidth="480.0" text="" textFill="#4dd0e1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="135.0" />
+
+              <Label alignment="CENTER" layoutY="205.0" prefWidth="480.0" text="Cost: 25,000 Wood | 18,000 Stone | 12,000 Iron | 8,000 Gunpowder | 5,000 Clean Water | 5,000 Clean Soil" textFill="#bfa15f" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="205.0" />
 
                <Label fx:id="towerRequirementWarningLabel" alignment="CENTER" layoutY="260.0" prefWidth="480.0" text="" textFill="#ff5555" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="260.0" />
 
@@ -903,7 +899,7 @@
                <Button fx:id="leaveTowerPanelButton" alignment="CENTER" layoutX="200.0" layoutY="365.0" mnemonicParsing="false" onAction="#onLeaveTowerPanelClicked" prefHeight="26.0" prefWidth="80.0" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
            </children>
        </AnchorPane>
-      <AnchorPane fx:id="sellResourcesPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="651.0" style="-fx-background-color: transparent;" visible="false">
+      <AnchorPane fx:id="sellResourcesPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="424.0" prefWidth="651.0" style="-fx-background-color: transparent;">
          <children>
             <ScrollPane layoutX="29.0" layoutY="33.0" prefHeight="362.0" prefWidth="587.0" style="-fx-background: #000415;">
                <content>

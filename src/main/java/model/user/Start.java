@@ -56,6 +56,7 @@ public class Start {
         this.gameState.setPhaseTwoStartTime(loaded.getPhaseTwoStartTime());
         this.gameState.setPhaseTwoEnforced(loaded.isPhaseTwoEnforced());
         this.gameState.setGameWinner(loaded.getGameWinner());
+        this.gameState.setEliminatedUsernames(loaded.getEliminatedUsernames());
         if (this.gameState.getGameStartTime() == null) {
 
             this.gameState.setGameStartTime(Instant.now());
@@ -65,8 +66,7 @@ public class Start {
         GameInitializer.init(this.gameState);
         //this.addProducedResources();
 
-        this.authService = new AuthService(userRepository, playerRepository, playerFactory);
-
+        this.authService = new AuthService(userRepository, playerRepository, playerFactory, gameState);
         this.startPhaseOneWatcher();
     }
 
@@ -92,16 +92,6 @@ public class Start {
                     this.saveAllData();
                 }
 
-                List<String> towerEliminated = GameManager.checkAndEnforceTowerEliminations(
-                        this.playerRepository,
-                        this.userRepository,
-                        this.worldMap);
-
-                if (!towerEliminated.isEmpty()) {
-                    System.out.println("Eliminated due to tower destroyed during protection window: " + towerEliminated);
-                    this.saveAllData();
-                }
-
                 if (GameManager.isPhaseTwoStarted(this.gameState)) {
 
                     boolean phaseTwoWasEnforced = this.gameState.isPhaseTwoEnforced();
@@ -114,7 +104,7 @@ public class Start {
 
                     if (!phaseTwoWasEnforced && this.gameState.isPhaseTwoEnforced()) {
                         System.out.println("Phase 2 ended. Winner: "
-                                + (winner != null ? winner : "NONE"));
+                                + (winner != null ? winner : "\"All lands have been destroyed. Humanity has gone extinct.\""));
                         this.saveAllData();
                     }
                 }

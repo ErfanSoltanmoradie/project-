@@ -201,7 +201,6 @@ public class BuildingsManagement{
         if (village.getGlobalTower() != null && village.getGlobalTower().isActive()) {
             return false;
         }
-        if (village.isPendingTowerElimination()) return false;
 
         for (TimedOperation operation : village.getTimedOperation().values()) {
             if (operation instanceof BuildGlobalTowerTask) {

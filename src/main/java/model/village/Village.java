@@ -80,15 +80,6 @@ public class Village implements Serializable {
         this.battleHistory = new LinkedList<>();
 
         RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
-
-
-        /*MajorBuilding majorBuilding = new MajorBuilding(BuildingType.MAJOR_BUILDING, new Coordinate(20, 20));
-        majorBuilding.setLevel(3);
-        this.getBuildings().put(majorBuilding.getId(), majorBuilding);
-
-        ResearchCenter researchCenter = new ResearchCenter(BuildingType.RESEARCH_CENTER, new Coordinate(40, 30));
-        researchCenter.setLevel(2);
-        this.getBuildings().put(researchCenter.getId(), researchCenter);*/
     }
 
     public void runTimeServices(){  // we want the logic after loading the game

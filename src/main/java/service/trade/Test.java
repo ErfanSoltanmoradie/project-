@@ -49,7 +49,7 @@ public class Test {
         System.out.println("SEND REQUST . . .");
         tradeService.sendRequest(senderPlayer, receiverPlayer, offered, requested);
 
-        TradeOffer offer = new TradeOffer(villageSender, villageReceiver, senderPlayer, receiverPlayer, offered, requested);
+        TradeOffer offer = new TradeOffer(senderPlayer, receiverPlayer, offered, requested);
 
         System.out.println("offer status: " + offer.getTradeStatus());
         System.out.println("transfer time: " + offer.getTradeTime());
