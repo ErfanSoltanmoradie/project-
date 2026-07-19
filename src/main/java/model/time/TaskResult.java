@@ -29,7 +29,7 @@ public class TaskResult {
     private final List<UUID> productionBuildingsToReschedule = new ArrayList<>();
     private final List<EventType> eventType = new ArrayList<>();
     private final Map<ArmyType, Integer> trainedArmiesToAdd = new HashMap<>();
-    //-------------------------------for battle ------------------------------------
+
     private final Map<UUID , BattleStatus> battleStatusChange = new HashMap<>();
     private final Map<ArmyType, Integer> attackerArmyLosses= new HashMap<>();
     private final Map<ArmyType, Integer> attackerReturningArmies= new HashMap<>();

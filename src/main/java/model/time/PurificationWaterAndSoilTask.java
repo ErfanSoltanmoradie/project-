@@ -14,9 +14,11 @@ import java.util.UUID;
 
 public class PurificationWaterAndSoilTask extends TimedOperation implements Serializable {
 
-    private final UUID buildingId;
-    private final Duration neededTime;
-    private ResourcesManagement resources;
+
+    private final ResourcesType producedType;
+    private final int producedAmount;
+    private final ResourcesType consumedType;
+    private final int consumedAmount;
 
     public PurificationWaterAndSoilTask(Instant startTime, Duration neededTime,
                                             TimedOperationType timedOperationType, UUID buildingId) {

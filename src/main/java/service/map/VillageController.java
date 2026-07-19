@@ -976,11 +976,20 @@ public class VillageController {
             try {
                 AllianceService.lockVillages(this.player, targetPlayer);
                 try {
-                    if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
-                        HBox playerRow = this.createEnemiesElement(targetPlayer);
+                    if(targetPlayer.getAlliance() != null && player.getAlliance() != null){
+                        if(!targetPlayer.getAlliance().getReceiver().equals(player) || !targetPlayer.getAlliance().getSender().equals(player)){
+                            if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
+                                continue;
+                            }
+                        }
+                    }else {
+                        if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
+                            HBox playerRow = this.createEnemiesElement(targetPlayer);
 
-                        this.playersContainerForAttack.getChildren().add(playerRow);
+                            this.playersContainerForAttack.getChildren().add(playerRow);
+                        }
                     }
+
                 }finally {
                     AllianceService.unlockVillages(this.player, targetPlayer);
                 }
@@ -2367,7 +2376,6 @@ public class VillageController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-
 
                 setTradeButtonEnable();
                 setAllianceButtonEnable();

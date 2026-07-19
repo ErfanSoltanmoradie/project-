@@ -354,10 +354,6 @@ public class TaskProcessor {
                         }finally {
                             defenderVillage.getLock().writeLock().unlock();
                         }
-                        System.out.println("===========================");
-                        System.out.println(task.getAttackerArmyLosses());
-                        System.out.println(task.getDefenderArmyLosses());
-                        System.out.println("===========================");
 
 
                         BattleHistory history = new BattleHistory(
