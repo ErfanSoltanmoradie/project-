@@ -163,9 +163,7 @@ public class GameMapController {
             this.selectedBuilding = clickedBuilding;
             this.selectedPlant = null;
             System.out.println("Selected: " + selectedBuilding.getType() + " level: " + selectedBuilding.getLevel()
-                    + " Status: " + selectedBuilding.getBuildingStatus());
-
-            System.out.println(clickedBuilding.getClass().getName());
+                    + " Status: " + selectedBuilding.getBuildingStatus() + "X: " + selectedBuilding.getPosition().getX() + "Y: " + selectedBuilding.getPosition().getY());
 
             if(selectedBuilding instanceof ArmyProducer && villageController != null) {
                 villageController.showDecisionPanel(selectedBuilding);
@@ -182,7 +180,6 @@ public class GameMapController {
                 return;
             }
 
-            System.out.println("Selected: " + selectedBuilding.getType());
 
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);
@@ -195,10 +192,11 @@ public class GameMapController {
                 villageController.showPlantInfo(clickedPlant);
             }
         } else {
-            this.selectedBuilding = null;
+
             this.selectedPlant = null;
             if (villageController != null) {
 
+                System.out.println();
                 villageController.hideInfoPanel();
                 villageController.hideShopPanel();
                 villageController.hideAddBuildingPanel();

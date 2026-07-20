@@ -135,7 +135,19 @@ public class TaskProcessor {
                 }
 
                 for (ResourcesType resourcesType : task.getResourcesToAdd().keySet()) {
-                    resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                    if(resourcesType == ResourcesType.CLEAN_SOIL){
+                        if(village.getResources().getAmount(ResourcesType.DIRTY_SOIL) > 0){
+                            resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                            continue;
+                        }
+                    } else if(resourcesType == ResourcesType.CLEAN_WATER){
+                        if(village.getResources().getAmount(ResourcesType.DIRTY_WATER) > 0){
+                            resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                            continue;
+                        }
+                    } else {
+                        resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                    }
                 }
 
                 for (ResourcesType resourcesType : task.getResourcesToWithdraw().keySet()) {
@@ -143,14 +155,16 @@ public class TaskProcessor {
                 }
 
                 for (UUID uuid : task.getProductionBuildingsToReschedule()) {
+                    ProductionTask nextTask = null;
                     building1 = village.getBuildings().get(uuid);
 
                     if (building1 == null)
                         continue;
 
-                    System.out.println(building1.getBuildingStatus());
                     if (building1.getBuildingStatus() == BuildingStatus.ACTIVE) {
-                        ProductionTask nextTask = ProductionTaskFactory.buildProductionTask(building1);
+
+                        nextTask = ProductionTaskFactory.buildProductionTask(building1);
+
                         if (nextTask != null) {
                             village.getTimedOperation().put(nextTask.getId(), nextTask);
                         }
@@ -165,6 +179,9 @@ public class TaskProcessor {
                         event.disease();
                     else
                         event.discovery();
+
+                    RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
+                    village.getTimedOperation().put(randomEventTask.getId(), randomEventTask);
                 }
 
 

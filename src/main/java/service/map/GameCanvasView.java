@@ -35,20 +35,24 @@ public class GameCanvasView extends Canvas {
     private final double MIN_TILE_WIDTH = 10;
     private final double MAX_TILE_WIDTH = 250;
 
-    private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/grass.png")));
-    private final Image brownTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/tree3.png")));
-    private final Image whiteTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/tree2.png")));
+    private final Image grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/dead_grass-2.png")));
+    private final Image deadGrass = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/dead_grass.png")));
+    private final Image water_grassTile = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/water_grass-2.png")));
+    private final Image rock = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/designe-13.png")));
+    private final Image tree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/kaj-tree-2.png")));
+    private final Image radioTree = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/mapDesign/radio-tree.png")));
     private final Image woodMineImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/WoodMine.png")));
     private final Image laboratoryImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png")));
-    //private final Image customhouseImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Customhouse.png")));
+
     private final Image nrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/NRC.png")));
     private final Image snrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/SNRC.png")));
     private final Image psnrcPlantImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/plants/PSNRC.png")));
-    //private final Image buildingImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Laboratory.png")));
+
     private Image globalTowerImage;
 
     private final Map<BuildingType, BuildingGraphicProperties> buildingGraphics = new HashMap<>();
     private final Map<PlantType, PlantGraphicProperties> plantGraphics = new HashMap<>();
+    private final Map<Tile.GroundType, Image> groundGraphics = new HashMap<>();
 
     public Village getVillage() {
         return village;
@@ -74,8 +78,21 @@ public class GameCanvasView extends Canvas {
         loadPlantGraphic();
         loadGlobalTowerGraphic();
 
+        loadGroundGraphic();
+
         widthProperty().addListener((obs, oldVal, newVal) -> draw());
         heightProperty().addListener((obs, oldVal, newVal) -> draw());
+    }
+
+    private void loadGroundGraphic(){
+        try {
+           groundGraphics.put(Tile.GroundType.GRASS, grassTile);
+            groundGraphics.put(Tile.GroundType.DIRT,deadGrass);
+
+
+        } catch(NullPointerException e) {
+            System.err.println("Error loading ground graphics: " + e.getMessage());
+        }
     }
 
     private void loadBuildingGraphic() {
@@ -101,7 +118,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.DIRTY_SOIL_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine-2.png"))),
                     1,1,1));
 
 
@@ -110,7 +127,7 @@ public class GameCanvasView extends Canvas {
                 1,1,1));
 
             buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
@@ -136,7 +153,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.CUSTOMHOUSE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/customs.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/customs-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.SENTINEL_DEFENSIVE, new BuildingGraphicProperties(
@@ -156,7 +173,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.WOOD_STORAGE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/wood-storage-2.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/wood-storage-2 (2).png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.GUNPOWDER_STORAGE, new BuildingGraphicProperties(
@@ -165,6 +182,14 @@ public class GameCanvasView extends Canvas {
 
             buildingGraphics.put(BuildingType.IRON_STORAGE, new BuildingGraphicProperties(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/iron-storage-2.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.SOIL_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/soil-storage.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.WATER_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/water-storage.png"))),
                     1,1,1));
 
         } catch(NullPointerException e) {
@@ -246,27 +271,21 @@ public class GameCanvasView extends Canvas {
                 if (isInsideMap) {
                     Tile tile = gameMap.getTile(r, c);
 
+                    Image groundImg = groundGraphics.get(tile.getGroundType());
                     if (grassTile != null && !grassTile.isError()) {
 
                         double renderX = Math.floor(isoX);
                         double renderY = Math.floor(isoY);
 
-                        double renderWidth = tileWidth +6;
+                        double renderWidth = tileWidth + 6;
                         double renderHeight = tileHeight + 6;
 
-                        gc.drawImage(grassTile, renderX, renderY, renderWidth, renderHeight);
-                    }
-
-                    if (tile.getType() == Tile.Type.BORDER) {
-                        double[] xPoints = {isoX + tileWidth / 2, isoX + tileWidth, isoX + tileWidth / 2, isoX};
-                        double[] yPoints = {isoY, isoY + tileHeight / 2, isoY + tileHeight, isoY + tileHeight / 2};
-
-                        gc.setFill(Color.rgb(15, 15, 15, 0.35));
-                        gc.fillPolygon(xPoints, yPoints, 4);
+                        gc.drawImage(groundImg, renderX, renderY, renderWidth, renderHeight);
                     }
                 }
             }
         }
+
 
         int maxDepth = (rows - 1) + (cols - 1);
 
@@ -293,16 +312,22 @@ public class GameCanvasView extends Canvas {
                         double hFactor = 1.0;
 
                         switch (deco) {
-                            case BROWN_TREE:
-                                currentImg = brownTree;
-                                wFactor = 4;
-                                hFactor = 8;
+                            case ROCK:
+                                currentImg = rock;
+                                wFactor = 4;//3;//4;
+                                hFactor = 8;//6 ;//8;
                                 break;
-                            case WHITE_TREE:
-                                currentImg = whiteTree;
-                                wFactor = 1.8;
-                                hFactor = 3.5;
+                            case KAJ_TREE:
+                                currentImg = tree;
+                                wFactor = 3;//1.5;
+                                hFactor = 7.5;//4.5;
                                 break;
+
+                            /*case RADIO_TREE:
+                                currentImg = radioTree;
+                                wFactor = 3;//1.5;
+                                hFactor = 15;//4.5;
+                                break;*/
                         }
 
                         if (currentImg != null) {
