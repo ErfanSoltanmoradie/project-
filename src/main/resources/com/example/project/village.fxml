@@ -401,6 +401,32 @@
                <content>
                   <HBox fx:id="addBuildingHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="318.0" prefWidth="1426.0" spacing="10.0">
                      <children>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="272.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onWaterStorageBuildButtonClicked" prefHeight="404.0" prefWidth="329.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="182.0" fitWidth="221.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/water-storage.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="261.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onSoilStorageBuildButtonClicked" prefHeight="395.0" prefWidth="382.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="188.0" fitWidth="204.0" pickOnBounds="true">
+                                       <image>
+                                          <Image url="@../../../images/building/soil-storage.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
                         <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="318.0" prefWidth="258.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#onBuildCustomHouseClicked" prefHeight="344.0" prefWidth="312.0" style="-fx-background-color: transparent;">

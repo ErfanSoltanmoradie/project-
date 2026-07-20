@@ -181,7 +181,6 @@ public class GameMapController {
             }
 
 
-
             if (villageController != null) {
                 villageController.showBuildingInfo(selectedBuilding);
             }

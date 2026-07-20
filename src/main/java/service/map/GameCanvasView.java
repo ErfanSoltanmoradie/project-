@@ -184,6 +184,14 @@ public class GameCanvasView extends Canvas {
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/iron-storage-2.png"))),
                     1,1,1));
 
+            buildingGraphics.put(BuildingType.SOIL_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/soil-storage.png"))),
+                    1,1,1));
+
+            buildingGraphics.put(BuildingType.WATER_STORAGE, new BuildingGraphicProperties(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/water-storage.png"))),
+                    1,1,1));
+
         } catch(NullPointerException e) {
             System.err.println("Error loading building graphics: " + e.getMessage());
         }

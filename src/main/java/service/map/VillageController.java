@@ -1694,6 +1694,28 @@ public class VillageController {
         }
     }
 
+    @FXML
+    private void onWaterStorageBuildButtonClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.WATER_STORAGE)) return;
+            if(showConstructionConfirmation("WATER_STORAGE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.WATER_STORAGE);
+            }
+        }
+    }
+
+    @FXML
+    private void onSoilStorageBuildButtonClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.SOIL_STORAGE)) return;
+            if(showConstructionConfirmation("SOIL_STORAGE")) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.SOIL_STORAGE);
+            }
+        }
+    }
+
 
     @FXML
     private void onCustomhouseBuildClicked(ActionEvent actionEvent) {
@@ -2325,12 +2347,12 @@ public class VillageController {
 
         ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
 
-        int maxWoodCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.WOOD);
-        int maxIronCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.IRON);
-        int maxStoneCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.STONE);
-        int maxCleanWaterCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_WATER);
-        int maxCleanSoilCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_SOIL);
-        int maxGunPowderCapacity = 10000;//resourcesManagement.getMaxCapacity(ResourcesType.GUN_POWDER);
+        int maxWoodCapacity = resourcesManagement.getMaxCapacity(ResourcesType.WOOD);
+        int maxIronCapacity = resourcesManagement.getMaxCapacity(ResourcesType.IRON);
+        int maxStoneCapacity = resourcesManagement.getMaxCapacity(ResourcesType.STONE);
+        int maxCleanWaterCapacity = resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_WATER);
+        int maxCleanSoilCapacity = resourcesManagement.getMaxCapacity(ResourcesType.CLEAN_SOIL);
+        int maxGunPowderCapacity = resourcesManagement.getMaxCapacity(ResourcesType.GUN_POWDER);
 
         int currentWood = resources.getAmount(ResourcesType.WOOD);
         int currentIron = resources.getAmount(ResourcesType.IRON);
