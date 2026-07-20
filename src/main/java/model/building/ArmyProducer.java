@@ -10,25 +10,24 @@ import java.util.Map;
 public class ArmyProducer extends Building implements Serializable {
 
     public ArmyProducer(BuildingType type, Coordinate position) {
-        super(type, position, 1, 1);
+        super(type, position, 9, 9);
     }
 
     private static final Map<Integer, UpgradeBuildingInfo> upgradeArmyProducerCost; //Integer ----> level
     static {
         upgradeArmyProducerCost = new HashMap<>();
 
-        upgradeArmyProducerCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(200, 200, 150, 100, 10, 10, 10, Duration.ofSeconds(1))));
+        upgradeArmyProducerCost.put(1, new UpgradeBuildingInfo(
+                new Cost(2, 1, 200, 200, 150, 100, 50, 50, 0, Duration.ofSeconds(1))));
 
-        upgradeArmyProducerCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeArmyProducerCost.put(2, new UpgradeBuildingInfo(
+                new Cost(3, 2, 400, 400, 300, 200, 100, 100, 0, Duration.ofSeconds(1))));
 
-        upgradeArmyProducerCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeArmyProducerCost.put(3, new UpgradeBuildingInfo(
+                new Cost(4, 3, 600, 600, 450, 300, 150, 150, 0, Duration.ofSeconds(1))));
 
-        upgradeArmyProducerCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
-    }
+        upgradeArmyProducerCost.put(4, new UpgradeBuildingInfo(
+                new Cost(5, 4, 800, 800, 600, 400, 200, 200, 0, Duration.ofSeconds(1)))); }
     public static UpgradeBuildingInfo getArmyProducerUpgradeInfo(int currentLevel){
         return ArmyProducer.upgradeArmyProducerCost.get(currentLevel);
     }

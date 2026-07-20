@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="eliminatedPanel" prefHeight="400.0" prefWidth="600.0"
+            visible="false" managed="false"
+            style="-fx-background-color: rgba(0,0,0,0.80);"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="service.map.EliminatedController">
+    <children>
+        <VBox alignment="CENTER" spacing="25"
+              AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <Label text="☠ ELIMINATED"
+                   style="-fx-font-size:40px; -fx-font-weight:bold; -fx-text-fill:#ff0055;" />
+            <Label fx:id="eliminatedReasonLabel" text="You have been eliminated" wrapText="true" maxWidth="500"
+                   style="-fx-font-size:20px; -fx-text-fill:white; -fx-text-alignment:center;" />
+        </VBox>
+    </children>
+</AnchorPane>

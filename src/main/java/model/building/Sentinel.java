@@ -16,17 +16,17 @@ public class Sentinel extends DefensiveBuilding implements Serializable {
     static {
         upgradeSentinelCost = new HashMap<>();
 
-        upgradeSentinelCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
+        upgradeSentinelCost.put(1, new UpgradeBuildingInfo(
+                new Cost(2, 1, 140, 100, 60, 20, 30, 30, 0, Duration.ofSeconds(1))));
 
-        upgradeSentinelCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeSentinelCost.put(2, new UpgradeBuildingInfo(
+                new Cost(3, 2, 210, 150, 90, 30, 45, 45, 0, Duration.ofSeconds(1))));
 
-        upgradeSentinelCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeSentinelCost.put(3, new UpgradeBuildingInfo(
+                new Cost(4, 3, 280, 200, 120, 40, 60, 60, 0, Duration.ofSeconds(1))));
 
-        upgradeSentinelCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+        upgradeSentinelCost.put(4, new UpgradeBuildingInfo(
+                new Cost(5, 4, 350, 250, 150, 50, 75, 75, 0, Duration.ofSeconds(1))));
     }
     public static UpgradeBuildingInfo getSentinelUpgradeInfo(int currentLevel){
         return Sentinel.upgradeSentinelCost.get(currentLevel);

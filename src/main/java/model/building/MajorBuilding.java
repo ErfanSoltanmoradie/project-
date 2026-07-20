@@ -18,17 +18,17 @@ public class MajorBuilding extends Building  implements Serializable {
     static {
         upgradeMajorBuildingBuildingsCost = new HashMap<>();
 
-        upgradeMajorBuildingBuildingsCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(200, 200,   200, 200, 200, 200, 0, Duration.ofSeconds(5))));
+        upgradeMajorBuildingBuildingsCost.put(1, new UpgradeBuildingInfo(
+                new Cost(2, 1, 400, 300, 250, 0, 150, 150, 0, Duration.ofSeconds(5))));
 
-        upgradeMajorBuildingBuildingsCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(300, 300,   300, 300, 300, 300, 0, Duration.ofSeconds(5))));
+        upgradeMajorBuildingBuildingsCost.put(2, new UpgradeBuildingInfo(
+                new Cost(3, 2, 500, 400, 450, 250, 250, 250, 0, Duration.ofSeconds(5))));
 
-        upgradeMajorBuildingBuildingsCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(200, 200,   200, 200, 200, 200, 0, Duration.ofSeconds(5))));
+        upgradeMajorBuildingBuildingsCost.put(3, new UpgradeBuildingInfo(
+                new Cost(4, 3, 700, 600, 650, 450, 450, 450, 0, Duration.ofSeconds(5))));
 
-        upgradeMajorBuildingBuildingsCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(200, 200,   200, 200, 200, 200, 0, Duration.ofSeconds(5))));
+        upgradeMajorBuildingBuildingsCost.put(4, new UpgradeBuildingInfo(
+                new Cost(5, 4, 900, 800, 850, 650, 650, 650, 0, Duration.ofSeconds(5))));
     }
 
     public static UpgradeBuildingInfo upgradeBuildingInfo(int level){

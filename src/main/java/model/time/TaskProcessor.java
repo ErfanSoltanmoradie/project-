@@ -67,7 +67,7 @@ public class TaskProcessor {
             throw new IllegalStateException("TaskProcessor is running concurrently!");
         }
 
-        if( (int) ((System.currentTimeMillis() - this.lastCloudNeutralization) / 1000) % 5 == 0  || !this.firstCloudNeutralization)
+        if( System.currentTimeMillis() - lastCloudNeutralization >= 5000 )
             this.cloudNeutralization();
 
 
@@ -181,16 +181,16 @@ public class TaskProcessor {
                 for (TradeOffer tradeOffer : task.getTradeOffers()) {
 
                     if (this.checkTradeCondition(tradeOffer)) {
-                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getRequestedResources().entrySet()) {
+                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getNetRequestedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
-                            tradeOffer.getSenderVillage().getResourcesManagement().addResource(amount, resource);
+                            tradeOffer.getSenderPlayer().getVillage().getResourcesManagement().addResource(amount, resource);
                         }
 
-                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()) {
+                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getNetOfferedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
-                            tradeOffer.getReceiverVillage().getResourcesManagement().addResource(amount, resource);
+                            tradeOffer.getReceiverPlayer().getVillage().getResourcesManagement().addResource(amount, resource);
                         }
                     }
                 }
@@ -366,8 +366,6 @@ public class TaskProcessor {
                                 battle.getDefenderUsername(),
                                 battle.getAttackerUsername());
 
-                        /*battle.getAttackerVillage().getBattleHistory().put(history.getBattleId(), history);
-                        battle.getDefenderVillage().getBattleHistory().put(history.getBattleId(), history);*/
                         battle.getAttackerVillage().getBattleHistory().add(history);
                         battle.getDefenderVillage().getBattleHistory().add(history);
 
@@ -461,12 +459,12 @@ public class TaskProcessor {
     private boolean checkTradeCondition(TradeOffer tradeOffer){
 
         Customhouse senderCustomhouse = null;
-        for(Building b : tradeOffer.getSenderVillage().getBuildings().values()){
+        for(Building b : tradeOffer.getSenderPlayer().getVillage().getBuildings().values()){
             if(b instanceof Customhouse c){senderCustomhouse = c; break;}
         }
 
         Customhouse receiverCustomhouse = null;
-        for(Building b : tradeOffer.getReceiverVillage().getBuildings().values()){
+        for(Building b : tradeOffer.getReceiverPlayer().getVillage().getBuildings().values()){
             if(b instanceof Customhouse c){receiverCustomhouse = c; break;}
         }
 
@@ -474,16 +472,16 @@ public class TaskProcessor {
             return  true;
 
 
-        tradeOffer.getSenderVillage().getLock().writeLock().lock();
+        tradeOffer.getSenderPlayer().getVillage().getLock().writeLock().lock();
         try {
             for(Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()){
                 ResourcesType type = entry.getKey();
                 int originalAmount = entry.getValue();
 
-                tradeOffer.getSenderVillage().getResourcesManagement().addResource(originalAmount, type);
+                tradeOffer.getSenderPlayer().getVillage().getResourcesManagement().addResource(originalAmount, type);
             }
         }finally {
-            tradeOffer.getSenderVillage().getLock().writeLock().unlock();
+            tradeOffer.getSenderPlayer().getVillage().getLock().writeLock().unlock();
         }
         return false;
     }

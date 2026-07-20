@@ -11,7 +11,7 @@ public abstract class DefensiveBuilding extends Building  implements Serializabl
 
     public DefensiveBuilding(BuildingType type, Coordinate position) {
 
-        super(type, position,1, 1);
+        super(type, position,6, 6);
     }
 
     public final void upgrade(){

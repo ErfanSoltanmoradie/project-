@@ -10,9 +10,6 @@ import java.util.Map;
 
 public class Laboratory extends Building implements Serializable {
 
-    private int width;
-    private int height;
-
     private static final Map<Integer, UpgradeBuildingInfo> upgradeLaboratoryBuildingsCost;
 
     public Laboratory(BuildingType type, Coordinate position) {
@@ -23,17 +20,17 @@ public class Laboratory extends Building implements Serializable {
     static {
         upgradeLaboratoryBuildingsCost = new HashMap<>();
 
-        upgradeLaboratoryBuildingsCost.put(1, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
+        upgradeLaboratoryBuildingsCost.put(1, new UpgradeBuildingInfo(
+                new Cost(2, 1, 250, 200, 150, 0, 50, 50, 0, Duration.ofSeconds(1))));
 
-        upgradeLaboratoryBuildingsCost.put(2, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
+        upgradeLaboratoryBuildingsCost.put(2, new UpgradeBuildingInfo(
+                new Cost(3, 2, 500, 400, 300, 0, 100, 100, 0, Duration.ofSeconds(2))));
 
-        upgradeLaboratoryBuildingsCost.put(3, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
+        upgradeLaboratoryBuildingsCost.put(3, new UpgradeBuildingInfo(
+                new Cost(4, 3, 750, 600, 450, 0, 150, 150, 0, Duration.ofSeconds(2))));
 
-        upgradeLaboratoryBuildingsCost.put(4, new UpgradeBuildingInfo(1 ,1,
-                new Cost(0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(2))));
+        upgradeLaboratoryBuildingsCost.put(4, new UpgradeBuildingInfo(
+                new Cost(5, 4, 1000, 800, 600, 0, 200, 200, 0, Duration.ofSeconds(2))));
     }
 
     public static UpgradeBuildingInfo upgradeBuildingInfo(int level){

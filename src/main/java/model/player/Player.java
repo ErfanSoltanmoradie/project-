@@ -23,6 +23,7 @@ public class Player  implements Serializable {
     private final List<AllianceRequest> pendingRequests = new ArrayList<>();
     private Alliance alliance;
     private int allianceCounts;
+    private transient String eliminationReason;
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -102,5 +103,8 @@ public class Player  implements Serializable {
     public void setAllianceCounts(int allianceCounts) {
         this.allianceCounts = allianceCounts;
     }
+
+    public String getEliminationReason() { return eliminationReason; }
+    public void setEliminationReason(String r) { this.eliminationReason = r; }
 }
 
