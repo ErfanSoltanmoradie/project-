@@ -2,7 +2,9 @@ package service.buildings;
 
 import model.building.*;
 import model.player.Player;
+import model.time.BuildGlobalTowerTask;
 import model.time.BuildTask;
+import model.time.TimedOperation;
 import model.time.UpgradeTask;
 import model.village.Village;
 import model.world.Coordinate;
@@ -14,8 +16,8 @@ import java.util.UUID;
 
 public class BuildingsManagement{
 
-   private final Village village;
-   private final ResourcesManagement resources;
+    private final Village village;
+    private final ResourcesManagement resources;
 
     public BuildingsManagement(Village village) {
         this.village = village;
@@ -23,10 +25,46 @@ public class BuildingsManagement{
 
     }
 
-    public void build(BuildingType buildingType, Coordinate coordinate){
+    private int getMaxAllowedCount(BuildingType type) {
+        return switch (type){
+            case WOOD_MINE, STONE_MINE, IRON_MINE -> 5;
+            case GUNPOWDER_MINE, DIRTY_WATER_MINE, DIRTY_SOIL_MINE,
+                 WOOD_STORAGE, STONE_STORAGE, IRON_STORAGE, GUNPOWDER_STORAGE -> 4;
+            case WATER_PURIFIER, SOIL_PURIFIER,
+                 WATER_STORAGE, SOIL_STORAGE -> 3;
+            case BALLISTA_DEFENSIVE -> 8;
+            case CATAPULT_DEFENSIVE , SENTINEL_DEFENSIVE -> 6;
+            case MAJOR_BUILDING, RESEARCH_CENTER, CUSTOMHOUSE , LABORATORY, BARRACKS, ARMY_PRODUCER-> 1;
+            default -> Integer.MAX_VALUE;
+        };
+    }
 
+    private int getCurrentBuildingCount(BuildingType type) {
+        int count = 0;
+        for (Building building : village.getBuildings().values()) {
+            if (building.getType() == type) {
+                count++;
+            }
+        }
+
+        for (TimedOperation operation : village.getTimedOperation().values()) {
+            if (operation instanceof BuildTask buildTask && buildTask.getBuildingType() == type) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void build(BuildingType buildingType, Coordinate coordinate){
         village.getLock().writeLock().lock();
         try {
+            int currentCount = getCurrentBuildingCount(buildingType);
+            int maxAllowed = getMaxAllowedCount(buildingType);
+
+            if(currentCount >= maxAllowed){
+                throw new BuildingLimitExceededException(buildingType, maxAllowed);
+            }
+
             Cost cost = Cost.buildCost(buildingType);
 
             if(!resources.checkResourcesCost(cost)) return;
@@ -158,4 +196,45 @@ public class BuildingsManagement{
     /*public int getTotalNeutralizationPower(){
         return PlantType.getTotalNeutralizationPower(village.getPlant());
     }*/
+
+    public boolean canBuildGlobalTower(){
+        if (village.getGlobalTower() != null && village.getGlobalTower().isActive()) {
+            return false;
+        }
+
+        for (TimedOperation operation : village.getTimedOperation().values()) {
+            if (operation instanceof BuildGlobalTowerTask) {
+                return false;
+            }
+        }
+
+        int majorBuildingLevel=0;
+        int researchCenterBuildingLevel=0;
+
+        for(Building b : village.getBuildings().values()){
+            if(b instanceof MajorBuilding) majorBuildingLevel=b.getLevel();
+            if(b instanceof ResearchCenter) researchCenterBuildingLevel=b.getLevel();
+        }
+        if(majorBuildingLevel<5 || researchCenterBuildingLevel<5) return false;
+
+        Cost towerCost = getGlobalTowerCost();
+        return resources.checkResourcesCost(towerCost);
+    }
+
+    private Cost getGlobalTowerCost(){
+        return new Cost(25000, 18000, 12000, 8000, 5000, 5000, 0, Duration.ofSeconds(10));
+    }
+
+    public void buildGlobalTower(Coordinate coordinate){
+        village.getLock().writeLock().lock();
+        try {
+            if(!canBuildGlobalTower()) throw new IllegalStateException("Cannot build global tower");
+            Cost towerCost = getGlobalTowerCost();
+            resources.withdrawResourcesCost(towerCost);
+            BuildGlobalTowerTask towerTask = new BuildGlobalTowerTask(Instant.now(), Duration.ofSeconds(10), village, coordinate);
+            village.getTimedOperation().put(towerTask.getId(), towerTask);
+        } finally {
+            village.getLock().writeLock().unlock();
+        }
+    }
 }

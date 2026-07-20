@@ -2,10 +2,11 @@ package model.building;
 
 import model.world.Coordinate;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class Plant {
+public class Plant implements Serializable {
     private final UUID id;
     private final PlantType type;
     private  Coordinate position;

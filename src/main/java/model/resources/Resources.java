@@ -20,16 +20,16 @@ public class Resources implements Serializable {
         this.iron = 80000;
         this.gunPowder = 80000;
         this.stone = 80000;
-        this.dirtyWater = 80000;
-        this.dirtySoil = 80000;
-        this.cleanWater = 80000;
-        this.cleanSoil = 80000;
-        this.coin = 80000;
+        this.dirtyWater = 0;
+        this.dirtySoil = 0;
+        this.cleanWater = 1000;
+        this.cleanSoil = 1000;
+        this.coin = 2000;
     }
 
 
     public void addResource(ResourcesType type, int amount, int capacity) {
-        setAmount(type,  amount + getAmount(type)/*Math.min(getAmount(type) + amount, capacity)*/);
+        setAmount(type,  /*amount + getAmount(type)*/Math.min(getAmount(type) + amount, capacity));
     }
 
     public boolean withdraw(ResourcesType type, int amount) {

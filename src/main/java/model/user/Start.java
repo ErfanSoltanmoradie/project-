@@ -1,25 +1,26 @@
 package model.user;
 
-
-import model.building.Building;
-import model.building.BuildingType;
-import model.building.MinerBuilding;
 import model.player.Player;
 import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
 import model.repository.UserRepository;
-import model.resources.ResourcesType;
 import model.world.WorldMap;
 import service.filehandeling.GameInitializer;
 import service.filehandeling.GameState;
 import service.filehandeling.LoadService;
 import service.filehandeling.SaveService;
 
+import service.gameManager.GameManager;
+
 import java.io.File;
-import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Start {
 
@@ -33,6 +34,7 @@ public class Start {
     GameState gameState;
 
     private final File FILE = new File("game.dat");
+    private ScheduledExecutorService phaseOneScheduler;
 
     public Start() {
 
@@ -43,16 +45,80 @@ public class Start {
         this.gameState = new GameState();
         this.playerRepository = new PlayerRepository(players);
         this.userRepository = new UserRepository(users);
+        GameState loaded = LoadService.load(FILE, gameState);
+        if (loaded == null) {
+            loaded = gameState;
+        }
+        this.gameState.setUser(loaded.getUsers());
+        this.gameState.setPlayer(loaded.getPlayers());
+        this.gameState.setGameStartTime(loaded.getGameStartTime());
+        this.gameState.setPhaseOneEnforced(loaded.isPhaseOneEnforced());
+        this.gameState.setPhaseTwoStartTime(loaded.getPhaseTwoStartTime());
+        this.gameState.setPhaseTwoEnforced(loaded.isPhaseTwoEnforced());
+        this.gameState.setGameWinner(loaded.getGameWinner());
+        this.gameState.setEliminatedUsernames(loaded.getEliminatedUsernames());
+        if (this.gameState.getGameStartTime() == null) {
 
-        this.gameState.setUser(LoadService.load(FILE, gameState).getUsers());
-        this.gameState.setPlayer(LoadService.load(FILE, gameState).getPlayers());
+            this.gameState.setGameStartTime(Instant.now());
+        }
+
         this.saveToRepositories();
         GameInitializer.init(this.gameState);
         //this.addProducedResources();
 
-        this.authService = new AuthService(userRepository, playerRepository, playerFactory);
+        this.authService = new AuthService(userRepository, playerRepository, playerFactory, gameState);
+        this.startPhaseOneWatcher();
+    }
 
+    private void startPhaseOneWatcher() {
 
+        this.phaseOneScheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "phase-one-watcher");
+            t.setDaemon(true);
+            return t;
+        });
+
+        this.phaseOneScheduler.scheduleAtFixedRate(() -> {
+            try {
+
+                List<String> eliminated = GameManager.checkAndEnforcePhaseOneEnd(
+                        this.gameState,
+                        this.playerRepository,
+                        this.userRepository,
+                        this.worldMap);
+
+                if (!eliminated.isEmpty()) {
+                    System.out.println("Phase 1 ended. Eliminated players: " + eliminated);
+                    this.saveAllData();
+                }
+
+                if (GameManager.isPhaseTwoStarted(this.gameState)) {
+
+                    boolean phaseTwoWasEnforced = this.gameState.isPhaseTwoEnforced();
+
+                    String winner = GameManager.checkAndEnforcePhaseTwoEnd(
+                            this.gameState,
+                            this.playerRepository,
+                            this.userRepository,
+                            this.worldMap);
+
+                    if (!phaseTwoWasEnforced && this.gameState.isPhaseTwoEnforced()) {
+                        System.out.println("Phase 2 ended. Winner: "
+                                + (winner != null ? winner : "\"All lands have been destroyed. Humanity has gone extinct.\""));
+                        this.saveAllData();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void stopPhaseOneWatcher() {
+        if (this.phaseOneScheduler != null) {
+            this.phaseOneScheduler.shutdownNow();
+        }
     }
 
     public void saveToRepositories(){
@@ -135,4 +201,9 @@ public class Start {
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
 }

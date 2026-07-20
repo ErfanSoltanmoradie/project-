@@ -4,8 +4,7 @@ import model.player.Player;
 import model.player.PlayerFactory;
 import model.repository.PlayerRepository;
 import model.repository.UserRepository;
-import model.village.Village;
-import model.world.WorldMap;
+import service.filehandeling.GameState;
 
 import java.util.Objects;
 
@@ -17,12 +16,15 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
     private final PlayerFactory playerFactory;
+    private final GameState gameState;
 
     public AuthService(UserRepository userRepository,
-                       PlayerRepository playerRepository, PlayerFactory playerFactory) {
+                       PlayerRepository playerRepository, PlayerFactory playerFactory,
+                       GameState gameState) {
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
         this.playerFactory = playerFactory;
+        this.gameState = gameState;
     }
 
     public UserRepository getUserRepository() {
@@ -50,6 +52,11 @@ public class AuthService {
     }
 
     public AuthResult register(String username, String password) {
+
+        // فاز اول تمام شده -> دیگر ثبت‌نام جدید مجاز نیست
+        if (gameState.isPhaseOneEnforced()) {
+            return new AuthResult(AuthStatus.SIGNUP_CLOSED, null);
+        }
 
         if (username != null) username = username.trim();
         if (password != null) password = password.trim();
@@ -88,6 +95,11 @@ public class AuthService {
         if(!userRepository.exists(username))
             return new AuthResult(AuthStatus.USERNAME_NOT_FOUND, null);
 
+        // بازیکنی که قبلا حذف شده دیگر اجازه‌ی ورود به بازی را ندارد
+        if (gameState.getEliminatedUsernames().contains(username)) {
+            return new AuthResult(AuthStatus.ELIMINATED, null);
+        }
+
         User user = userRepository.findUserByUsername(username);
         String enteredHash = PasswordHasher.hash(password);
 
@@ -95,6 +107,12 @@ public class AuthService {
             return new AuthResult(AuthStatus.WRONG_PASSWORD, null);
 
         Player player = playerRepository.findPlayerById(user.getId());
+
+        // احتیاط: حتی اگر یوزر هست ولی به هر دلیلی Player دیگر در ریپازیتوری نیست
+        if (player == null) {
+            return new AuthResult(AuthStatus.ELIMINATED, null);
+        }
+
         return new AuthResult(AuthStatus.SUCCESS, player);
     }
 }

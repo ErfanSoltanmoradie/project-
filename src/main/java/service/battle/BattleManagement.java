@@ -35,32 +35,10 @@ public class BattleManagement {
         //check dont battle to itself
         if(attackerVillage == defenderVillage) {return false;}
 
-        //checking the allied village
-
-
-        /*
-        if (attackerVillage.getAlliance() != null &&
-                (attackerVillage.getAlliance().getSender().equals(defender) ||
-                 attackerVillage.getAlliance().getReceiver().equals(defender))) {
-            return;
-        }
-        */
-        System.out.println("Attacker Active Battles : "
-                + attackerVillage.getActiveBattles().size());
-
-        System.out.println("Defender Active Battles : "
-                + defenderVillage.getActiveBattles().size());
-
-
-        if (!attackerVillage.getActiveBattles().isEmpty() || !defenderVillage.getActiveBattles().isEmpty()) {
-            return false;
-        }
+        if (!attackerVillage.getActiveBattles().isEmpty() || !defenderVillage.getActiveBattles().isEmpty()) {return false;}
 
         //army count must be > 0
-        if(attackerArmy.getTotalArmyCount()==0) {
-            System.out.println("attackerArmy.getTotalArmyCount()=  : " +  attackerArmy.getTotalArmyCount());
-            return false;
-        }
+        if(attackerArmy.getTotalArmyCount()==0) {return false;}
 
         ArmyProducer producer = getArmyProducer();
         if (producer == null) {return false;}
@@ -69,13 +47,11 @@ public class BattleManagement {
         if (barrack == null) {return false;}
 
 
-        /*  Comment this because i want to test
-        //check the number of requested armies
         for(ArmyType type : ArmyType.values()){
             if(attackerArmy.getArmyCount(type) > armies.getArmyStorage().getArmyCount(type))
                 return false;
         }
-        */
+
 
         return true;
     }
@@ -104,7 +80,7 @@ public class BattleManagement {
         return null;
     }
 
-    /*
+
     private void withdrawArmy(BattleArmy attackerArmy) {
 
         ArmyStorage armyStorage = armies.getArmyStorage();
@@ -118,7 +94,7 @@ public class BattleManagement {
             }
         }
     }
-    */
+
 
     public boolean startBattle(BattleArmy attackerArmy) {
 
@@ -129,7 +105,7 @@ public class BattleManagement {
             if (!canStartBattle(attackerArmy))
                 return false;
 
-            //withdrawArmy(attackerArmy);
+            withdrawArmy(attackerArmy);
 
             Battle battle = new Battle(
                     attackerVillage,

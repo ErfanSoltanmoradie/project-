@@ -17,11 +17,11 @@ public class ProductionTaskFactory {
 
                 switch (waterSoilPurifier.getType()) {
                     case SOIL_PURIFIER:
-                        return new ProductionTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.PRODUCTION_TASK,
+                        return new ProductionTask(Instant.now(), Duration.ofSeconds(2), TimedOperationType.PRODUCTION_TASK,
                                 building.getId(), ResourcesType.CLEAN_SOIL, waterSoilPurifier.getProduction(),ResourcesType.DIRTY_SOIL ,waterSoilPurifier.getConsumeAmount());
 
                     case WATER_PURIFIER:
-                        return new ProductionTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.PRODUCTION_TASK,
+                        return new ProductionTask(Instant.now(), Duration.ofSeconds(2), TimedOperationType.PRODUCTION_TASK,
                                 building.getId(), ResourcesType.CLEAN_WATER, waterSoilPurifier.getProduction(),ResourcesType.DIRTY_WATER , waterSoilPurifier.getConsumeAmount());
                 }
             }

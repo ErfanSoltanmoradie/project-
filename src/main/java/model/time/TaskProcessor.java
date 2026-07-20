@@ -47,9 +47,11 @@ public class TaskProcessor {
 
         int totalAmount = PlantType.getTotalNeutralizationPower(this.village.getPlants());
 
-        if(totalAmount <= this.village.getCloud().getRadiation())
+        if(totalAmount <= this.village.getCloud().getRadiation()){
             this.village.getCloud().setRadiation(this.village.getCloud().getRadiation() - totalAmount);
-        else {
+            this.village.getCloud().addNeutralized(totalAmount);
+
+        } else {
             this.village.getCloud().setRadiation(0);
         }
 
@@ -67,7 +69,7 @@ public class TaskProcessor {
             throw new IllegalStateException("TaskProcessor is running concurrently!");
         }
 
-        if( (int) ((System.currentTimeMillis() - this.lastCloudNeutralization) / 1000) % 5 == 0  || !this.firstCloudNeutralization)
+        if( System.currentTimeMillis() - lastCloudNeutralization >= 5000 )
             this.cloudNeutralization();
 
 
@@ -133,7 +135,19 @@ public class TaskProcessor {
                 }
 
                 for (ResourcesType resourcesType : task.getResourcesToAdd().keySet()) {
-                    resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                    if(resourcesType == ResourcesType.CLEAN_SOIL){
+                        if(village.getResources().getAmount(ResourcesType.DIRTY_SOIL) > 0){
+                            resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                            continue;
+                        }
+                    } else if(resourcesType == ResourcesType.CLEAN_WATER){
+                        if(village.getResources().getAmount(ResourcesType.DIRTY_WATER) > 0){
+                            resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                            continue;
+                        }
+                    } else {
+                        resourcesManagement.addResource(task.getResourcesToAdd().get(resourcesType), resourcesType);
+                    }
                 }
 
                 for (ResourcesType resourcesType : task.getResourcesToWithdraw().keySet()) {
@@ -141,14 +155,16 @@ public class TaskProcessor {
                 }
 
                 for (UUID uuid : task.getProductionBuildingsToReschedule()) {
+                    ProductionTask nextTask = null;
                     building1 = village.getBuildings().get(uuid);
 
                     if (building1 == null)
                         continue;
 
-                    System.out.println(building1.getBuildingStatus());
                     if (building1.getBuildingStatus() == BuildingStatus.ACTIVE) {
-                        ProductionTask nextTask = ProductionTaskFactory.buildProductionTask(building1);
+
+                        nextTask = ProductionTaskFactory.buildProductionTask(building1);
+
                         if (nextTask != null) {
                             village.getTimedOperation().put(nextTask.getId(), nextTask);
                         }
@@ -163,6 +179,9 @@ public class TaskProcessor {
                         event.disease();
                     else
                         event.discovery();
+
+                    RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
+                    village.getTimedOperation().put(randomEventTask.getId(), randomEventTask);
                 }
 
 
@@ -184,13 +203,13 @@ public class TaskProcessor {
                         for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getRequestedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
-                            tradeOffer.getSenderVillage().getResourcesManagement().addResource(amount, resource);
+                            tradeOffer.getAlliancesender().getVillage().getResourcesManagement().addResource(amount, resource);
                         }
 
                         for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
-                            tradeOffer.getReceiverVillage().getResourcesManagement().addResource(amount, resource);
+                            tradeOffer.getAlliancesreceiver().getVillage().getResourcesManagement().addResource(amount, resource);
                         }
                     }
                 }
@@ -363,11 +382,10 @@ public class TaskProcessor {
                                 task.getAttackerArmyLosses(),
                                 task.getDefenderArmyLosses(),
                                 task.getAttackerLoot(),
-                                battle.getDefenderUsername(),
-                                battle.getAttackerUsername());
+                                battle.getAttackerUsername(),
+                                battle.getDefenderUsername());
 
-                        /*battle.getAttackerVillage().getBattleHistory().put(history.getBattleId(), history);
-                        battle.getDefenderVillage().getBattleHistory().put(history.getBattleId(), history);*/
+
                         battle.getAttackerVillage().getBattleHistory().add(history);
                         battle.getDefenderVillage().getBattleHistory().add(history);
 
@@ -461,12 +479,12 @@ public class TaskProcessor {
     private boolean checkTradeCondition(TradeOffer tradeOffer){
 
         Customhouse senderCustomhouse = null;
-        for(Building b : tradeOffer.getSenderVillage().getBuildings().values()){
+        for(Building b : tradeOffer.getAlliancesender().getVillage().getBuildings().values()){
             if(b instanceof Customhouse c){senderCustomhouse = c; break;}
         }
 
         Customhouse receiverCustomhouse = null;
-        for(Building b : tradeOffer.getReceiverVillage().getBuildings().values()){
+        for(Building b : tradeOffer.getAlliancesreceiver().getVillage().getBuildings().values()){
             if(b instanceof Customhouse c){receiverCustomhouse = c; break;}
         }
 
@@ -474,16 +492,16 @@ public class TaskProcessor {
             return  true;
 
 
-        tradeOffer.getSenderVillage().getLock().writeLock().lock();
+        tradeOffer.getAlliancesender().getVillage().getLock().writeLock().lock();
         try {
             for(Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()){
                 ResourcesType type = entry.getKey();
                 int originalAmount = entry.getValue();
 
-                tradeOffer.getSenderVillage().getResourcesManagement().addResource(originalAmount, type);
+                tradeOffer.getAlliancesender().getVillage().getResourcesManagement().addResource(originalAmount, type);
             }
         }finally {
-            tradeOffer.getSenderVillage().getLock().writeLock().unlock();
+            tradeOffer.getAlliancesender().getVillage().getLock().writeLock().unlock();
         }
         return false;
     }

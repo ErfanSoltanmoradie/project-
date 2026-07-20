@@ -8,13 +8,18 @@ import java.lang.reflect.Type;
 
 public class Tile implements Serializable {
 
-    public enum Type{PLAYABLE, BORDER, BORDER_WITH_TREE};
+    public enum Type{PLAYABLE, BORDER};
 
     public enum DecorateType{
         NONE,
-        BROWN_TREE,
-        WHITE_TREE,
+        KAJ_TREE,
+        RADIO_TREE,
         ROCK
+    }
+
+    public enum GroundType{
+        GRASS,
+        DIRT
     }
 
     private final int column;
@@ -22,8 +27,10 @@ public class Tile implements Serializable {
     private Building building;
     private Plant plant;
     private Object object;
+
     private Type type = Type.PLAYABLE;
     private DecorateType decorateType =DecorateType.NONE;
+    private GroundType groundType = GroundType.GRASS;
 
     public Tile(int column, int row) {
         this.column = column;
@@ -86,5 +93,13 @@ public class Tile implements Serializable {
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    public GroundType getGroundType() {
+        return groundType;
+    }
+
+    public void setGroundType(GroundType groundType) {
+        this.groundType = groundType;
     }
 }
