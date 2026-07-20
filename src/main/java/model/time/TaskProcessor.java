@@ -165,6 +165,9 @@ public class TaskProcessor {
                         event.disease();
                     else
                         event.discovery();
+
+                    RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
+                    village.getTimedOperation().put(randomEventTask.getId(), randomEventTask);
                 }
 
 

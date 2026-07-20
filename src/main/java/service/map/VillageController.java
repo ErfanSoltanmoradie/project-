@@ -997,6 +997,11 @@ public class VillageController {
             try {
                 AllianceService.lockVillages(this.player, targetPlayer);
                 try {
+                    if(targetPlayer.getAlliance() != null && player.getAlliance() != null){
+                        if(targetPlayer.getAlliance().getReceiver().equals(player) || targetPlayer.getAlliance().getSender().equals(player)){
+                            continue;
+                        }
+                    }
                     if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
                         HBox playerRow = this.createEnemiesElement(targetPlayer);
 
@@ -1008,6 +1013,7 @@ public class VillageController {
             }finally {
                 AllianceService.unlockPlayers(this.player, targetPlayer);
             }
+
         }
     }
 

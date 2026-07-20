@@ -18,10 +18,13 @@ public class GameMap implements Serializable {
         this.rows = rows;
         tiles = new Tile[rows][columns];
         this.createTiles();
+
+        //this.setMapDesign();
     }
 
     private void createTiles() {
-        int borderSize = 24;
+        int borderSize = 25;
+
 
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
@@ -31,28 +34,64 @@ public class GameMap implements Serializable {
                 if (i < borderSize || i >= this.rows - borderSize|| j < borderSize || j >= this.columns - borderSize) {
 
                     tiles[i][j].setType(Tile.Type.BORDER);
+                    tiles[i][j].setGroundType(Tile.GroundType.DIRT);
 
-                    if (Math.random() < 0.20) {
-                        double rand = Math.random();
-
-                        if (rand < 0.3) {
-                            tiles[i][j].setDecorateType(Tile.DecorateType.WHITE_TREE);
-                        /*} else if (rand < 0.5) {
-                            tiles[i][j].setDecorateType(Tile.DecorateType.LARGE_BUSH);
-                        } else if (rand < 0.75) {
-                            tiles[i][j].setDecorateType(Tile.DecorateType.OAK_TREE);
-                        } else if (rand < 0.9) {
-                            tiles[i][j].setDecorateType(Tile.DecorateType.PINE_TREE);*/
-                        } else {
-                            tiles[i][j].setDecorateType(Tile.DecorateType.BROWN_TREE);
-                        }
+                    if (Math.random() < 0.30){
+                        if (i < borderSize -1 || i >= this.rows - borderSize -1 || j < borderSize -1 || j >= this.columns - borderSize -1)
+                            tiles[i][j].setDecorateType(Tile.DecorateType.ROCK);
                     }
+
+                    if (Math.random() < 0.270){
+                        if (i < borderSize -2 || i >= this.rows - borderSize -2 || j < borderSize -2 || j >= this.columns - borderSize -2)
+                            tiles[i][j].setDecorateType(Tile.DecorateType.KAJ_TREE);
+                    }
+                    if (Math.random() < 0.01){
+                        if (i < borderSize -2 || i >= this.rows - borderSize -2 || j < borderSize -2 || j >= this.columns - borderSize -2)
+                            tiles[i][j].setDecorateType(Tile.DecorateType.RADIO_TREE);
+                    }
+
                 }else{
                     tiles[i][j].setType(Tile.Type.PLAYABLE);
                 }
             }
         }
     }
+
+    /*private void setMapDesign(){
+        /*this.setDecorateRange(0, 5, 0, 150, Tile.DecorateType.BROWN_TREE);
+        this.setDecorateRange(145, 150, 0, 150, Tile.DecorateType.BROWN_TREE);
+        this.setDecorateRange(0, 150, 0, 5, Tile.DecorateType.BROWN_TREE);
+        this.setDecorateRange(0, 150, 145, 150, Tile.DecorateType.BROWN_TREE);
+
+        //setGroundRange(24, 28, 0, 149, Tile.GroundType.WATER);
+        //setGroundRange(125, 127, 0, 149, Tile.GroundType.WATER);
+        //setGroundRange(24, 128, 24, 26, Tile.GroundType.WATER);
+        //setGroundRange(24, 125, 125, 127, Tile
+        // .GroundType.WATER);
+        //setGroundRange(125, 149, 0, 149, Tile.GroundType.WATER);
+
+        this.setGroundRange(34, 122, 31, 124, Tile.GroundType.GRASS);
+    }*/
+
+    /*private void setGroundRange(int startRow, int endRow, int startCol, int endCol, Tile.GroundType type){
+        for (int i = startRow; i <=endRow ; i++) {
+            for (int j = startCol; j <= endCol; j++) {
+                if(isInside(i, j)){
+                    tiles[i][j].setGroundType(type);
+                }
+            }
+        }
+    }
+
+    private void setDecorateRange(int startRow, int endRow, int startCol, int endCol, Tile.DecorateType type){
+        for (int i = startRow; i <=endRow ; i++) {
+            for (int j = startCol; j <= endCol; j++) {
+                if(isInside(i, j)){
+                    tiles[i][j].setDecorateType(type);
+                }
+            }
+        }
+    }*/
 
     public boolean isInside(int row, int column){
         if((row >= 0 && row < this.rows) && (column >= 0 && column < this.columns))
@@ -74,7 +113,7 @@ public class GameMap implements Serializable {
             for (int j = column - protection; j < column + width + protection; j++) {
 
                 if (isInside(i, j)) {
-                    if (tiles[i][j].getBuilding() != null) {
+                    if (tiles[i][j].getBuilding() != null || tiles[i][j].getType() != Tile.Type.PLAYABLE) {
                         return false;
                     }
                 }
