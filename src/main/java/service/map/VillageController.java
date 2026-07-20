@@ -1711,7 +1711,7 @@ public class VillageController {
     private void onWaterStorageBuildButtonClicked(){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.WATER_STORAGE)) return;
-            if(showConstructionConfirmation("WATER_STORAGE")) {
+            if(showConstructionConfirmation("WATER_STORAGE",Cost.buildCost(BuildingType.GUNPOWDER_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.WATER_STORAGE);
             }
@@ -1722,7 +1722,7 @@ public class VillageController {
     private void onSoilStorageBuildButtonClicked(){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.SOIL_STORAGE)) return;
-            if(showConstructionConfirmation("SOIL_STORAGE")) {
+            if(showConstructionConfirmation("SOIL_STORAGE",Cost.buildCost(BuildingType.GUNPOWDER_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.SOIL_STORAGE);
             }
@@ -1734,7 +1734,7 @@ public class VillageController {
     private void onCustomhouseBuildClicked(ActionEvent actionEvent) {
         if (controller != null) {
             if (!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
-            if(showConstructionConfirmation("Customhouse")) {
+            if(showConstructionConfirmation("Customhouse",Cost.buildCost(BuildingType.GUNPOWDER_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
             }
