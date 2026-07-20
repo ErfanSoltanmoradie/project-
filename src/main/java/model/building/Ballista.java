@@ -18,17 +18,16 @@ public class Ballista extends  DefensiveBuilding implements Serializable {
         upgradeBallistaCost = new HashMap<>();
 
         upgradeBallistaCost.put(1, new UpgradeBuildingInfo(
-                new Cost(1 ,1,10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
+                new Cost(2, 1, 350, 240, 160, 60, 60, 60, 0, Duration.ofSeconds(1))));
 
         upgradeBallistaCost.put(2, new UpgradeBuildingInfo(
-                new Cost(1 ,1,20, 20, 20, 20, 20, 20, 20, Duration.ofSeconds(1))));
+                new Cost(3, 2, 450, 360, 240, 90, 90, 90, 0, Duration.ofSeconds(1))));
 
         upgradeBallistaCost.put(3, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+                new Cost(4, 3, 600, 480, 320, 110, 110, 110, 0, Duration.ofSeconds(1))));
 
         upgradeBallistaCost.put(4, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
-    }
+                new Cost(5, 4, 800, 640, 420, 140, 140, 140, 0, Duration.ofSeconds(1)))); }
     public static UpgradeBuildingInfo getBallistaUpgradeInfo(int currentLevel){
         return Ballista.upgradeBallistaCost.get(currentLevel);
     }

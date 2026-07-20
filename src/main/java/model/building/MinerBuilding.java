@@ -18,16 +18,16 @@ public class MinerBuilding extends Building implements Production , Serializable
         upgradeMinersCost = new HashMap<>();
 
         upgradeMinersCost.put(1, new UpgradeBuildingInfo(
-                new Cost(1 ,1,10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(5))));
+                new Cost(2, 1, 200, 125, 75, 0, 0, 0, 0, Duration.ofSeconds(5))));
 
         upgradeMinersCost.put(2, new UpgradeBuildingInfo(
-                new Cost(1 ,1,20, 20, 20, 20, 20, 20, 20, Duration.ofSeconds(10))));
+                new Cost(3, 2, 400, 250, 150, 0, 0, 0, 0, Duration.ofSeconds(10))));
 
         upgradeMinersCost.put(3, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(10))));
+                new Cost(4, 3, 600, 375, 225, 0, 0, 0, 0, Duration.ofSeconds(10))));
 
         upgradeMinersCost.put(4, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(10))));
+                new Cost(5, 4, 800, 500, 300, 0, 0, 0, 0, Duration.ofSeconds(10))));
     }
 
     public MinerBuilding( BuildingType type, Coordinate position, int production) {

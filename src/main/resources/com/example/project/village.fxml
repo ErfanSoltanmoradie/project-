@@ -19,6 +19,9 @@
 <StackPane fx:id="rootStackPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="596.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="service.map.VillageController">
    <children>
       <Label fx:id="towerAnnouncementLabel" alignment="CENTER" managed="false" maxWidth="400.0" style="-fx-background-color: rgba(11, 7, 16, 0.9); -fx-text-fill: #4dd0e1; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 8; -fx-border-color: #4dd0e1; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(77, 208, 225, 0.5), 8, 0, 0, 0);" visible="false" wrapText="true" StackPane.alignment="CENTER" />
+      <Label fx:id="phaseTwoAnnouncementLabel" alignment="CENTER" managed="false" maxWidth="450.0" wrapText="true"
+             style="-fx-background-color: rgba(11, 7, 16, 0.95); -fx-text-fill: #ff5252; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 15 25 15 25; -fx-background-radius: 8; -fx-border-color: #ff5252; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(255, 82, 82, 0.5), 8, 0, 0, 0);"
+             visible="false" StackPane.alignment="CENTER" />
       <AnchorPane pickOnBounds="false" prefHeight="660.0" prefWidth="633.0" StackPane.alignment="CENTER">
          <children>
              <Button fx:id="shopButton" alignment="CENTER" layoutX="553.0" layoutY="364.0" mnemonicParsing="false" onAction="#onShopClicked" prefHeight="58.0" prefWidth="66.0" style="-fx-background-color: transparent;" textAlignment="CENTER" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="14.0">
@@ -33,7 +36,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="tradeButton" disable="true" layoutX="397.0" layoutY="366.0" mnemonicParsing="false" onAction="#onTradeButtonClicked" prefHeight="72.0" prefWidth="87.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="19.0" AnchorPane.rightAnchor="166.0">
+            <Button fx:id="tradeButton" layoutX="397.0" layoutY="366.0" mnemonicParsing="false" onAction="#onTradeButtonClicked" prefHeight="72.0" prefWidth="87.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="19.0" AnchorPane.rightAnchor="166.0">
                <font>
                   <Font name="Calibri Bold Italic" size="15.0" />
                </font>
@@ -45,7 +48,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="allianceButton" alignment="CENTER" contentDisplay="CENTER" disable="true" graphicTextGap="0.0" layoutX="424.0" layoutY="507.0" mnemonicParsing="false" onAction="#onAllianceButtonClicked" prefHeight="66.0" prefWidth="48.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="23.0" AnchorPane.rightAnchor="279.0">
+            <Button fx:id="allianceButton" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="424.0" layoutY="507.0" mnemonicParsing="false" onAction="#onAllianceButtonClicked" prefHeight="66.0" prefWidth="48.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="23.0" AnchorPane.rightAnchor="279.0">
                <font>
                   <Font name="System Bold Italic" size="11.0" />
                </font>
@@ -726,7 +729,7 @@
       </AnchorPane>
       <AnchorPane fx:id="tradePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="362.0" prefWidth="544.0" style="-fx-background-color: #000415;" visible="false">
          <children>
-            <ScrollPane prefHeight="294.0" prefWidth="562.0" style="-fx-background: #000415; -fx-background-color: transparent;" AnchorPane.topAnchor="10.0">
+             <ScrollPane prefHeight="294.0" prefWidth="562.0" style="-fx-background: #000415; -fx-background-color: transparent;" AnchorPane.topAnchor="10.0">
                <content>
                   <VBox fx:id="tradePlayersContainer" prefHeight="292.0" prefWidth="555.0" />
                </content>
@@ -737,6 +740,25 @@
                   <Image url="@../../../images/designs/gold-kadr%20(2).png" />
                </image>
             </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="tradeInfoPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="520.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10; -fx-border-color: #4dd0e1; -fx-border-width: 2; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" layoutY="14.0" prefWidth="520.0" text="Trade" textFill="#4dd0e1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+               <font><Font name="System Bold" size="18.0" /></font>
+            </Label>
+
+            <ScrollPane layoutX="20.0" layoutY="55.0" prefHeight="250.0" prefWidth="480.0" style="-fx-background: #000415; -fx-background-color: transparent;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="55.0">
+               <content>
+                  <Label wrapText="true" prefWidth="460.0" textFill="WHITE" style="-fx-padding: 10;" text="Trading between players includes a transfer time based on the distance between villages, and may include a commission of 2 to 5 percent.&#10;&#10;A Customhouse is required to trade.&#10;• Customhouse level 1: 5 percent commission on traded resources (deducted from both sides).&#10;• Level 2: commission drops to 3 percent.&#10;• Level 3: commission drops to 2 percent.&#10;&#10;How it works: both players must have a Customhouse. Player A selects Village B from the world map and sends a trade offer, specifying what resources they give and what they want in return. Player B can accept or reject. If accepted, the commission is deducted from both sides." />
+               </content>
+            </ScrollPane>
+
+            <Label fx:id="tradeRequirementsLabel" alignment="CENTER" layoutY="315.0" prefWidth="520.0" text="" textFill="#ff5555" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="315.0" />
+
+            <Button fx:id="continueToTradePanelButton" alignment="CENTER" layoutX="160.0" layoutY="400.0" mnemonicParsing="false" onAction="#onContinueToTradePanelClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: white; -fx-font-weight: bold;" text="View Trade Partners" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="160.0" />
+
+            <Button fx:id="leaveTradeInfoPanelButton" alignment="CENTER" layoutX="220.0" layoutY="445.0" mnemonicParsing="false" onAction="#onLeaveTradeInfoPanelClicked" prefHeight="26.0" prefWidth="80.0" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="decidePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="107.0" prefWidth="415.0" visible="false">
@@ -778,7 +800,26 @@
                </font>
             </Button>
          </children>
-      </AnchorPane>
+      </AnchorPane><AnchorPane fx:id="allianceInfoPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="520.0" style="-fx-background-color: #1a1a2e; -fx-background-radius: 10; -fx-border-color: #4dd0e1; -fx-border-width: 2; -fx-border-radius: 8;" visible="false" StackPane.alignment="CENTER">
+      <children>
+         <Label alignment="CENTER" layoutY="14.0" prefWidth="520.0" text="Alliance" textFill="#4dd0e1" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+            <font><Font name="System Bold" size="18.0" /></font>
+         </Label>
+
+         <ScrollPane layoutX="20.0" layoutY="55.0" prefHeight="250.0" prefWidth="480.0" style="-fx-background: #000415; -fx-background-color: transparent;" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="55.0">
+            <content>
+               <Label wrapText="true" prefWidth="460.0" textFill="WHITE" style="-fx-padding: 10;" text="Alliance is possible only between two players, and attacking each other becomes forbidden.&#10;&#10;When an alliance is formed between 2 players, their science level increases by one unit, one time only.&#10;&#10;Each player can only form an alliance with one other player at a time.&#10;&#10;Requirements for BOTH sides:&#10;• Pay 500 Wood, 500 Stone, 300 Iron and 100 Coin (each player pays separately).&#10;• Research Center level 2+ for both.&#10;• At least 200 units of your cloud neutralized.&#10;• Major Building level 2+ for both.&#10;• The alliance becomes active 1 day after the request is accepted (no benefits apply during this time).&#10;&#10;Alliance benefits:&#10;• Both players get one extra science level (one-time, on first alliance). This increase is permanent.&#10;• Plant neutralization rate becomes 10% faster — applies to all plants.&#10;• Resource and army trading between members happens with no commission.&#10;• Attacking each other becomes impossible." />
+            </content>
+         </ScrollPane>
+
+         <Label fx:id="allianceRequirementsLabel" alignment="CENTER" layoutY="315.0" prefWidth="520.0" text="" textFill="#ff5555" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="315.0" />
+
+         <Button fx:id="continueToAlliancePanelButton" alignment="CENTER" layoutX="160.0" layoutY="400.0" mnemonicParsing="false" onAction="#onContinueToAlliancePanelClicked" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #ff0055; -fx-background-radius: 6; -fx-text-fill: white; -fx-font-weight: bold;" text="View Eligible Players" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="160.0" />
+
+         <Button fx:id="leaveAllianceInfoPanelButton" alignment="CENTER" layoutX="220.0" layoutY="445.0" mnemonicParsing="false" onAction="#onLeaveAllianceInfoPanelClicked" prefHeight="26.0" prefWidth="80.0" text="Close" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0" />
+      </children>
+   </AnchorPane>
+
       <AnchorPane fx:id="allianceRequestsPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0" prefWidth="574.0" visible="false">
          <children>
             <ScrollPane layoutX="19.0" layoutY="16.0" prefHeight="345.0" prefWidth="540.0" style="-fx-background: #000415;" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="16.0">

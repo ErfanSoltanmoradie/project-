@@ -20,16 +20,16 @@ public class WaterSoilPurifier extends Building implements Production, Serializa
         upgradeWellsCost = new HashMap<>();
 
         upgradeWellsCost.put(1, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+                new Cost(2, 1, 200, 125, 75, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeWellsCost.put(2, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+                new Cost(3, 2, 300, 250, 150, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeWellsCost.put(3, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+                new Cost(4, 3, 500, 375, 225, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeWellsCost.put(4, new UpgradeBuildingInfo(
-                new Cost(1 ,1,100, 50, 40, 10, 5, 5, 5, Duration.ofSeconds(1))));
+                new Cost(5, 4, 700, 500, 300, 0, 0, 0, 0, Duration.ofSeconds(1))));
     }
 
     public WaterSoilPurifier(BuildingType type, Coordinate position, int production) {

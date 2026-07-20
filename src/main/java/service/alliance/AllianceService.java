@@ -79,7 +79,7 @@ public class AllianceService {
 
                 if(this.checkAllianceCost(allianceRequest.getSender(), allianceRequest.getReceiver())) {
                     this.withdrawAllianceCost(allianceRequest.getSender(), allianceRequest.getReceiver());
-                    Duration transferTime = Duration.ofHours(1);
+                    Duration transferTime = Duration.ofSeconds(1);
                     AllianceTask allianceTask = new AllianceTask(Instant.now(), Duration.ofSeconds(5), allianceRequest);
 
                     this.removePendingRequests(allianceRequest);

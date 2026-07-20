@@ -1,6 +1,5 @@
 package service.gameManager;
 
-import model.army.LinkedList;
 import model.finalPart.GlobalTower;
 import model.player.Player;
 import model.repository.PlayerRepository;
@@ -199,8 +198,6 @@ public class GameManager {
         } else {
 
         System.out.println("No active tower survived.");
-        // هیچ بازیکنی اینجا حذف نمی‌شه؛ فقط پنل گیم‌اور/برنده بهشون نشون داده می‌شه
-        // (که خودش از طریق phaseTwoEnforced=true در پایین همین متد فعال می‌شه)
         }
 
         gameState.setGameWinner(winner);
@@ -211,6 +208,45 @@ public class GameManager {
 
     public static boolean isPhaseTwoStarted(GameState gameState) {
         return gameState.getPhaseTwoStartTime() != null;
+    }
+
+    public static List<String> checkAndEnforceHealthElimination(GameState gameState,
+                                                                PlayerRepository playerRepository,
+                                                                UserRepository userRepository,
+                                                                WorldMap worldMap) {
+
+        List<String> eliminatedUsernames = new ArrayList<>();
+
+        List<Player> snapshot = new ArrayList<>(playerRepository.getAllPlayers().values());
+
+        for (Player player : snapshot) {
+            player.getLock().writeLock().lock();
+            try {
+                Village village = player.getVillage();
+                if (village == null) continue;
+
+                boolean shouldEliminate;
+                village.getLock().readLock().lock();
+                try {
+                    shouldEliminate = village.getHealth() <= 0;
+                } finally {
+                    village.getLock().readLock().unlock();
+                }
+
+                if (shouldEliminate) {
+                    player.setEliminationReason("Your village's health reached zero and was destroyed.");
+                    playerRepository.getAllPlayers().remove(player.getPlayerId());
+                    gameState.getEliminatedUsernames().add(player.getUsername());
+                    worldMap.releaseCoordinate(village.getCoordinate());
+                    eliminatedUsernames.add(player.getUsername());
+                }
+
+            } finally {
+                player.getLock().writeLock().unlock();
+            }
+        }
+
+        return eliminatedUsernames;
     }
 
 }

@@ -15,6 +15,9 @@ public class TradeOffer implements Serializable {
     //private final Village receiver;
     private final Player Alliancesender;
     private final Player Alliancesreceiver;
+    private Map<ResourcesType, Integer> netOfferedResources;   // چیزی که واقعاً به گیرنده می‌رسد
+    private Map<ResourcesType, Integer> netRequestedResources;  // چیزی که واقعاً به فرستنده می‌رسد
+
     private final  Map<ResourcesType , Integer> offeredResources;
     private final  Map<ResourcesType , Integer> requestedResources;
     private TradeStatus tradeStatus;
@@ -36,6 +39,19 @@ public class TradeOffer implements Serializable {
         this.tradeStatus = TradeStatus.PENDING;
         double distance = Math.sqrt(Math.pow(coordinateOfSender.getX() - coordinateOfReceiver.getX(), 2) + Math.pow(coordinateOfSender.getY() - coordinateOfReceiver.getY(), 2));
         this.tradeTime = (int) Math.ceil(distance / 10);
+    }
+
+    public void setNetOfferedResources(Map<ResourcesType, Integer> netOfferedResources) {
+        this.netOfferedResources = netOfferedResources;
+    }
+    public Map<ResourcesType, Integer> getNetOfferedResources() {
+        return netOfferedResources;
+    }
+    public void setNetRequestedResources(Map<ResourcesType, Integer> netRequestedResources) {
+        this.netRequestedResources = netRequestedResources;
+    }
+    public Map<ResourcesType, Integer> getNetRequestedResources() {
+        return netRequestedResources;
     }
 
     public UUID getUuid() {
