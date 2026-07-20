@@ -6,6 +6,7 @@ import model.player.Player;
 import model.resources.ResourcesType;
 
 import model.village.Village;
+import service.alliance.AllianceService;
 import service.resource.ResourcesManagement;
 
 import java.time.Duration;
@@ -14,216 +15,148 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TradeService {
-    private final UUID id;
-    private Village village;
-    private Customhouse customhouse;
-    private ResourcesManagement resourcesManagement;
-    public TradeService(UUID id ) {
-        this.id = id;
-    }
 
-    public void sendRequest(Player sender, Player receiver, Map<ResourcesType,Integer> offered , Map<ResourcesType,Integer> requested) {
+    public void sendRequest(Player sender, Player receiver, Map<ResourcesType, Integer> offered, Map<ResourcesType, Integer> requested) {
 
         Village senderVillage = sender.getVillage();
         Village receiverVillage = receiver.getVillage();
 
-        senderVillage.getLock().writeLock().lock();
+        AllianceService.lockPlayers(sender, receiver);
         try {
-            boolean senderHasCustoms= false;
-            for(Building building : senderVillage.getBuildings().values()){
-                if(building instanceof Customhouse){
-                    senderHasCustoms=true;
-                    break;
+            AllianceService.lockVillages(sender, receiver);
+            try {
+                boolean senderHasCustoms = false;
+                for (Building building : senderVillage.getBuildings().values()) {
+                    if (building instanceof Customhouse) {
+                        senderHasCustoms = true;
+                        break;
+                    }
                 }
-            }
-            if (!senderHasCustoms){return;}
-        }finally {
-            senderVillage.getLock().writeLock().unlock();
-        }
-
-        receiverVillage.getLock().writeLock().lock();
-        try {
-            boolean receiverHasCustoms= false;
-            for(Building building : receiverVillage.getBuildings().values()){
-                if(building instanceof Customhouse){
-                    receiverHasCustoms=true;
-                    break;
+                if (!senderHasCustoms) {
+                    return;
                 }
-            }if (!receiverHasCustoms){return;}
-        }finally {
-            receiverVillage.getLock().writeLock().unlock();
-        }
 
-        TradeOffer tradeOffer = new TradeOffer(sender,receiver,offered,requested);// for making & showing an offer in receiverVillage
+                boolean receiverHasCustoms = false;
+                for (Building building : receiverVillage.getBuildings().values()) {
+                    if (building instanceof Customhouse) {
+                        receiverHasCustoms = true;
+                        break;
+                    }
+                }
+                if (!receiverHasCustoms) {
+                    return;
+                }
 
-        senderVillage.getLock().writeLock().lock();
-        try {
-            for(Map.Entry<ResourcesType,Integer> entry : offered.entrySet()){
-                ResourcesType type = entry.getKey();
-                Integer amount = entry.getValue();
-                if(senderVillage.getResources().getAmount(type) < amount){return;}
+                for (Map.Entry<ResourcesType, Integer> entry : offered.entrySet()) {
+                    ResourcesType type = entry.getKey();
+                    Integer amount = entry.getValue();
+                    if (senderVillage.getResources().getAmount(type) < amount) {
+                        return;
+                    }
+                }
+
+                TradeOffer tradeOffer = new TradeOffer(/*senderVillage, receiverVillage,*/ sender, receiver, offered, requested);// for making & showing an offer in receiverVillage
+
+                sender.getVillage().getSentTradeRequests().add(tradeOffer);
+                receiver.getVillage().getReceivedTradeRequests().add(tradeOffer);
+
+                for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()) {
+                    ResourcesType type = entry.getKey();
+                    int originalAmount = entry.getValue();
+                    tradeOffer.getAlliancesender().getVillage().getResourcesManagement().withdrawResource(originalAmount, type);
+                }
+
+                tradeOffer.setTradeStatus(TradeStatus.PENDING);
+
+            } finally {
+                AllianceService.unlockVillages(sender, receiver);
             }
-        }finally {
-            senderVillage.getTradeOffers().put(tradeOffer.getUuid(), tradeOffer);
-            senderVillage.getLock().writeLock().unlock();
-        }
-
-
-        senderVillage.getLock().writeLock().lock();
-        try {
-            for(Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()){
-                ResourcesType type = entry.getKey();
-                int originalAmount = entry.getValue();
-
-                tradeOffer.getSenderPlayer().getVillage().getResourcesManagement().withdrawResource(originalAmount, type);
-            }
-        }finally {
-            senderVillage.getLock().writeLock().unlock();
-        }
-
-        receiverVillage.getLock().writeLock().lock();
-        try {
-            for(Map.Entry<ResourcesType,Integer> entry : requested.entrySet()){
-                ResourcesType type = entry.getKey();
-                Integer amount = entry.getValue();
-                if(receiverVillage.getResourcesManagement().getMaxCapacity(type) < amount){return;}
-            }
-        }finally {
-            receiverVillage.getTradeOffers().put(tradeOffer.getUuid(), tradeOffer);
-            receiverVillage.getLock().writeLock().unlock();
+        } finally {
+            AllianceService.unlockPlayers(sender, receiver);
         }
     }
 
 
-
     public void acceptOffer(TradeOffer offer) {
-        if (offer == null || offer.getTradeStatus() != TradeStatus.PENDING) { return; }
-
-        offer.setTradeStatus(TradeStatus.ACCEPTED);
-
-        Village senderVillage = offer.getSenderPlayer().getVillage();
-        Village receiverVillage = offer.getReceiverPlayer().getVillage();
+        if (offer == null || offer.getTradeStatus() != TradeStatus.PENDING) {
+            return;
+        }
 
         Customhouse senderCustomhouse = null;
         Customhouse receiverCustomhouse = null;
 
-        senderVillage.getLock().writeLock().lock();
+        AllianceService.lockVillages(offer.getAlliancesender(), offer.getAlliancesreceiver());
         try {
-            for(Building building1 : offer.getSenderPlayer().getVillage().getBuildings().values()){
-                if(building1 instanceof Customhouse customhouse){senderCustomhouse = customhouse ;break;}
+            for (Building building1 : offer.getAlliancesender().getVillage().getBuildings().values()) {
+                if (building1 instanceof Customhouse customhouse) { senderCustomhouse = customhouse; break; }
             }
-        }finally {
-            senderVillage.getLock().writeLock().unlock();
-        }
-
-        receiverVillage.getLock().writeLock().lock();
-        try {
-
-            for(Building building2 : offer.getReceiverPlayer().getVillage().getBuildings().values()){
-                if(building2 instanceof Customhouse customhouse){receiverCustomhouse = customhouse ;break;}
+            for (Building building2 : offer.getAlliancesreceiver().getVillage().getBuildings().values()) {
+                if (building2 instanceof Customhouse customhouse) { receiverCustomhouse = customhouse; break; }
             }
-        }finally {
-            receiverVillage.getLock().writeLock().unlock();
-        }
 
-        boolean areAllied = offer.getSenderPlayer().getAlliance() != null &&
-                (offer.getSenderPlayer().getAlliance().getSender().equals(offer.getReceiverPlayer()) ||
-                        offer.getSenderPlayer().getAlliance().getReceiver().equals(offer.getReceiverPlayer()));
-
-        double senderTaxRate = 0;
-        senderVillage.getLock().writeLock().lock();
-        try {
-            senderTaxRate = areAllied ? 0 : (senderCustomhouse != null ? senderCustomhouse.getCommission() : 0);
-        }finally {
-            senderVillage.getLock().writeLock().unlock();
-        }
-
-        double receiverTaxRate = 0;
-        receiverVillage.getLock().writeLock().lock();
-        try {
-            receiverTaxRate = areAllied ? 0 : (receiverCustomhouse != null ? receiverCustomhouse.getCommission() : 0);
-        }finally {
-            receiverVillage.getLock().writeLock().unlock();
-        }
-
-
-        senderVillage.getLock().writeLock().lock();
-        try {
-            for(Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()){
-                ResourcesType type = entry.getKey();
-                int originalAmount = entry.getValue();
-                int amountWithTax =  (int)(originalAmount * senderTaxRate);
-                offer.getSenderPlayer().getVillage().getResourcesManagement().withdrawResource(amountWithTax, type);
+            // گیرنده باید به اندازه‌ی کافی از منابع درخواستی را داشته باشد
+            for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+                if (offer.getAlliancesreceiver().getVillage().getResources().getAmount(entry.getKey()) < entry.getValue()) {
+                    return;
+                }
             }
-        }finally {
-            senderVillage.getLock().writeLock().unlock();
-        }
 
-        receiverVillage.getLock().writeLock().lock();
-        try {
-            for(Map.Entry<ResourcesType,Integer> entry : offer.getRequestedResources().entrySet()) {
-                ResourcesType type = entry.getKey();
-                int originalAmount = entry.getValue();
-                int amountWithTax = originalAmount + (int)(originalAmount * receiverTaxRate);
-                offer.getReceiverPlayer().getVillage().getResourcesManagement().withdrawResource(amountWithTax, type);
+            boolean areAllied = offer.getAlliancesender().getAlliance() != null &&
+                    (offer.getAlliancesender().getAlliance().getSender().equals(offer.getAlliancesreceiver()) ||
+                            offer.getAlliancesender().getAlliance().getReceiver().equals(offer.getAlliancesreceiver()));
+
+            double senderTaxRate = areAllied ? 0 : (senderCustomhouse != null ? senderCustomhouse.getCommission() : 0);
+            double receiverTaxRate = areAllied ? 0 : (receiverCustomhouse != null ? receiverCustomhouse.getCommission() : 0);
+
+            // فرستنده قبلاً هنگام ارسال پیشنهاد، منابع اهدایی‌اش کسر شده — اینجا فقط از گیرنده کم می‌کنیم (دقیقاً همون مقدار توافق‌شده، بدون اضافه)
+            for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+                offer.getAlliancesreceiver().getVillage().getResourcesManagement()
+                        .withdrawResource(entry.getValue(), entry.getKey());
             }
-        }finally {
-            receiverVillage.getLock().writeLock().unlock();
-        }
 
-        //Duration transferTime = Duration.ofHours(offer.getTradeTime());
-        TradeTask tradeTask = new TradeTask(Instant.now(), Duration.ofSeconds(4), offer);
-
-        senderVillage.getLock().writeLock().lock();
-        try {
-            offer.getSenderPlayer().getVillage().getTimedOperation().put(tradeTask.getId(), tradeTask);
-        }finally {
-            senderVillage.getLock().writeLock().unlock();
-        }
-
-        /*for(Map.Entry<ResourcesType,Integer> entry : offer.getRequestedResources().entrySet()){
-            ResourcesType type = entry.getKey();
-            Integer originalAmount = entry.getValue();
-            int amountWithTax = originalAmount + (int) (originalAmount * receiverTaxRate);
-            if(offer.getReceiver().getResources().getAmount(type) < amountWithTax){return;}
-            int currentAmount = offer.getSender().getResources().getAmount(type);
-            int maxCapacity = offer.getSender().getResourcesManagement().getMaxCapacity(type);
-            if (currentAmount + originalAmount > maxCapacity) {
-                return;
+            // مقدار خالصی که هر طرف واقعاً دریافت می‌کند (بعد از کسر کمیسیون)
+            Map<ResourcesType, Integer> netOffered = new java.util.HashMap<>();
+            for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
+                int net = entry.getValue() - (int) (entry.getValue() * senderTaxRate);
+                netOffered.put(entry.getKey(), net);
             }
-        }*/
+            offer.setNetOfferedResources(netOffered);
 
-        /*for(Map.Entry<ResourcesType,Integer> entry : offer.getOfferedResources().entrySet()){
-
-            ResourcesType type = entry.getKey();
-            Integer originalAmount = entry.getValue();
-
-            int amountWithTax = originalAmount + (int) (originalAmount * senderTaxRate);
-
-            if(offer.getReceiver().getResourcesManagement().getMaxCapacity(type) < originalAmount){return;}
-            int currentAmount = offer.getReceiver().getResources().getAmount(type);
-            int maxCapacity = offer.getReceiver().getResourcesManagement().getMaxCapacity(type);
-            if (currentAmount + originalAmount > maxCapacity) {
-                return;
+            Map<ResourcesType, Integer> netRequested = new java.util.HashMap<>();
+            for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+                int net = entry.getValue() - (int) (entry.getValue() * receiverTaxRate);
+                netRequested.put(entry.getKey(), net);
             }
-        }*/
+            offer.setNetRequestedResources(netRequested);
+
+            TradeTask tradeTask = new TradeTask(Instant.now(), Duration.ofSeconds(offer.getTradeTime()), offer);
+
+            offer.getAlliancesender().getVillage().getTimedOperation().put(tradeTask.getId(), tradeTask);
+            offer.setTradeStatus(TradeStatus.ACCEPTED);
+
+            offer.getAlliancesreceiver().getVillage().getReceivedTradeRequests().remove(offer);
+            offer.getAlliancesender().getVillage().getSentTradeRequests().remove(offer);
+
+        } finally {
+            AllianceService.unlockVillages(offer.getAlliancesender(), offer.getAlliancesreceiver());
+        }
     }
 
     public void rejectOffer(TradeOffer offer) {
         offer.setTradeStatus(TradeStatus.REJECTED);
 
-        offer.getSenderPlayer().getVillage().getLock().writeLock().lock();
+        offer.getAlliancesender().getVillage().getLock().writeLock().lock();
         try {
             for(Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()){
                 ResourcesType type = entry.getKey();
                 int originalAmount = entry.getValue();
 
-                offer.getSenderPlayer().getVillage().getResourcesManagement().addResource(originalAmount, type);
+                offer.getAlliancesender().getVillage().getResourcesManagement().addResource(originalAmount, type);
+                offer.getAlliancesender().getVillage().getReceivedTradeRequests().remove(offer);
+                offer.getAlliancesender().getVillage().getSentTradeRequests().remove(offer);
             }
         }finally {
-            offer.getSenderPlayer().getVillage().getLock().writeLock().unlock();
+            offer.getAlliancesender().getVillage().getLock().writeLock().unlock();
         }
     }
-
-
 }

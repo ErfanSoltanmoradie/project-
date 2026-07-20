@@ -181,13 +181,13 @@ public class TaskProcessor {
                 for (TradeOffer tradeOffer : task.getTradeOffers()) {
 
                     if (this.checkTradeCondition(tradeOffer)) {
-                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getRequestedResources().entrySet()) {
+                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getNetRequestedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
                             tradeOffer.getSenderPlayer().getVillage().getResourcesManagement().addResource(amount, resource);
                         }
 
-                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getOfferedResources().entrySet()) {
+                        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getNetOfferedResources().entrySet()) {
                             ResourcesType resource = entry.getKey();
                             int amount = entry.getValue();
                             tradeOffer.getReceiverPlayer().getVillage().getResourcesManagement().addResource(amount, resource);

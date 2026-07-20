@@ -16,10 +16,9 @@ public class Customhouse extends Building {
     }
     static {
         upgradeCustomhouseBuildingsCost=new HashMap<>();
-        upgradeCustomhouseBuildingsCost.put(1,new UpgradeBuildingInfo(new Cost(1,1,500,400,300,0,100,100,0,Duration.ofSeconds(4))));
-        upgradeCustomhouseBuildingsCost.put(2,new UpgradeBuildingInfo(new Cost(3,4,600,450,300,0,180,180,0,Duration.ofHours(4))));
-        upgradeCustomhouseBuildingsCost.put(3,new UpgradeBuildingInfo(new Cost(4,5,1000,800,600,0,200,200,0,Duration.ofHours(6))));
-    }
+        upgradeCustomhouseBuildingsCost.put(1, new UpgradeBuildingInfo(new Cost(3, 2, 500, 400, 300, 0, 100, 100, 0, Duration.ofSeconds(4))));
+        upgradeCustomhouseBuildingsCost.put(2, new UpgradeBuildingInfo(new Cost(4, 3, 1000, 800, 600, 0, 200, 200, 0, Duration.ofSeconds(5))));
+        upgradeCustomhouseBuildingsCost.put(3, new UpgradeBuildingInfo(new Cost(5, 4, 1600, 1200, 900, 0, 300, 300, 0, Duration.ofSeconds(6)))); }
 
     public static UpgradeBuildingInfo upgradeBuildingInfo(int level) {
         return upgradeCustomhouseBuildingsCost.get(level);

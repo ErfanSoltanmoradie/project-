@@ -18,16 +18,16 @@ public class StorageBuilding extends Building implements Storage, Serializable {
         upgradeStoragesCost = new HashMap<>();
 
         upgradeStoragesCost.put(1, new UpgradeBuildingInfo(
-                new Cost(1 ,1,10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
+                new Cost(2, 1, 300, 200, 120, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeStoragesCost.put(2, new UpgradeBuildingInfo(
-                new Cost(1 ,1,10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(1))));
+                new Cost(3, 2, 400, 300, 220, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeStoragesCost.put(3, new UpgradeBuildingInfo(
-                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
+                new Cost(4, 3, 500, 400, 320, 0, 0, 0, 0, Duration.ofSeconds(1))));
 
         upgradeStoragesCost.put(4, new UpgradeBuildingInfo(
-                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(1))));
+                new Cost(5, 4, 600, 500, 420, 0, 0, 0, 0, Duration.ofSeconds(1))));
     }
 
     public static UpgradeBuildingInfo getUpgradeStoragesCost(int level){

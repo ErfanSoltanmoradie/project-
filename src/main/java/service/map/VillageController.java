@@ -1,6 +1,7 @@
 package service.map;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -13,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.army.ArmyStorage;
+import model.army.ArmyType;
 import model.battle.BattleArmy;
 import model.battle.BattleHistory;
 
@@ -26,6 +29,8 @@ import javafx.scene.layout.VBox;
 
 import model.building.*;
 import model.finalPart.GlobalTower;
+import model.finalPart.GlobalTowerAnnouncer;
+import model.finalPart.PhaseTwoAnnouncer;
 import model.player.Player;
 import model.repository.PlayerRepository;
 import model.resources.Resources;
@@ -54,6 +59,7 @@ public class VillageController {
 
     private PlayerRepository playerRepository;
     private int lastSeenAnnouncementCount = 0;
+    private int lastSeenPhaseTwoAnnouncementCount = 0;
     private GameState gameState;
 
     public PlayerRepository getPlayerRepository() {
@@ -79,6 +85,7 @@ public class VillageController {
     @FXML private Label plantsCountLabel;
     @FXML private Label neutralizationPowerLabel;
     @FXML private Label towerAnnouncementLabel;
+    @FXML private Label phaseTwoAnnouncementLabel;
 
     @FXML private Label woodLabel;
 
@@ -266,11 +273,29 @@ public class VillageController {
 
     @FXML AnchorPane battlePanel;
 
+    @FXML AnchorPane finalBattlePanel;
+
     @FXML Button battleHistoryButton;
 
     @FXML VBox battleHistoryContainer;
 
     @FXML AnchorPane battleHistoryPannel;
+
+    @FXML private Label ragnarAvailableLabel;
+    @FXML private Label rosooAvailableLabel;
+    @FXML private Label lagertaAvailableLabel;
+
+    @FXML private TextField ragnarSendTextField;
+    @FXML private TextField rosooSendTextField;
+    @FXML private TextField lagertaSendTextField;
+
+    @FXML private Label troopSelectionErrorLabel;
+
+    @FXML private Button confirmAttackButton;
+    @FXML private Button cancelTroopSelectionButton;
+
+    private Player selectedTarget;
+
 
     @FXML ProgressBar woodProgressBar;
 
@@ -332,6 +357,7 @@ public class VillageController {
     @FXML Button buildTowerButton;
     @FXML Button leaveTowerPanelButton;
     @FXML Button confirmTowerBuildButton;
+
     @FXML private WinnerController winnerViewController;
     @FXML private EliminatedController eliminatedViewController;
 
@@ -363,6 +389,14 @@ public class VillageController {
     @FXML Label coinLabel;
 
     @FXML TextField receiveWoodTextField;
+
+    @FXML AnchorPane allianceInfoPanel;
+    @FXML Label allianceRequirementsLabel;
+    @FXML Button continueToAlliancePanelButton;
+    @FXML AnchorPane tradeInfoPanel;
+    @FXML Label tradeRequirementsLabel;
+    @FXML Button continueToTradePanelButton;
+
 
 
     private Player player;
@@ -497,7 +531,6 @@ public class VillageController {
         });
     }
 
-
     public void validPlayersToTrade(){
         this.traders.clear();
         try {
@@ -506,10 +539,7 @@ public class VillageController {
                 if(player1.getPlayerId().equals(this.player.getPlayerId()))
                     continue;
 
-                if(BuildingsManagement.checkResearchCenterBuildingForTrade(player1) &&
-                        BuildingsManagement.checkCustomHouseBuildingForTrade(player1)&&
-                        BuildingsManagement.checkCustomHouseBuildingForTrade(player1)){
-
+                if(BuildingsManagement.checkCustomHouseBuildingForTrade(player1)){
                     this.traders.put(player1.getPlayerId(), player1);
                 }
             }
@@ -607,10 +637,10 @@ public class VillageController {
                 "-fx-alignment: CENTER_LEFT;");
 
 
-        VBox playerVBox = new VBox();
+       /* VBox playerVBox = new VBox();
         playerVBox.setSpacing(5);
 
-        String receiverPlayerName = tradeOffer.getReceiverPlayer().getVillage().getUserName();
+        String receiverPlayerName = tradeOffer.getReceiverVillage().getUserName();
         Label receiverLabel = new Label("receiver player [ " + receiverPlayerName + " ]");
         receiverLabel.setStyle("-fx-text-fill: #FF9800FF; -fx-font-size: 14px; -fx-font-weight: bold;");
 
@@ -619,19 +649,62 @@ public class VillageController {
         VBox resourcesContainer = new VBox();
         resourcesContainer.setSpacing(4);
 
+        //String offeredStr = String.valueOf(tradeOffer.getOfferedResources().get(ResourcesType.WOOD));
+        // String requestedStr = String.valueOf(tradeOffer.getRequestedResources().get(ResourcesType.IRON));
 
-        String offeredStr = String.valueOf(tradeOffer.getOfferedResources().get(ResourcesType.WOOD));
-        String requestedStr = String.valueOf(tradeOffer.getRequestedResources().get(ResourcesType.IRON));
+        //Label receiveLabel = new Label("RECEIVE: " + offeredStr);
+        //receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
 
-        Label receiveLabel = new Label("RECEIVE: " + offeredStr);
-        receiveLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-size: 11px;");
+        // Label payLabel = new Label("SEND: " + requestedStr);
+//payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
 
-        Label payLabel = new Label("SEND: " + requestedStr);
-        payLabel.setStyle("-fx-text-fill: #f44336; -fx-font-size: 11px;");
+        //resourcesContainer.getChildren().addAll(receiveLabel, payLabel);*/
 
-        resourcesContainer.getChildren().addAll(receiveLabel, payLabel);
+        VBox senderContainer = new VBox();
+        senderContainer.setSpacing(4);
+        senderContainer.setMinWidth(120);
+        senderContainer.setPrefWidth(120);
 
-        row.getChildren().addAll(playerVBox, resourcesContainer);
+        String receiverName = tradeOffer.getAlliancesreceiver().getVillage().getUserName();
+        Label senderLabel = new Label( "YOU ➔ " + receiverName);
+        senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
+
+        senderContainer.getChildren().addAll(senderLabel);
+
+        VBox offeredResourcesContainer = new VBox();
+        offeredResourcesContainer.setSpacing(4);
+        offeredResourcesContainer.setMinWidth(140);
+
+        for (Map.Entry<ResourcesType, Integer> entry :tradeOffer.getOfferedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #ff0000; -fx-font-size: 11px; -fx-font-weight: bold;");
+                offeredResourcesContainer.getChildren().add(label);
+            }
+        }
+
+        VBox requestedResourcesContainer = new VBox();
+        requestedResourcesContainer.setSpacing(4);
+        requestedResourcesContainer.setMinWidth(100);
+
+        for (Map.Entry<ResourcesType, Integer> entry : tradeOffer.getRequestedResources().entrySet()) {
+            ResourcesType resourcesType = entry.getKey();
+            int amount = entry.getValue();
+            if (amount > 0) {
+                Label label = new Label(resourcesType.toString() + ": " + amount);
+                label.setStyle("-fx-text-fill: #00ff0f; -fx-font-size: 11px; -fx-font-weight: bold;");
+                requestedResourcesContainer.getChildren().add(label);
+            }
+        }
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+
+        //row.getChildren().addAll(playerVBox, resourcesContainer);
+        row.getChildren().addAll(senderContainer, offeredResourcesContainer, requestedResourcesContainer, spacer);
 
         row.setOnMouseEntered(event -> row.setStyle(row.getStyle() + "-fx-background-color: #383838; -fx-border-color: #ff9800;"));
         row.setOnMouseExited(event -> row.setStyle(row.getStyle() + "-fx-background-color: #2b2b2b; -fx-border-color: #444444;"));
@@ -657,7 +730,7 @@ public class VillageController {
     }
 
     private HBox createTradeRequestsRowElement(TradeOffer offer) {
-        TradeService tradeService = new TradeService(UUID.randomUUID());
+        TradeService tradeService = new TradeService();
 
         HBox row = new HBox();
         row.setSpacing(15);
@@ -674,7 +747,7 @@ public class VillageController {
         senderContainer.setMinWidth(120);
         senderContainer.setPrefWidth(120);
 
-        String senderName = offer.getSenderPlayer().getVillage().getUserName();
+        String senderName = offer.getAlliancesender().getVillage().getUserName();
         Label senderLabel = new Label(senderName + " ➔ YOU");
         senderLabel.setStyle("-fx-text-fill: #ff9800; -fx-font-size: 13px; -fx-font-weight: bold;");
 
@@ -933,6 +1006,11 @@ public class VillageController {
             try {
                 AllianceService.lockVillages(this.player, targetPlayer);
                 try {
+                    if(targetPlayer.getAlliance() != null && player.getAlliance() != null){
+                        if(targetPlayer.getAlliance().getReceiver().equals(player) || targetPlayer.getAlliance().getSender().equals(player)){
+                            continue;
+                        }
+                    }
                     if(!targetPlayer.getPlayerId().equals(this.player.getPlayerId())){
                         HBox playerRow = this.createEnemiesElement(targetPlayer);
 
@@ -982,9 +1060,9 @@ public class VillageController {
                 "-fx-cursor: hand;");
 
         selectBtn.setOnAction(e -> {
-            // do the attack
+            this.selectedTarget = targetPlayer;
             this.hideAttackPanel();
-            this.doAttack(targetPlayer);
+            this.showTroopSelectionPanel();
         });
 
         row.getChildren().addAll(textContainer, spacer, selectBtn);
@@ -995,14 +1073,116 @@ public class VillageController {
         return row;
     }
 
-    private void doAttack(Player targetPlayer){
+    private boolean doAttack(Player targetPlayer, BattleArmy battleArmy){
 
         BattleManagement battleManagement = new BattleManagement(this.player.getVillage(), targetPlayer.getVillage());
-        BattleArmy battleArmy = new BattleArmy(10, 10, 10);
-        //you need to create an army first it's just a test
-        battleManagement.startBattle(battleArmy);
-        this.battleButton.setDisable(true);
+
+        boolean started = battleManagement.startBattle(battleArmy);
+
+        if (started) {
+            this.battleButton.setDisable(true);
+        }
+
+        return started;
     }
+
+    private void showTroopSelectionPanel(){
+
+        if (this.troopSelectionErrorLabel != null) {
+            this.troopSelectionErrorLabel.setText("");
+        }
+
+        player.getVillage().getLock().readLock().lock();
+        try {
+            ArmyStorage armyStorage = player.getVillage().getArmies().getArmyStorage();
+
+            this.ragnarAvailableLabel.setText("Available Ragnar:" + armyStorage.getArmyCount(ArmyType.RAGNAR));
+            this.rosooAvailableLabel.setText("Available Rosso: " + armyStorage.getArmyCount(ArmyType.ROSOO));
+            this.lagertaAvailableLabel.setText("Available Lagerta:" + armyStorage.getArmyCount(ArmyType.LAGERTA));
+        } finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+
+
+        this.ragnarSendTextField.setText("0");
+        this.rosooSendTextField.setText("0");
+        this.lagertaSendTextField.setText("0");
+
+        this.finalBattlePanel.setVisible(true);
+        this.finalBattlePanel.setManaged(true);
+    }
+
+    private void hideTroopSelectionPanel(){
+        this.finalBattlePanel.setVisible(false);
+        this.finalBattlePanel.setManaged(false);
+    }
+
+    @FXML
+    private void onConfirmAttackClicked(){
+
+        if (this.selectedTarget == null) {
+            this.hideTroopSelectionPanel();
+            return;
+        }
+
+        int ragnarCount;
+        int rosooCount;
+        int lagertaCount;
+
+        try {
+            ragnarCount = parseArmyCount(this.ragnarSendTextField.getText());
+            rosooCount = parseArmyCount(this.rosooSendTextField.getText());
+            lagertaCount = parseArmyCount(this.lagertaSendTextField.getText());
+        } catch (NumberFormatException ex) {
+            this.troopSelectionErrorLabel.setText("Enter a valid number");
+            return;
+        }
+
+        BattleArmy battleArmy = new BattleArmy(ragnarCount, rosooCount, lagertaCount);
+
+        if (battleArmy.getTotalArmyCount() == 0) {
+            this.troopSelectionErrorLabel.setText("You must select at least one army");
+            return;
+        }
+
+        player.getVillage().getLock().readLock().lock();
+        try {
+            ArmyStorage armyStorage = player.getVillage().getArmies().getArmyStorage();
+
+            for (ArmyType type : ArmyType.values()) {
+                if (battleArmy.getArmyCount(type) > armyStorage.getArmyCount(type)) {
+                    this.troopSelectionErrorLabel.setText("You dont have enough armies ");
+                    return;
+                }
+            }
+        } finally {
+            player.getVillage().getLock().readLock().unlock();
+        }
+
+        boolean started = this.doAttack(this.selectedTarget, battleArmy);
+
+        if (started) {
+            this.hideTroopSelectionPanel();
+            this.selectedTarget = null;
+        } else {
+            this.troopSelectionErrorLabel.setText("You cant battle this village because the target village is currently in a battle");
+        }
+    }
+
+    @FXML
+    private void onCancelTroopSelectionClicked(){
+        this.selectedTarget = null;
+        this.hideTroopSelectionPanel();
+    }
+
+    private int parseArmyCount(String text){
+        if (text == null || text.isBlank()) {
+            return 0;
+        }
+        int value = Integer.parseInt(text.trim());
+        return Math.max(value, 0);
+    }
+
 
     private void showAttackHistory(){
 
@@ -1268,11 +1448,15 @@ public class VillageController {
         this.player.getVillage().getLock().writeLock().lock();
         try {
             ResourcesManagement resourcesManagement = this.player.getVillage().getResourcesManagement();
-            resourcesManagement.sellResource(Integer.parseInt(sellWoodTextField.getText()), ResourcesType.WOOD);
-            resourcesManagement.sellResource(Integer.parseInt(sellIronTextField.getText()), ResourcesType.IRON);
-            resourcesManagement.sellResource(Integer.parseInt(sellGunPowderTextField.getText()), ResourcesType.GUN_POWDER);
-            resourcesManagement.sellResource(Integer.parseInt(sellWaterTextField.getText()), ResourcesType.CLEAN_WATER);
-            resourcesManagement.sellResource(Integer.parseInt(sellSoilTextField.getText()), ResourcesType.CLEAN_SOIL);
+            if(!sellWoodTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellWoodTextField.getText()), ResourcesType.WOOD);
+
+            if(!sellIronTextField.getText().isEmpty())resourcesManagement.sellResource(Integer.parseInt(sellIronTextField.getText()), ResourcesType.IRON);
+
+            if(!sellGunPowderTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellGunPowderTextField.getText()), ResourcesType.GUN_POWDER);
+
+            if(!sellWaterTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellWaterTextField.getText()), ResourcesType.CLEAN_WATER);
+
+            if(!sellSoilTextField.getText().isEmpty()) resourcesManagement.sellResource(Integer.parseInt(sellSoilTextField.getText()), ResourcesType.CLEAN_SOIL);
 
             this.hideSellResourcesPanel();
             this.hideDecisionCustomhousePanel();
@@ -1354,7 +1538,7 @@ public class VillageController {
     private void onWoodMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.WOOD_MINE)) return;
-            if(showConstructionConfirmation("WoodMiner")) {
+            if(showConstructionConfirmation("WoodMiner",Cost.buildCost(BuildingType.WOOD_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.WOOD_MINE);
             }
@@ -1365,9 +1549,20 @@ public class VillageController {
     private void onBuildCustomHouseClicked(){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
-            if(showConstructionConfirmation("CUSTOMHOUSE")) {
+            if(showConstructionConfirmation("CUSTOMHOUSE",Cost.buildCost(BuildingType.CUSTOMHOUSE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
+            }
+        }
+    }
+
+    @FXML
+    private void onArmyProducerBuildClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.ARMY_PRODUCER)) return;
+            if(showConstructionConfirmation("ARMY_PRODUCER",Cost.buildCost(BuildingType.ARMY_PRODUCER))) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
             }
         }
     }
@@ -1377,7 +1572,7 @@ public class VillageController {
 
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.BALLISTA_DEFENSIVE)) return;
-            if(showConstructionConfirmation("BALLISTA_DEFENSIVE")) {
+            if(showConstructionConfirmation("BALLISTA_DEFENSIVE",Cost.buildCost(BuildingType.BALLISTA_DEFENSIVE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.BALLISTA_DEFENSIVE);
             }
@@ -1389,7 +1584,7 @@ public class VillageController {
 
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.SENTINEL_DEFENSIVE)) return;
-            if(showConstructionConfirmation("SENTINEL_DEFENSIVE")) {
+            if(showConstructionConfirmation("SENTINEL_DEFENSIVE",Cost.buildCost(BuildingType.SENTINEL_DEFENSIVE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.SENTINEL_DEFENSIVE);
             }
@@ -1401,7 +1596,7 @@ public class VillageController {
     private void onCatapultBuildClicked(){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.CATAPULT_DEFENSIVE)) return;
-            if(showConstructionConfirmation("CATAPULT_DEFENSIVE")) {
+            if(showConstructionConfirmation("CATAPULT_DEFENSIVE",Cost.buildCost(BuildingType.CATAPULT_DEFENSIVE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.CATAPULT_DEFENSIVE);
             }
@@ -1412,7 +1607,7 @@ public class VillageController {
     private void onIronMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.IRON_MINE)) return;
-            if(showConstructionConfirmation("IronMiner")) {
+            if(showConstructionConfirmation("IronMiner",Cost.buildCost(BuildingType.IRON_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.IRON_MINE);
             }
@@ -1423,7 +1618,7 @@ public class VillageController {
     private void onStoneMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.STONE_MINE)) return;
-            if(showConstructionConfirmation("StoneMiner")) {
+            if(showConstructionConfirmation("StoneMiner",Cost.buildCost(BuildingType.STONE_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.STONE_MINE);
             }
@@ -1434,9 +1629,53 @@ public class VillageController {
     private void onWaterMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.WATER_STORAGE)) return;
-            if(showConstructionConfirmation("DirtyWaterMine")) {
+            if(showConstructionConfirmation("DirtyWaterMine",Cost.buildCost(BuildingType.DIRTY_WATER_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.DIRTY_WATER_MINE);
+            }
+        }
+    }
+
+    @FXML
+    private void onStoneStorageBuildButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.STONE_STORAGE)) return;
+            if(showConstructionConfirmation("STONE_STORAGE",Cost.buildCost(BuildingType.STONE_STORAGE))) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.STONE_STORAGE);
+            }
+        }
+    }
+
+    @FXML
+    private void onBuildWoodStorageButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.WOOD_STORAGE)) return;
+            if(showConstructionConfirmation("WOOD_STORAGE",Cost.buildCost(BuildingType.WOOD_STORAGE))) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.WOOD_STORAGE);
+            }
+        }
+    }
+
+    @FXML
+    private void onGunPowderBuildButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.GUNPOWDER_STORAGE)) return;
+            if(showConstructionConfirmation("GUNPOWDER_STORAGE",Cost.buildCost(BuildingType.GUNPOWDER_STORAGE))) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.GUNPOWDER_STORAGE);
+            }
+        }
+    }
+
+    @FXML
+    private void onIronStorageBuildButtonClicked(ActionEvent actionEvent){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.IRON_STORAGE)) return;
+            if(showConstructionConfirmation("IRON_STORAGE",Cost.buildCost(BuildingType.IRON_STORAGE))) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.IRON_STORAGE);
             }
         }
     }
@@ -1445,7 +1684,7 @@ public class VillageController {
     private void onSoilMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.SOIL_STORAGE)) return;
-            if(showConstructionConfirmation("DirtySoilMine")) {
+            if(showConstructionConfirmation("DirtySoilMine",Cost.buildCost(BuildingType.SOIL_STORAGE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.DIRTY_SOIL_MINE);
             }
@@ -1456,21 +1695,9 @@ public class VillageController {
     private void onGunPowderMineBuildClicked(ActionEvent actionEvent){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.GUNPOWDER_MINE)) return;
-            if(showConstructionConfirmation("GunpowderMine")) {
+            if(showConstructionConfirmation("GunpowderMine",Cost.buildCost(BuildingType.GUNPOWDER_MINE))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.GUNPOWDER_MINE);
-            }
-        }
-    }
-
-
-    @FXML
-    private void onCustomhouseBuildClicked(ActionEvent actionEvent) {
-        if (controller != null) {
-            if (!checkResourcesAndAlert(BuildingType.CUSTOMHOUSE)) return;
-            if(showConstructionConfirmation("Customhouse")) {
-                this.hideAddBuildingPanel();
-                controller.enterBuildMode(BuildingType.CUSTOMHOUSE);
             }
         }
     }
@@ -1479,7 +1706,7 @@ public class VillageController {
     private void onMajorBuildingBuildClicked(ActionEvent actionEvent){
         if(controller != null){
             if(!checkResourcesAndAlert(BuildingType.MAJOR_BUILDING)) return;
-            if(showConstructionConfirmation("TownHall")) {
+            if(showConstructionConfirmation("MajorBuilding",Cost.buildCost(BuildingType.MAJOR_BUILDING))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.MAJOR_BUILDING);
             }
@@ -1490,7 +1717,7 @@ public class VillageController {
     private  void onLabBuildClicked(){
         if (controller != null) {
             if(!checkResourcesAndAlert(BuildingType.LABORATORY)) return;
-            if(showConstructionConfirmation("Laboratory")) {
+            if(showConstructionConfirmation("Laboratory",Cost.buildCost(BuildingType.LABORATORY))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.LABORATORY);
             }
@@ -1517,7 +1744,7 @@ public class VillageController {
     private void onResearchCenterBuildClicked(){
         if(controller != null){
             if(!checkResourcesAndAlert(BuildingType.RESEARCH_CENTER)) return;
-            if(showConstructionConfirmation("ResearchCenter")) {
+            if(showConstructionConfirmation("ResearchCenter",Cost.buildCost(BuildingType.RESEARCH_CENTER))) {
                 this.hideAddBuildingPanel();
                 controller.enterBuildMode(BuildingType.RESEARCH_CENTER);
             }
@@ -1528,7 +1755,7 @@ public class VillageController {
     private void onNRCBuildClicked(ActionEvent actionEvent){
         if(controller != null) {
             if(!checkResourcesAndAlert(PlantType.NRC)) return;
-            if(showConstructionConfirmation("NRC Plant")) {
+            if(showConstructionConfirmation("NRC Plant",Cost.buildCost(PlantType.NRC))) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.NRC);
                 this.hideAddPlantPanel();
@@ -1540,7 +1767,7 @@ public class VillageController {
     private void onSNRCBuildClicked(ActionEvent actionEvent){
         if(controller != null) {
             if(!checkResourcesAndAlert(PlantType.SNRC)) return;
-            if(showConstructionConfirmation("SNRC Plant")) {
+            if(showConstructionConfirmation("SNRC Plant",Cost.buildCost(PlantType.SNRC))) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.SNRC);
                 this.hideAddPlantPanel();
@@ -1552,7 +1779,7 @@ public class VillageController {
     private void onPSNRCBuildClicked(ActionEvent actionEvent){
         if(controller != null) {
             if(!checkResourcesAndAlert(PlantType.PSNRC)) return;
-            if(showConstructionConfirmation("PSNRC Plant")) {
+            if(showConstructionConfirmation("PSNRC Plant",Cost.buildCost(PlantType.PSNRC))) {
                 this.hideAddBuildingPanel();
                 controller.enterPlantBuildMode(PlantType.PSNRC);
                 this.hideAddPlantPanel();
@@ -1560,15 +1787,19 @@ public class VillageController {
         }
     }
 
-    private boolean showConstructionConfirmation(String typeName) {
-        Alert confirmAlert = new Alert(
-                Alert.AlertType.CONFIRMATION,
-                "Are you sure you want to build " + typeName + "?",
-                ButtonType.YES,
-                ButtonType.NO
-        );
+    private boolean showConstructionConfirmation(String typeName, Cost cost) {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO);
         confirmAlert.setTitle("Final Approval");
-        confirmAlert.setHeaderText("Confirm Construction");
+        confirmAlert.setHeaderText("Confirm Construction: " + typeName);
+
+        Label contentLabel = new Label("Are you sure?\nThis will consume:\n" + buildCostMessage(cost));
+        contentLabel.setWrapText(true);
+        contentLabel.setMaxWidth(380);
+        contentLabel.setPrefWidth(380);
+
+        confirmAlert.getDialogPane().setContent(contentLabel);
+        confirmAlert.getDialogPane().setMinWidth(420);
+        confirmAlert.getDialogPane().setPrefWidth(420);
 
         java.util.Optional<ButtonType> result = confirmAlert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.YES;
@@ -1650,16 +1881,14 @@ public class VillageController {
 
     @FXML
     private void onAllianceButtonClicked(){
-        this.showAlliancePanel();
-        this.findAllowedPlayerForAlliance();
-        showAllowedToAllianceOnPanel(this.allowedToAlliance);
+        this.showAllianceInfoPanel();
+        this.refreshAllianceRequirements();
     }
 
     @FXML
     private void onTradeButtonClicked(){
-        this.showTradePanel();
-        this.validPlayersToTrade();
-        this.showTradersOnPanel(this.traders);
+        this.showTradeInfoPanel();
+        this.refreshTradeRequirements();
     }
 
     @FXML
@@ -1678,7 +1907,7 @@ public class VillageController {
         this.makeDeals(offeredResources, requestedResources);
         this.clearTradeTextFields();
 
-        TradeService tradeService = new TradeService(UUID.randomUUID());
+        TradeService tradeService = new TradeService();
         tradeService.sendRequest(this.player, this.getReceiverTradeRequest(), offeredResources, requestedResources);
 
         this.hideMakeATradePanel();
@@ -1769,32 +1998,6 @@ public class VillageController {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void setTradeButtonEnable(){
-        if(BuildingsManagement.checkResearchCenterBuildingForTrade(this.player) &&
-                BuildingsManagement.checkCustomHouseBuildingForTrade(this.player)&&
-                BuildingsManagement.checkCustomHouseBuildingForTrade(this.player))
-
-            this.tradeButton.setDisable(false);
-    }
-
-    private void setAllianceButtonEnable(){
-        this.player.getLock().readLock().lock();
-        try {
-            this.player.getVillage().getLock().readLock().lock();
-            try {
-                if(AllianceService.checkSenderAllianceRequestMajorBuildingLevel(this.player)
-                        && AllianceService.checkCloudForAllianceSender(this.player)
-                        && AllianceService.checkScienceLevelForAlliance(this.player))
-
-                    this.allianceButton.setDisable(false);
-            }finally {
-                this.player.getVillage().getLock().readLock().unlock();
-            }
-        }finally {
-            this.player.getLock().readLock().unlock();
         }
     }
 
@@ -2068,12 +2271,122 @@ public class VillageController {
             this.towerHpLabel.setText("Health: " + tower.getHp() + " / " + tower.getMaxHp());
             this.towerHpBar.setProgress((double) tower.getHp() / tower.getMaxHp());
 
+            java.time.LocalDateTime completeTime = tower.getConstructionCompleteTime();
+            if (completeTime != null) {
+                java.time.LocalDateTime protectionEnds = completeTime.plusHours(24);
+                if (java.time.LocalDateTime.now().isBefore(protectionEnds)) {
+                    long minutesLeft = java.time.Duration.between(java.time.LocalDateTime.now(), protectionEnds).toMinutes();
+                    this.towerProtectionLabel.setText("in protecting: " + minutesLeft + "remained ");
+                } else {
+                    this.towerProtectionLabel.setText("");
+                }
+            }
+
             this.buildTowerButton.setDisable(true);
             this.buildTowerButton.setVisible(false);
             this.towerRequirementWarningLabel.setText("");
         }
     }
 
+    private void refreshAllianceRequirements(){
+        this.player.getLock().readLock().lock();
+        try {
+            this.player.getVillage().getLock().readLock().lock();
+            try {
+                if (this.player.getAlliance() != null) {
+                    this.allianceRequirementsLabel.setTextFill(javafx.scene.paint.Color.web("#ff5555"));
+                    this.allianceRequirementsLabel.setText("You are already in an alliance.");
+                    this.continueToAlliancePanelButton.setDisable(true);
+                    return;
+                }
+
+                boolean majorOk = AllianceService.checkSenderAllianceRequestMajorBuildingLevel(this.player);
+                boolean scienceOk = AllianceService.checkScienceLevelForAlliance(this.player);
+                boolean cloudOk = AllianceService.checkCloudForAllianceSender(this.player);
+                boolean costOk = this.player.getVillage().getResourcesManagement().checkResourcesCost(Cost.allianceCost());
+
+                boolean allOk = majorOk && scienceOk && cloudOk && costOk;
+
+                if (allOk) {
+                    this.allianceRequirementsLabel.setTextFill(javafx.scene.paint.Color.web("#4dd0e1"));
+                    this.allianceRequirementsLabel.setText("All requirements met — you can view eligible players.");
+                } else {
+                    StringBuilder sb = new StringBuilder("Requirements not met: ");
+                    if (!majorOk) sb.append("Major Building level 2+. ");
+                    if (!scienceOk) sb.append("Research Center level 2+. ");
+                    if (!cloudOk) sb.append("Cloud neutralized 200+. ");
+                    if (!costOk) sb.append("Not enough resources. ");
+                    this.allianceRequirementsLabel.setTextFill(javafx.scene.paint.Color.web("#ff5555"));
+                    this.allianceRequirementsLabel.setText(sb.toString());
+                }
+
+                this.continueToAlliancePanelButton.setDisable(!allOk);
+            } finally {
+                this.player.getVillage().getLock().readLock().unlock();
+            }
+        } finally {
+            this.player.getLock().readLock().unlock();
+        }
+    }
+
+    @FXML
+    private void onContinueToAlliancePanelClicked(){
+        this.hideAllianceInfoPanel();
+        this.showAlliancePanel();
+        this.findAllowedPlayerForAlliance();
+        this.showAllowedToAllianceOnPanel(this.allowedToAlliance);
+    }
+
+    @FXML
+    private void onLeaveAllianceInfoPanelClicked(){
+        this.hideAllianceInfoPanel();
+    }
+
+    private void showAllianceInfoPanel(){
+        this.allianceInfoPanel.setVisible(true);
+        this.allianceInfoPanel.setManaged(true);
+    }
+
+    private void hideAllianceInfoPanel(){
+        this.allianceInfoPanel.setVisible(false);
+        this.allianceInfoPanel.setManaged(false);
+    }
+
+    private void refreshTradeRequirements(){
+        boolean customhouseOk = BuildingsManagement.checkCustomHouseBuildingForTrade(this.player);
+
+        if (customhouseOk) {
+            this.tradeRequirementsLabel.setTextFill(javafx.scene.paint.Color.web("#4dd0e1"));
+            this.tradeRequirementsLabel.setText("Requirements met — you can view trade partners.");
+        } else {
+            this.tradeRequirementsLabel.setTextFill(javafx.scene.paint.Color.web("#ff5555"));
+            this.tradeRequirementsLabel.setText("Requirements not met: a Customhouse is required.");
+        }
+        this.continueToTradePanelButton.setDisable(!customhouseOk);
+    }
+
+    @FXML
+    private void onContinueToTradePanelClicked(){
+        this.hideTradeInfoPanel();
+        this.showTradePanel();
+        this.validPlayersToTrade();
+        this.showTradersOnPanel(this.traders);
+    }
+
+    @FXML
+    private void onLeaveTradeInfoPanelClicked(){
+        this.hideTradeInfoPanel();
+    }
+
+    private void showTradeInfoPanel(){
+        this.tradeInfoPanel.setVisible(true);
+        this.tradeInfoPanel.setManaged(true);
+    }
+
+    private void hideTradeInfoPanel(){
+        this.tradeInfoPanel.setVisible(false);
+        this.tradeInfoPanel.setManaged(false);
+    }
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
@@ -2314,9 +2627,6 @@ public class VillageController {
             @Override
             public void handle(long now) {
 
-                setTradeButtonEnable();
-                setAllianceButtonEnable();
-
                 taskProcessor.process();
 
                 if (!winnerWindowShown
@@ -2370,9 +2680,9 @@ public class VillageController {
                 healthProgressBar();
                 radiationProgressBar();
 
-                int currentAnnouncementCount = model.finalPart.GlobalTowerAnnouncer.getAnnouncementCount();
+                int currentAnnouncementCount = GlobalTowerAnnouncer.getAnnouncementCount();
                 if (currentAnnouncementCount > lastSeenAnnouncementCount) {
-                    List<String> announcements = model.finalPart.GlobalTowerAnnouncer.getAnnouncements();
+                    List<String> announcements = GlobalTowerAnnouncer.getAnnouncements();
                     String latest = announcements.get(announcements.size() - 1);
                     towerAnnouncementLabel.setText(latest);
                     towerAnnouncementLabel.setVisible(true);
@@ -2386,6 +2696,24 @@ public class VillageController {
                     hideDelay.play();
 
                     lastSeenAnnouncementCount = currentAnnouncementCount;
+                }
+
+                int currentPhaseTwoCount = PhaseTwoAnnouncer.getAnnouncementCount();
+                if (currentPhaseTwoCount > lastSeenPhaseTwoAnnouncementCount) {
+                    List<String> phaseTwoAnnouncements = PhaseTwoAnnouncer.getAnnouncements();
+                    String latest = phaseTwoAnnouncements.get(phaseTwoAnnouncements.size() - 1);
+                    phaseTwoAnnouncementLabel.setText(latest);
+                    phaseTwoAnnouncementLabel.setVisible(true);
+                    phaseTwoAnnouncementLabel.setManaged(true);
+
+                    PauseTransition hideDelay = new PauseTransition(javafx.util.Duration.seconds(20));
+                    hideDelay.setOnFinished(e -> {
+                        phaseTwoAnnouncementLabel.setVisible(false);
+                        phaseTwoAnnouncementLabel.setManaged(false);
+                    });
+                    hideDelay.play();
+
+                    lastSeenPhaseTwoAnnouncementCount = currentPhaseTwoCount;
                 }
             }
         };
@@ -2445,27 +2773,60 @@ public class VillageController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("error in building");
             alert.setHeaderText("you don't have enough resources!");
-            alert.setContentText("for building " + plant + " you need " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
+            alert.setContentText("for building " + plant + " you need \n " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
             alert.showAndWait();
             return false;
         }
         return true;
     }
     private boolean checkResourcesAndAlert(BuildingType type) {
-        model.building.Cost cost = model.building.Cost.buildCost(type);
+        if (type == BuildingType.CUSTOMHOUSE) {
+            int majorLevel = 0;
+            int researchLevel = 0;
+            for (Building b : player.getVillage().getBuildings().values()) {
+                if (b instanceof MajorBuilding) majorLevel = b.getLevel();
+                if (b instanceof ResearchCenter) researchLevel = b.getLevel();
+            }
+            if (majorLevel < 3 || researchLevel < 2) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("error in building");
+                alert.setHeaderText("requirements not met!");
+                alert.setContentText("Customhouse needs Major Building level 3+ \n and Research Center level 2+.");
+                alert.showAndWait();
+                return false;
+            }
+        }
+        Cost cost = model.building.Cost.buildCost(type);
         if (cost == null) return true;
 
         boolean hasResources = player.getVillage().getResourcesManagement().checkResourcesCost(cost);
         if (!hasResources) {
-            javafx.scene.control.Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("error in building");
             alert.setHeaderText("you don't have enough resources!");
-            alert.setContentText("for building " + type + " you need " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
+            alert.setContentText("for building " + type + " you need \n " + cost.getNeededTime().toSeconds() + " seconds and extra resources");
             alert.showAndWait();
             return false;
         }
         return true;
     }
+
+    private String buildCostMessage(Cost cost) {
+        StringBuilder sb = new StringBuilder();
+
+        if (cost.getWood() > 0) sb.append("Wood: ").append(cost.getWood()).append("\n");
+        if (cost.getStone() > 0) sb.append("Stone: ").append(cost.getStone()).append("\n");
+        if (cost.getIron() > 0) sb.append("Iron: ").append(cost.getIron()).append("\n");
+        if (cost.getGunPowder() > 0) sb.append("Gunpowder: ").append(cost.getGunPowder()).append("\n");
+        if (cost.getCleanWater() > 0) sb.append("Clean Water: ").append(cost.getCleanWater()).append("\n");
+        if (cost.getCleanSoil() > 0) sb.append("Clean Soil: ").append(cost.getCleanSoil()).append("\n");
+        if (cost.getCoin() > 0) sb.append("Coin: ").append(cost.getCoin()).append("\n");
+
+        sb.append("Build time: ").append(cost.getNeededTime().toSeconds()).append(" seconds");
+
+        return sb.toString();
+    }
+
     private void checkBuildingButtonsLimit(){
         Village village = player.getVillage();
         if (village == null || village.getBuildings() == null) return;
