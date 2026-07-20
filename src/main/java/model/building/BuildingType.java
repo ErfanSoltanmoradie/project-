@@ -36,7 +36,7 @@ public enum BuildingType {
     MAJOR_BUILDING(new Cost(400, 300, 150,0, 150, 150, 0, Duration.ofSeconds(2)), 10, 10),
 // PURIFICATION(new Cost(10, 10, 10, 10, 10, 10, 10, Duration.ofSeconds(2)), 1, 1),
 
-    CUSTOMHOUSE(new Cost(3, 2, 500, 400, 300, 0, 100, 100, 0, Duration.ofHours(4)), 9, 9);
+    CUSTOMHOUSE(new Cost(3, 2, 500, 400, 300, 0, 100, 100, 0, Duration.ofSeconds(4)), 9, 9);
     BuildingType(Cost baseBuildCost, int width, int height) {
         this.baseBuildCost = baseBuildCost;
         this.width = width;

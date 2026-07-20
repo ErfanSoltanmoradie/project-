@@ -1561,16 +1561,7 @@ public class VillageController {
         }
     }
 
-    @FXML
-    private void onArmyProducerBuildClicked(){
-        if (controller != null) {
-            if(!checkResourcesAndAlert(BuildingType.ARMY_PRODUCER)) return;
-            if(showConstructionConfirmation("ARMY_PRODUCER",Cost.buildCost(BuildingType.ARMY_PRODUCER))) {
-                this.hideAddBuildingPanel();
-                controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
-            }
-        }
-    }
+
 
     @FXML
     private void onBallistaBuildClicked(){
@@ -1864,11 +1855,22 @@ public class VillageController {
         this.tradePanel.setManaged(false);
     }
 
-    @FXML
+    /*@FXML
     private void onArmyProducerBuildClicked(ActionEvent actionEvent){
         if(controller != null){
             this.hideAddBuildingPanel();
             controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
+        }
+    }*/
+
+    @FXML
+    private void onArmyProducerBuildClicked(){
+        if (controller != null) {
+            if(!checkResourcesAndAlert(BuildingType.ARMY_PRODUCER)) return;
+            if(showConstructionConfirmation("ARMY_PRODUCER",Cost.buildCost(BuildingType.ARMY_PRODUCER))) {
+                this.hideAddBuildingPanel();
+                controller.enterBuildMode(BuildingType.ARMY_PRODUCER);
+            }
         }
     }
 
