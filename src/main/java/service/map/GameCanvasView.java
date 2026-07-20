@@ -118,7 +118,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.DIRTY_SOIL_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine-2.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine-3.png"))),
                     1,1,1));
 
 

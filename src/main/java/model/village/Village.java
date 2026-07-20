@@ -106,6 +106,8 @@ public class Village implements Serializable {
         this.getBuildings().put(gunPowderStorage.getId(), gunPowderStorage);
 
 
+        waterStorage.setBuildingStatus(BuildingStatus.ACTIVE);
+        soilStorage.setBuildingStatus(BuildingStatus.ACTIVE);
         stoneStorage.setBuildingStatus(BuildingStatus.ACTIVE);
         woodStorage.setBuildingStatus(BuildingStatus.ACTIVE);
         gunPowderStorage.setBuildingStatus(BuildingStatus.ACTIVE);
