@@ -118,7 +118,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.DIRTY_SOIL_MINE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/SoilMine-2.png"))),
                     1,1,1));
 
 
@@ -127,7 +127,7 @@ public class GameCanvasView extends Canvas {
                 1,1,1));
 
             buildingGraphics.put(BuildingType.RESEARCH_CENTER, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/researchCenter-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.LABORATORY, new BuildingGraphicProperties(
@@ -153,7 +153,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.CUSTOMHOUSE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/customs.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/customs-2.png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.SENTINEL_DEFENSIVE, new BuildingGraphicProperties(
@@ -173,7 +173,7 @@ public class GameCanvasView extends Canvas {
                     1,1,1));
 
             buildingGraphics.put(BuildingType.WOOD_STORAGE, new BuildingGraphicProperties(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/wood-storage-2.png"))),
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/building/wood-storage-2 (2).png"))),
                     1,1,1));
 
             buildingGraphics.put(BuildingType.GUNPOWDER_STORAGE, new BuildingGraphicProperties(

@@ -20,8 +20,8 @@ public class Resources implements Serializable {
         this.iron = 80000;
         this.gunPowder = 80000;
         this.stone = 80000;
-        this.dirtyWater = 80000;
-        this.dirtySoil = 80000;
+        this.dirtyWater = 0;
+        this.dirtySoil = 0;
         this.cleanWater = 1000;
         this.cleanSoil = 1000;
         this.coin = 2000;
