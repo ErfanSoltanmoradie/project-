@@ -222,7 +222,7 @@ public class BuildingsManagement{
     }
 
     private Cost getGlobalTowerCost(){
-        return new Cost(25000, 18000, 12000, 8000, 5000, 5000, 0, Duration.ofSeconds(10));
+        return new Cost(1000, 1000, 1000, 1000, 1000, 1000, 100, Duration.ofSeconds(10));
     }
 
     public void buildGlobalTower(Coordinate coordinate){
