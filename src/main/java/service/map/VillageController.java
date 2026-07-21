@@ -57,6 +57,10 @@ import java.util.*;
 
 public class VillageController {
 
+    public Label upgradeCostLabel;
+
+
+
     private PlayerRepository playerRepository;
     private int lastSeenAnnouncementCount = 0;
     private int lastSeenPhaseTwoAnnouncementCount = 0;
@@ -2078,8 +2082,35 @@ public class VillageController {
         this.makeATradePanel.setManaged(false);
     }
 
+    private String buildUpgradeCostText(Cost cost) {
+        if (cost.isMaxLevelReached()) {
+            return "Maximum level reached";
+        }
+
+        StringBuilder sb = new StringBuilder("Upgrade cost:\n");
+
+        if (cost.getWood() > 0)       sb.append("Wood: ").append(cost.getWood()).append("  ");
+        if (cost.getStone() > 0)      sb.append("Stone: ").append(cost.getStone()).append("  ");
+        if (cost.getIron() > 0)       sb.append("Iron: ").append(cost.getIron()).append("\n");
+        if (cost.getGunPowder() > 0)  sb.append("GunPowder: ").append(cost.getGunPowder()).append("  ");
+        if (cost.getCleanWater() > 0) sb.append("Water: ").append(cost.getCleanWater()).append("  ");
+        if (cost.getCleanSoil() > 0)  sb.append("Soil: ").append(cost.getCleanSoil()).append("\n");
+        if (cost.getCoin() > 0)       sb.append("Coin: ").append(cost.getCoin()).append("\n");
+
+        sb.append("Time: ").append(cost.getNeededTime().toSeconds()).append("s");
+
+        if (cost.getRequiredMajorBuildingLevel() > 1)
+            sb.append(" | Major Lvl ").append(cost.getRequiredMajorBuildingLevel());
+        if (cost.getRequiredScienceLevel() > 1)
+            sb.append(" | Science Lvl ").append(cost.getRequiredScienceLevel());
+
+        return sb.toString();
+    }
+
     public void showBuildingInfo(Building building){
         if (building == null) return;
+
+        this.upgradeCostLabel.setVisible(true);
 
         infoPanelTitleLabel.setText(building.getType().toString());
         buildingLevelLabel.setVisible(true);
@@ -2102,9 +2133,11 @@ public class VillageController {
             neutralizationPowerLabel.setVisible(false);
         }
 
-        boolean isMaxLevel = Cost.upgradeCost(building).isMaxLevelReached();
+        Cost upgradeCost = Cost.upgradeCost(building);
 
-        if (isMaxLevel) {
+        this.upgradeCostLabel.setText(buildUpgradeCostText(upgradeCost));
+
+        if (upgradeCost.isMaxLevelReached()) {
             this.upgradeButton.setText("Maximum level");
             this.upgradeButton.setDisable(true);
         } else {

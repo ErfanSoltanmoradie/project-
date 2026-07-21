@@ -709,21 +709,21 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="infoPanel" depthTest="ENABLE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #2b1d0e;                                                                               -fx-background-radius: 10; -fx-border-color: #bfa15f;                                                                                -fx-border-width: 3; -fx-border-radius: 8; -fx-padding: 10; " visible="false" StackPane.alignment="CENTER">
-         <StackPane.margin>
-            <Insets />
-         </StackPane.margin>
-         <children>
-            <Label fx:id="infoPanelTitleLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="24.0" prefWidth="280.0" textFill="#ffcc00" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <Label fx:id="buildingLevelLabel" alignment="CENTER" layoutX="10.0" layoutY="40.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
-            <Label fx:id="plantsCountLabel" alignment="CENTER" layoutX="10.0" layoutY="65.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="65.0" />
-            <Label fx:id="neutralizationPowerLabel" alignment="CENTER" layoutX="10.0" layoutY="90.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
-            <Button fx:id="upgradeButton" alignment="BOTTOM_CENTER" layoutX="76.0" layoutY="132.0" mnemonicParsing="false" onAction="#onUpgradeClicked" prefHeight="58.0" prefWidth="174.0" text="UPGRADE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="63.0" AnchorPane.rightAnchor="63.0" AnchorPane.topAnchor="135.0" />
-         </children>
+      <AnchorPane fx:id="infoPanel" depthTest="ENABLE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: #2b1d0e;                                                                               -fx-background-radius: 10; -fx-border-color: #bfa15f;                                                                                -fx-border-width: 3; -fx-border-radius: 8; -fx-padding: 10; " visible="false" StackPane.alignment="CENTER">
+      <StackPane.margin>
+         <Insets />   </StackPane.margin>
+      <children>
+      <Label fx:id="infoPanelTitleLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="24.0" prefWidth="280.0" textFill="#ffcc00" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+         <Label fx:id="buildingLevelLabel" alignment="CENTER" layoutX="10.0" layoutY="40.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+         <Label fx:id="plantsCountLabel" alignment="CENTER" layoutX="10.0" layoutY="65.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="65.0" />
+         <Label fx:id="neutralizationPowerLabel" alignment="CENTER" layoutX="10.0" layoutY="90.0" prefHeight="20.0" prefWidth="280.0" textFill="WHITE" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0" />
+         <Label fx:id="upgradeCostLabel" alignment="TOP_CENTER" layoutX="1.0" layoutY="115.0" prefHeight="100.0" prefWidth="280.0" style="-fx-font-size: 11px;" textFill="#ffd54f" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="115.0" />
+         <Button fx:id="upgradeButton" alignment="BOTTOM_CENTER" layoutX="31.2" layoutY="249.60000000000002" mnemonicParsing="false" onAction="#onUpgradeClicked" prefHeight="66.0" prefWidth="265.0" style="-fx-background-color: transparent; -fx-background-color: linear-gradient(to bottom, #33251a, #140f0b); -fx-border-color: #ff7e14; -fx-border-width: 1.5; -fx-border-radius: 5; -fx-background-radius: 5; -fx-letter-spacing: 2px; -fx-padding: 10 30 10 30; -fx-cursor: hand;" text="UPGRADE" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="237.0" />
+      </children>
       </AnchorPane>
       <AnchorPane fx:id="tradePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="362.0" prefWidth="544.0" style="-fx-background-color: #000415;" visible="false">
          <children>
