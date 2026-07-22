@@ -21,16 +21,16 @@ public class ResearchCenter extends Building implements Serializable {
         upgradeResearchBuildingsCost = new HashMap<>();
 
         upgradeResearchBuildingsCost.put(1, new UpgradeBuildingInfo(
-                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(10))));
+                new Cost(2, 0, 500, 350, 250, 0, 150, 150, 0, Duration.ofSeconds(10))));
 
         upgradeResearchBuildingsCost.put(2, new UpgradeBuildingInfo(
-                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(10))));
+                new Cost(3, 0, 600, 500, 450, 0, 200, 200, 0, Duration.ofSeconds(10))));
 
         upgradeResearchBuildingsCost.put(3, new UpgradeBuildingInfo(
-                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(10))));
+                new Cost(4, 0, 800, 700, 600, 0, 300, 300, 0, Duration.ofSeconds(10))));
 
         upgradeResearchBuildingsCost.put(4, new UpgradeBuildingInfo(
-                new Cost(1 ,1,0, 0, 0, 0, 0, 0, 0, Duration.ofSeconds(10))));
+                new Cost(5, 0, 1000, 900, 800, 0, 400, 400, 0, Duration.ofSeconds(10))));
     }
 
     public static UpgradeBuildingInfo upgradeBuildingInfo(int level){

@@ -180,8 +180,8 @@ public class TaskProcessor {
                     else
                         event.discovery();
 
-                    RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
-                    village.getTimedOperation().put(randomEventTask.getId(), randomEventTask);
+                    /*RandomEventTask randomEventTask = new RandomEventTask(Instant.now(), Duration.ofMinutes(1), TimedOperationType.RANDOM_EVENT_TASK);
+                    village.getTimedOperation().put(randomEventTask.getId(), randomEventTask);*/
                 }
 
 

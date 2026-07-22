@@ -17,9 +17,7 @@ public class ResourcesManagement{
     }
 
     public boolean checkResourcesCost(Cost cost) {
-
         Resources resources = village.getResources();
-
         return resources.getAmount(ResourcesType.WOOD) >= cost.getWood()
                 && resources.getAmount(ResourcesType.IRON) >= cost.getIron()
                 && resources.getAmount(ResourcesType.STONE) >= cost.getStone()
@@ -28,7 +26,7 @@ public class ResourcesManagement{
                 && resources.getAmount(ResourcesType.CLEAN_WATER) >= cost.getCleanWater()
                 && resources.getAmount(ResourcesType.GUN_POWDER) >= cost.getGunPowder()
                 && findMajor() >= cost.getRequiredMajorBuildingLevel()
-                && findMajor() >= cost.getRequiredScienceLevel();
+                && findResearchCenter() >= cost.getRequiredScienceLevel();
     }
 
     private int findMajor(){

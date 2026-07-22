@@ -91,12 +91,12 @@ public class Village implements Serializable {
         this.getBuildings().put(laboratory.getId(), laboratory);
 
 
-        StorageBuilding stoneStorage = new StorageBuilding(BuildingType.STONE_STORAGE, new Coordinate(36, 104), 2000);
-        StorageBuilding woodStorage = new StorageBuilding(BuildingType.WOOD_STORAGE, new Coordinate(27, 103), 2000);
-        StorageBuilding ironStorage = new StorageBuilding(BuildingType.IRON_STORAGE, new Coordinate(27, 112), 2000);
-        StorageBuilding gunPowderStorage = new StorageBuilding(BuildingType.GUNPOWDER_STORAGE, new Coordinate(36, 113), 2000);
-        StorageBuilding waterStorage = new StorageBuilding(BuildingType.WATER_STORAGE, new Coordinate(27, 93), 2000);
-        StorageBuilding soilStorage = new StorageBuilding(BuildingType.SOIL_STORAGE, new Coordinate(37, 95), 2000);
+        StorageBuilding stoneStorage = new StorageBuilding(BuildingType.STONE_STORAGE, new Coordinate(36, 104), 5000);
+        StorageBuilding woodStorage = new StorageBuilding(BuildingType.WOOD_STORAGE, new Coordinate(27, 103), 5000);
+        StorageBuilding ironStorage = new StorageBuilding(BuildingType.IRON_STORAGE, new Coordinate(27, 112), 5000);
+        StorageBuilding gunPowderStorage = new StorageBuilding(BuildingType.GUNPOWDER_STORAGE, new Coordinate(36, 113), 5000);
+        StorageBuilding waterStorage = new StorageBuilding(BuildingType.WATER_STORAGE, new Coordinate(27, 93), 5000);
+        StorageBuilding soilStorage = new StorageBuilding(BuildingType.SOIL_STORAGE, new Coordinate(37, 95), 5000);
 
         this.getBuildings().put(waterStorage.getId(), waterStorage);
         this.getBuildings().put(soilStorage.getId(), soilStorage);

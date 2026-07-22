@@ -90,23 +90,15 @@ public class TradeService {
         AllianceService.lockVillages(offer.getAlliancesender(), offer.getAlliancesreceiver());
         try {
             for (Building building1 : offer.getAlliancesender().getVillage().getBuildings().values()) {
-                if (building1 instanceof Customhouse customhouse) {
-                    senderCustomhouse = customhouse;
-                    break;
-                }
+                if (building1 instanceof Customhouse customhouse) { senderCustomhouse = customhouse; break; }
             }
-
             for (Building building2 : offer.getAlliancesreceiver().getVillage().getBuildings().values()) {
-                if (building2 instanceof Customhouse customhouse) {
-                    receiverCustomhouse = customhouse;
-                    break;
-                }
+                if (building2 instanceof Customhouse customhouse) { receiverCustomhouse = customhouse; break; }
             }
 
+            // گیرنده باید به اندازه‌ی کافی از منابع درخواستی را داشته باشد
             for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
-                ResourcesType type = entry.getKey();
-                Integer amount = entry.getValue();
-                if (offer.getAlliancesreceiver().getVillage().getResources().getAmount(type) < amount) {
+                if (offer.getAlliancesreceiver().getVillage().getResources().getAmount(entry.getKey()) < entry.getValue()) {
                     return;
                 }
             }
@@ -115,26 +107,29 @@ public class TradeService {
                     (offer.getAlliancesender().getAlliance().getSender().equals(offer.getAlliancesreceiver()) ||
                             offer.getAlliancesender().getAlliance().getReceiver().equals(offer.getAlliancesreceiver()));
 
-            double senderTaxRate = 0;
-            senderTaxRate = areAllied ? 0 : (senderCustomhouse != null ? senderCustomhouse.getCommission() : 0);
-            double receiverTaxRate = 0;
-            receiverTaxRate = areAllied ? 0 : (receiverCustomhouse != null ? receiverCustomhouse.getCommission() : 0);
-
-            for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
-                ResourcesType type = entry.getKey();
-                int originalAmount = entry.getValue();
-                int amountWithTax = (int) (originalAmount * senderTaxRate);
-                offer.getAlliancesender().getVillage().getResourcesManagement().withdrawResource(amountWithTax, type);
-            }
+            double senderTaxRate = areAllied ? 0 : (senderCustomhouse != null ? senderCustomhouse.getCommission() : 0);
+            double receiverTaxRate = areAllied ? 0 : (receiverCustomhouse != null ? receiverCustomhouse.getCommission() : 0);
 
             for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
-                ResourcesType type = entry.getKey();
-                int originalAmount = entry.getValue();
-                int amountWithTax = originalAmount + (int) (originalAmount * receiverTaxRate);
-                offer.getAlliancesreceiver().getVillage().getResourcesManagement().withdrawResource(amountWithTax, type);
+                offer.getAlliancesreceiver().getVillage().getResourcesManagement()
+                        .withdrawResource(entry.getValue(), entry.getKey());
             }
 
-            TradeTask tradeTask = new TradeTask(Instant.now(), Duration.ofSeconds(4), offer);
+            Map<ResourcesType, Integer> netOffered = new java.util.HashMap<>();
+            for (Map.Entry<ResourcesType, Integer> entry : offer.getOfferedResources().entrySet()) {
+                int net = entry.getValue() - (int) (entry.getValue() * senderTaxRate);
+                netOffered.put(entry.getKey(), net);
+            }
+            offer.setNetOfferedResources(netOffered);
+
+            Map<ResourcesType, Integer> netRequested = new java.util.HashMap<>();
+            for (Map.Entry<ResourcesType, Integer> entry : offer.getRequestedResources().entrySet()) {
+                int net = entry.getValue() - (int) (entry.getValue() * receiverTaxRate);
+                netRequested.put(entry.getKey(), net);
+            }
+            offer.setNetRequestedResources(netRequested);
+
+            TradeTask tradeTask = new TradeTask(Instant.now(), Duration.ofSeconds(offer.getTradeTime()), offer);
 
             offer.getAlliancesender().getVillage().getTimedOperation().put(tradeTask.getId(), tradeTask);
             offer.setTradeStatus(TradeStatus.ACCEPTED);

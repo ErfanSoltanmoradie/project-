@@ -81,6 +81,7 @@ public class Start {
         this.phaseOneScheduler.scheduleAtFixedRate(() -> {
             try {
 
+                // پایان فاز اول
                 List<String> eliminated = GameManager.checkAndEnforcePhaseOneEnd(
                         this.gameState,
                         this.playerRepository,
@@ -89,6 +90,14 @@ public class Start {
 
                 if (!eliminated.isEmpty()) {
                     System.out.println("Phase 1 ended. Eliminated players: " + eliminated);
+                    this.saveAllData();
+                }
+
+                List<String> healthEliminated = GameManager.checkAndEnforceHealthElimination(
+                        this.gameState, this.playerRepository, this.userRepository, this.worldMap);
+
+                if (!healthEliminated.isEmpty()) {
+                    System.out.println("Eliminated due to zero health: " + healthEliminated);
                     this.saveAllData();
                 }
 
